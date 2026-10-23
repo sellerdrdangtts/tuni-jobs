@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -24,7 +24,7 @@
 
   :root { --ease:cubic-bezier(.22,.8,.24,1); --ink:#111; --black:#141414; --dark:#141414; --mute:#8b8b90; --bg:#eeeeef; --mint:#cfe9e4; --peach:#fbe4c6; --lav:#e8dcf7; --line:rgba(0,0,0,.08); }
   * { box-sizing:border-box; }
-  html { background:var(--bg); }
+  html { background:var(--bg); -webkit-text-size-adjust:100%; text-size-adjust:100%; touch-action:manipulation; }
   body { margin:0; font:14px/1.45 'Gilroy','Inter',-apple-system,sans-serif; color:var(--ink); background:var(--bg); -webkit-user-select:none; -webkit-tap-highlight-color:transparent; }
   .app { max-width:1100px; margin:0 auto; padding:calc(env(safe-area-inset-top) + 16px) 22px calc(130px + env(safe-area-inset-bottom)); }
 
@@ -197,14 +197,17 @@
   .sw-dark .jrow { margin-bottom:0; position:relative; z-index:1; touch-action:pan-y; }
   .syncbar { background:var(--peach); border-radius:20px; padding:12px 18px; margin-bottom:14px; font-size:13px; line-height:1.5; cursor:pointer; box-shadow:inset 0 0 0 1.5px var(--black); }
 
-  /* nút nổi kiểu AssistiveTouch */
-  .fab { position:fixed; left:0; top:0; width:58px; height:58px; border-radius:20px; background:rgba(24,24,24,.88); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); box-shadow:0 10px 26px rgba(0,0,0,.3); z-index:16; display:none; touch-action:none; cursor:grab; outline:0; transition:left .4s var(--ease), top .4s var(--ease), opacity .4s, transform .15s; }
-  .fab.drag { transition:none; cursor:grabbing; transform:scale(1.07); }
+  /* nút nổi kiểu AssistiveTouch: di chuyển bằng transform (GPU), không dùng bộ lọc mờ để kéo mượt trên iPhone */
+  .fab { position:fixed; left:0; top:0; width:58px; height:58px; z-index:16; display:none; touch-action:none; cursor:grab; outline:0; will-change:transform; transition:transform .45s var(--ease), opacity .4s; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
+  .fab::after { content:''; position:absolute; inset:-8px; }
+  .fab-body { position:absolute; inset:0; border-radius:20px; background:rgba(24,24,24,.93); box-shadow:0 6px 16px rgba(0,0,0,.28); transition:transform .15s var(--ease); pointer-events:none; }
+  .fab.drag { transition:none; cursor:grabbing; }
+  .fab.drag .fab-body { transform:scale(1.08); }
+  .fab:active .fab-body { transform:scale(.94); }
   .fab.idle { opacity:.55; }
-  .fab:active { transform:scale(.94); }
-  .fab i { position:absolute; inset:10px; border-radius:50%; background:rgba(255,255,255,.14); box-shadow:inset 0 0 0 2px rgba(255,255,255,.85); display:grid; place-items:center; color:#fff; pointer-events:none; }
+  .fab i { position:absolute; inset:10px; border-radius:50%; background:rgba(255,255,255,.14); box-shadow:inset 0 0 0 2px rgba(255,255,255,.85); display:grid; place-items:center; color:#fff; }
   .fab svg { width:20px; height:20px; }
-  .fab-label { position:absolute; top:50%; right:70px; transform:translateY(-50%) translateX(8px); background:var(--black); color:#fff; padding:9px 15px; border-radius:999px; font-size:13px; font-weight:600; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity .3s, transform .3s var(--ease); box-shadow:0 8px 20px rgba(0,0,0,.22); }
+  .fab-label { position:absolute; top:50%; right:70px; transform:translateY(-50%) translateX(8px); background:var(--black); color:#fff; padding:9px 15px; border-radius:999px; font-size:13px; font-weight:600; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity .3s, transform .3s var(--ease); box-shadow:0 6px 16px rgba(0,0,0,.2); }
   .fab.lft .fab-label { right:auto; left:70px; transform:translateY(-50%) translateX(-8px); }
   .fab-label.show { opacity:1; transform:translateY(-50%); }
 
@@ -227,6 +230,8 @@
   .fld.wide { grid-column:1 / -1; }
   .fld input, .fld textarea, .fld select { font:inherit; font-size:14px; color:var(--ink); padding:11px 15px; border:1px solid #e3e3e6; border-radius:16px; outline:0; background:#f7f7f8; -webkit-user-select:text; resize:vertical; width:100%; }
   .fld input:focus, .fld textarea:focus, .fld select:focus { border-color:var(--black); background:#fff; }
+  .err { font-size:12.5px; font-weight:600; background:var(--peach); border-radius:14px; padding:9px 13px; }
+  .err:empty { display:none; }
   .hint { font-size:12px; color:var(--mute); margin:-4px 2px 0; }
   .remain { display:flex; justify-content:space-between; align-items:center; background:var(--black); color:#fff; border-radius:20px; padding:14px 18px; }
   .remain b { font-size:18px; }
@@ -268,7 +273,6 @@
   @media (max-width: 340px) {
     .jobchips button { font-size:10.5px !important; letter-spacing:-.2px; }
     .ibtn { width:42px; height:42px; } .top-r { gap:6px; } .brand { height:30px; }
-    .sortbar select { font-size:14px !important; }
   }
 
   /* motion */
@@ -342,7 +346,7 @@
   <div id="main"></div>
 </div>
 <div class="veil"></div>
-<div class="fab" id="fab" role="button" tabindex="0"><i></i><span class="fab-label" id="fabLabel"></span></div>
+<div class="fab" id="fab" role="button" tabindex="0"><div class="fab-body"><i></i></div><span class="fab-label" id="fabLabel"></span></div>
 <nav class="dock" id="nav"></nav>
 <div id="menu"></div>
 <div id="modal"><div class="box" id="box"></div></div>
@@ -370,6 +374,7 @@ const ICON = {
   check: '<path d="M5 12.5l4.5 4.5L19 7"/>',
   arrow: '<path d="M7 17L17 7M8 7h9v9"/>',
   in: '<path d="M17 7L7 17M16 17H7V8"/>',
+  link: '<path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/>',
   phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.2-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
   sort: '<path d="M4 7h10M4 12h7M4 17h4"/><path d="M17 5v14M14 16l3 3 3-3"/>',
   folder: '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
@@ -439,7 +444,7 @@ function leave(el, fn) {
   requestAnimationFrame(() => { el.style.maxHeight = '0px'; });
   setTimeout(fn, 270);
 }
-function swipeable(row, onDone, label = 'Xong', cls = '') {
+function swipeable(row, onDone, label = 'Xong', cls = '', gate = null) {
   const wrap = $('div', { className: 'sw ' + cls }, [row, $('div', { className: 'sw-bg' }, [svg(ICON.check), label])]);
   const TH = 88, MAX = 150;
   let x0 = 0, y0 = 0, dx = 0, mode = null, active = false, moved = false;
@@ -463,7 +468,7 @@ function swipeable(row, onDone, label = 'Xong', cls = '') {
     active = false;
     if (mode === 'x') {
       row.style.transition = 'transform .25s var(--ease)';
-      if (dx <= -TH) { setX(-row.offsetWidth); leave(wrap, onDone); } else { setX(0); wrap.classList.remove('armed'); }
+      if (dx <= -TH && !(gate && gate())) { setX(-row.offsetWidth); leave(wrap, onDone); } else { setX(0); wrap.classList.remove('armed'); }
     }
     mode = null;
     setTimeout(() => { moved = false; }, 60);
@@ -473,7 +478,33 @@ function swipeable(row, onDone, label = 'Xong', cls = '') {
   row.addEventListener('click', e => { if (moved) { e.stopPropagation(); e.preventDefault(); } }, true);
   return wrap;
 }
-const swipeRow = (j, row) => j.status === 'paid' ? row : swipeable(row, () => setStatus(j, j.status === 'todo' ? 'done' : 'paid'), j.status === 'todo' ? 'Xong' : 'Đã Thu');
+const normLink = v => {
+  let t = String(v || '').trim();
+  if (!t) return '';
+  if (!/^https?:\/\//i.test(t)) t = 'https://' + t;
+  try { const u = new URL(t); return u.hostname.includes('.') ? u.href : ''; } catch (e) { return ''; }
+};
+// chuyển job sang "đã xong": bắt buộc nhập link sản phẩm mới cho qua
+function askLink(j) {
+  const input = $('input', { type: 'text', inputMode: 'url', autocapitalize: 'off', autocomplete: 'off', spellcheck: false, placeholder: 'https://...', value: j.link || '' });
+  const err = $('div', { className: 'err' });
+  const submit = () => {
+    const link = normLink(input.value);
+    if (!link) { err.textContent = 'Bắt buộc phải nhập một link hợp lệ (ví dụ https://drive.google.com/...).'; input.focus(); return; }
+    j.link = link; closeModal(); setStatus(j, 'done');
+  };
+  box.textContent = '';
+  box.className = 'box';
+  box.append($('h3', {}, 'Link Sản Phẩm'),
+    $('div', { className: 'hint' }, 'Dán link sản phẩm đã giao cho khách của job "' + j.title + '" (Google Drive, ảnh, video...). Phải điền thì mới đánh dấu xong được.'),
+    $('label', { className: 'fld' }, [$('span', {}, 'Link *'), input]), err,
+    $('div', { className: 'actions' }, [$('button', { className: 'btn ghost', type: 'button', onclick: closeModal }, 'Huỷ'), $('button', { className: 'btn', type: 'button', onclick: submit }, 'Xác Nhận Đã Xong')]));
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+  input.addEventListener('input', () => { err.textContent = ''; });
+  showModal();
+  input.focus();
+}
+const swipeRow = (j, row) => j.status === 'paid' ? row : swipeable(row, () => setStatus(j, 'paid'), j.status === 'todo' ? 'Xong' : 'Đã Thu', '', j.status === 'todo' ? () => { askLink(j); return true; } : null);
 const tick = (e, fn) => { const c = e.currentTarget; c.classList.add('done'); leave(c.parentElement, fn); };
 
 const lastVals = {};
@@ -518,7 +549,7 @@ const delJob = j => askConfirm('Xoá job "' + j.title + '"? Không thể hoàn t
 const jobActions = j => [
   ['Chi tiết', () => showJob(j)],
   j.status !== 'todo' && ['Về chưa làm', () => setStatus(j, 'todo')],
-  j.status === 'todo' && ['Đánh dấu đã xong', () => setStatus(j, 'done')],
+  j.status === 'todo' && ['Đánh dấu đã xong', () => askLink(j)],
   j.status === 'done' && ['Đã thu tiền', () => setStatus(j, 'paid')],
   j.status === 'paid' && ['Huỷ thu tiền', () => setStatus(j, 'done')],
   ['Sửa', () => jobForm(j)],
@@ -582,13 +613,16 @@ function jobForm(j) {
     field('amount', 'Chi phí (₫) *', { type: 'number', min: 0, step: 'any', required: true, value: v('amount') }),
     field('deposit', 'Tiền cọc (₫)', { type: 'number', min: 0, step: 'any', value: v('deposit', '') }),
     field('deadline', 'Deadline (nếu có)', { type: 'date', value: v('deadline') }, true),
+    field('link', 'Link Sản Phẩm', { type: 'text', inputMode: 'url', autocapitalize: 'off', value: v('link'), placeholder: 'https://... (bắt buộc khi đánh dấu xong)' }, true),
   ]);
   const submit = () => {
     const amount = Number(fields.amount.value), deposit = Number(fields.deposit.value || 0);
     fields.deposit.setCustomValidity(deposit > amount ? 'Tiền cọc lớn hơn chi phí' : '');
+    const lk = fields.link.value.trim();
+    fields.link.setCustomValidity(lk && !normLink(lk) ? 'Link không hợp lệ' : '');
     if (!Object.values(fields).every(e => e.reportValidity())) return;
     const data = { title: fields.title.value.trim(), client: fields.client.value.trim(), phone: fields.phone.value.trim(), address: fields.address.value.trim(),
-      created: fields.created.value, time: fields.time.value, desc: fields.desc.value.trim(), amount, deposit, deadline: fields.deadline.value };
+      created: fields.created.value, time: fields.time.value, desc: fields.desc.value.trim(), amount, deposit, deadline: fields.deadline.value, link: lk ? normLink(lk) : '' };
     if (j) { const had = (j.deposit || 0) > 0; Object.assign(j, data); if (!had && deposit > 0) j.depositDate = today(); }
     else { const nj = { id: Date.now() + Math.random(), status: 'todo', paidDate: null, depositDate: today(), ...data }; state.jobs.push(nj); freshId = nj.id; }
     if (!jobIn({ created: data.created, paidDate: j ? j.paidDate : null })) period = { mode: 'month', ym: data.created.slice(0, 7) };
@@ -613,6 +647,7 @@ function showJob(j) {
     $('div', {}, [
       line('Khách hàng', j.client), line('Số điện thoại', j.phone), line('Địa chỉ', j.address), line('Thời gian', when(j)), line('Deadline', fmtDate(j.deadline)), line('Mô tả', j.desc),
       line('Chi phí', fmt(j.amount)), line('Tiền cọc', fmt(j.deposit || 0)), line('Ngày nhận cọc', j.deposit > 0 ? fmtDate(depDate(j)) : ''), line('Còn phải thu', fmt(owed(j))), line('Ngày thu đủ', fmtDate(j.paidDate)),
+      j.link ? $('div', { className: 'kv' }, [$('span', {}, 'Link Sản Phẩm'), $('a', { href: j.link, target: '_blank', rel: 'noopener', style: 'font-weight:500;text-align:right;word-break:break-all;color:inherit;text-decoration:underline' }, j.link)]) : '',
     ]),
     $('div', { className: 'actions' }, [$('button', { className: 'btn ghost', onclick: closeModal }, 'Đóng'), $('button', { className: 'btn', onclick: () => jobForm(j) }, 'Sửa')]));
   showModal();
@@ -721,8 +756,8 @@ function viewOverview() {
       $('div', { className: 'ic' }, svg(ICON.brief)),
       $('div', { className: 'in lnk', onclick: () => showJob(j) }, [$('div', { className: 'nm' }, j.title), $('small', {}, [when(j), j.client].filter(Boolean).join(' · '))]),
       $('div', { className: 'am' }, [fmt(owed(j)), $('small', {}, 'còn thu')]),
-      $('button', { className: 'ok', title: homeList === 'todo' ? 'Đánh dấu đã xong' : 'Đã thu tiền', onclick: e => leave(e.currentTarget.closest('.sw') || e.currentTarget.closest('.jrow'), () => setStatus(j, homeList === 'todo' ? 'done' : 'paid')) }, svg(ICON.check)),
-    ]), () => setStatus(j, homeList === 'todo' ? 'done' : 'paid'), homeList === 'todo' ? 'Xong' : 'Đã Thu', 'sw-dark')) : [$('div', { className: 'empty dim' }, homeList === 'todo' ? 'Không còn job nào chưa làm' : 'Không có khoản nào đang chờ thu')]),
+      $('button', { className: 'ok', title: homeList === 'todo' ? 'Đánh dấu đã xong' : 'Đã thu tiền', onclick: e => homeList === 'todo' ? askLink(j) : leave(e.currentTarget.closest('.sw') || e.currentTarget.closest('.jrow'), () => setStatus(j, 'paid')) }, svg(ICON.check)),
+    ]), () => homeList === 'todo' ? askLink(j) : setStatus(j, 'paid'), homeList === 'todo' ? 'Xong' : 'Đã Thu', 'sw-dark', homeList === 'todo' ? () => { askLink(j); return true; } : null)) : [$('div', { className: 'empty dim' }, homeList === 'todo' ? 'Không còn job nào chưa làm' : 'Không có khoản nào đang chờ thu')]),
     list.length > 5 ? $('div', { className: 'more', onclick: () => go(homeList) }, 'Xem tất cả (' + list.length + ') ›') : '',
     $('div', { className: 'jtotal' }, [$('span', {}, 'Tổng tiền chờ thu'), $('b', {}, fmt(sumOwed(unpaid)))]),
   ]);
@@ -737,7 +772,7 @@ function viewOverview() {
     $('div', { className: 'mt' }, [$('span', {}, title), $('i', {}, svg(ICON.arrow))]),
     $('div', { className: 'mn' }, fmt(sum(list))), $('small', {}, nextDue(list)),
   ]);
-  const debts = $('div', { className: 'pair2 ga-debt' }, [mini('peach', 'Phải trả (đang vay)', open('vay'), () => { thuFilter = 'vay'; go('thu'); }), mini('lav', 'Cần thu lại (cho vay)', open('chovay'), () => { expFilter = 'chovay'; go('chi'); })]);
+  const debts = $('div', { className: 'pair2 ga-debt' }, [mini('peach', 'Phải trả (đang vay)', open('vay'), () => { thuFilter = 'vay'; go('thu'); }), mini('lav', 'Cần thu lại (cho vay)', open('chovay'), () => go('chi'))]);
 
   return $('div', {}, [reminders(), $('div', { className: 'home' }, [hero, chart, jobsCard, prog, debts])]);
 }
@@ -759,8 +794,9 @@ function viewList(jobs, empty, extra) {
     $('div', { className: 'info' }, [$('div', { className: 'lnk', onclick: () => showJob(j) }, j.title), $('small', {}, [when(j), j.client || '—', j.phone].filter(Boolean).join(' · ') + (j.paidDate ? ' · thu ' + fmtDate(j.paidDate) : ''))]),
     $('span', { className: 'tag ' + j.status }, STATUS[j.status]),
     $('div', { className: 'qacts' }, [
+      j.link ? $('a', { className: 'qbtn', href: j.link, target: '_blank', rel: 'noopener', title: 'Mở Link Sản Phẩm' }, svg(ICON.link)) : '',
       j.phone ? $('a', { className: 'qbtn', href: 'tel:' + j.phone.replace(/[^\d+]/g, ''), title: 'Gọi Khách' }, svg(ICON.phone)) : '',
-      j.status !== 'paid' ? $('button', { className: 'qbtn go', title: j.status === 'todo' ? 'Đánh Dấu Xong' : 'Đã Thu Tiền', onclick: e => leave(e.currentTarget.closest('.sw') || e.currentTarget.closest('.row'), () => setStatus(j, j.status === 'todo' ? 'done' : 'paid')) }, svg(ICON.check)) : '',
+      j.status !== 'paid' ? $('button', { className: 'qbtn go', title: j.status === 'todo' ? 'Đánh Dấu Xong' : 'Đã Thu Tiền', onclick: e => j.status === 'todo' ? askLink(j) : leave(e.currentTarget.closest('.sw') || e.currentTarget.closest('.row'), () => setStatus(j, 'paid')) }, svg(ICON.check)) : '',
     ]),
     $('div', { className: 'amt' }, [fmt(shown(j)), $('small', {}, j.status === 'paid' ? 'đã thu đủ' : 'còn phải thu')]),
     $('button', { className: 'dots', onclick: e => openMenu(e, jobActions(j)) }, '···'),
@@ -831,6 +867,7 @@ const dayCaption = (w, hi, lo) => hi ? $('div', { className: 'daycap' }, [w + ' 
 const bodyCard = (body, empty) => { const c = $('div', { className: 'card' }, banner()); c.append(body.length ? $('div', {}, body) : $('div', { className: 'empty' }, empty)); return c; };
 
 function viewChi() {
+  expFilter = 'all';
   const q = query.toLowerCase(), hit = t => !q || t.toLowerCase().includes(q);
   const lab = expFilter.startsWith('label:') ? expFilter.slice(6) : null;
   const rows = [];
@@ -853,7 +890,6 @@ function viewChi() {
       statCard('peach', 'Chi tiêu thường', sum(state.expenses.filter(x => x.kind === 'chi' && inPeriod(x.date)))),
       statCard('mint', 'Cho vay · cần thu lại', openOf('chovay')),
     ]),
-    chipRow(expFilter, [['all', 'Tất cả'], ...LABELS.map(l => ['label:' + l, l]), ['chovay', 'Cho vay'], ['tra', 'Trả nợ']], k => { expFilter = k; }),
     sortSelect(expSort, sortOpts('Chi'), k => { expSort = k; }),
     dayCaption('Chi', hi, lo),
     bodyCard(body, 'Chưa có khoản chi nào'),
@@ -1241,13 +1277,13 @@ const FAB_KEY = 'tuni-fab', FAB = 58, FM = 12;
 const FAB_ACTIONS = { jobs: ['Tạo Job', () => jobForm()], chi: ['Thêm Khoản Chi', () => expenseForm(null, ['chi', 'chovay'])], thu: ['Thêm Khoản Thu', () => expenseForm(null, ['thu', 'vay'])] };
 const fab = document.getElementById('fab'), fabLabel = document.getElementById('fabLabel');
 fab.querySelector('i').append(svg(ICON.plus));
-let fabPos = { side: 'right', y: Infinity }, fabCur = null, fabIdle = null, fabLabelTimer = null;
+let fabPos = { side: 'right', y: Infinity }, fabX = 0, fabY = 0, fabCur = null, fabIdle = null, fabLabelTimer = null;
 try { const q = JSON.parse(localStorage.getItem(FAB_KEY) || 'null'); if (q && (q.side === 'left' || q.side === 'right') && Number.isFinite(q.y)) fabPos = q; } catch (e) {}
 const fabLimits = () => ({ minY: 96, maxY: Math.max(96, innerHeight - FAB - 118) });
+function fabMove(x, y) { fabX = x; fabY = y; fab.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)'; }
 function placeFab() {
   const { minY, maxY } = fabLimits();
-  fab.style.left = (fabPos.side === 'left' ? FM : innerWidth - FAB - FM) + 'px';
-  fab.style.top = Math.min(maxY, Math.max(minY, fabPos.y === Infinity ? maxY : fabPos.y)) + 'px';
+  fabMove(fabPos.side === 'left' ? FM : innerWidth - FAB - FM, Math.min(maxY, Math.max(minY, fabPos.y === Infinity ? maxY : fabPos.y)));
   fab.classList.toggle('lft', fabPos.side === 'left');
 }
 function wakeFab() { fab.classList.remove('idle'); clearTimeout(fabIdle); fabIdle = setTimeout(() => fab.classList.add('idle'), 3500); }
@@ -1262,35 +1298,46 @@ function updateFab(cur) {
   fabCur = cur;
 }
 (() => {
-  let sx = 0, sy = 0, ox = 0, oy = 0, curX = 0, curY = 0, down = false, dragging = false;
+  let sx = 0, sy = 0, ox = 0, oy = 0, nx = 0, ny = 0, down = false, dragging = false, raf = 0;
+  const flush = () => { raf = 0; fabMove(nx, ny); };
   fab.addEventListener('pointerdown', e => {
-    down = true; dragging = false; sx = e.clientX; sy = e.clientY;
-    const r = fab.getBoundingClientRect(); ox = r.left; oy = r.top; wakeFab();
+    down = true; dragging = false; sx = e.clientX; sy = e.clientY; ox = nx = fabX; oy = ny = fabY; wakeFab();
     try { fab.setPointerCapture(e.pointerId); } catch (_) {}
   });
   fab.addEventListener('pointermove', e => {
     if (!down) return;
     const dx = e.clientX - sx, dy = e.clientY - sy;
-    if (!dragging && Math.hypot(dx, dy) > 8) { dragging = true; fab.classList.add('drag'); fabLabel.classList.remove('show'); }
+    if (!dragging && Math.hypot(dx, dy) > 10) { dragging = true; fab.classList.add('drag'); fabLabel.classList.remove('show'); }
     if (!dragging) return;
+    e.preventDefault();
     const { minY, maxY } = fabLimits();
-    curX = Math.min(innerWidth - FAB - 4, Math.max(4, ox + dx)); curY = Math.min(maxY, Math.max(minY, oy + dy));
-    fab.style.left = curX + 'px'; fab.style.top = curY + 'px';
+    nx = Math.min(innerWidth - FAB - 4, Math.max(4, ox + dx)); ny = Math.min(maxY, Math.max(minY, oy + dy));
+    if (!raf) raf = requestAnimationFrame(flush);   // gom các lần cập nhật vào mỗi khung hình để kéo mượt
   });
   const end = e => {
     if (!down) return;
-    down = false; fab.classList.remove('drag');
+    down = false;
+    if (raf) { cancelAnimationFrame(raf); raf = 0; }
     if (dragging) {
-      fabPos = { side: curX + FAB / 2 < innerWidth / 2 ? 'left' : 'right', y: curY };
+      fabMove(nx, ny); void fab.offsetWidth;   // chốt vị trí ngón tay thả để hiệu ứng hít vào mép bắt đầu từ đúng chỗ đó
+      fab.classList.remove('drag');
+      fabPos = { side: nx + FAB / 2 < innerWidth / 2 ? 'left' : 'right', y: ny };
       try { localStorage.setItem(FAB_KEY, JSON.stringify(fabPos)); } catch (_) {}
       placeFab(); wakeFab();
-    } else if (e.type === 'pointerup' && FAB_ACTIONS[fab.dataset.tab]) FAB_ACTIONS[fab.dataset.tab][1]();
+    } else {
+      fab.classList.remove('drag');
+      if (e.type === 'pointerup' && FAB_ACTIONS[fab.dataset.tab]) FAB_ACTIONS[fab.dataset.tab][1]();
+    }
   };
   fab.addEventListener('pointerup', end);
   fab.addEventListener('pointercancel', end);
   fab.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && FAB_ACTIONS[fab.dataset.tab]) { e.preventDefault(); FAB_ACTIONS[fab.dataset.tab][1](); } });
 })();
 window.addEventListener('resize', () => { placeFab(); movePill(); });
+// chặn thu phóng bằng hai ngón và Ctrl + cuộn để trang luôn đúng một kích thước
+['gesturestart', 'gesturechange', 'gestureend'].forEach(t => document.addEventListener(t, e => e.preventDefault()));
+document.addEventListener('touchmove', e => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
+document.addEventListener('wheel', e => { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
 render();
 </script>
 </body>
