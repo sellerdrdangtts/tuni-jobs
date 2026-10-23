@@ -172,6 +172,20 @@
   .drive p { margin:0 0 18px; line-height:1.6; color:rgba(0,0,0,.65); max-width:520px; }
   a.btn { display:inline-block; text-decoration:none; }
 
+  /* thao tác nhanh, sắp xếp, nhãn */
+  .qacts { display:flex; gap:6px; }
+  .qbtn { width:36px; height:36px; border-radius:50%; border:0; background:#f1f1f2; display:grid; place-items:center; color:var(--ink); cursor:pointer; text-decoration:none; flex:none; transition:transform .14s var(--ease), background .2s, color .2s; }
+  .qbtn svg { width:16px; height:16px; }
+  .qbtn.go { background:var(--black); color:#fff; }
+  .qbtn:active { transform:scale(.9); }
+  .sortbar { display:inline-flex; align-items:center; gap:8px; background:#fff; border-radius:999px; padding:0 6px 0 16px; height:44px; font-size:13px; margin:0 0 14px; max-width:100%; }
+  .sortbar svg { width:16px; height:16px; flex:none; }
+  .sortbar select { border:0; background:transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 8px center / 14px; font:inherit; font-weight:600; padding:0 30px 0 4px; height:100%; -webkit-appearance:none; appearance:none; outline:0; cursor:pointer; color:var(--ink); min-width:0; }
+  .dayhead { display:flex; justify-content:space-between; align-items:center; padding:11px 14px; margin:12px 0 2px; border-radius:16px; background:var(--peach); font-size:13px; }
+  .dayhead b { font-size:14px; }
+  .daycap { font-size:12px; color:var(--mute); margin:-4px 2px 12px; line-height:1.6; }
+  .daycap b { color:var(--ink); }
+
   /* lớp mờ che nội dung dưới dock */
   .veil { position:fixed; left:0; right:0; bottom:0; height:calc(108px + env(safe-area-inset-bottom)); z-index:14; -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); background:linear-gradient(to top, var(--bg) 0, var(--bg) 78%, rgba(238,238,239,0) 100%); -webkit-mask-image:linear-gradient(to top, #000 82%, transparent 100%); mask-image:linear-gradient(to top, #000 82%, transparent 100%); }
 
@@ -323,6 +337,8 @@ const ICON = {
   check: '<path d="M5 12.5l4.5 4.5L19 7"/>',
   arrow: '<path d="M7 17L17 7M8 7h9v9"/>',
   in: '<path d="M17 7L7 17M16 17H7V8"/>',
+  phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.2-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
+  sort: '<path d="M4 7h10M4 12h7M4 17h4"/><path d="M17 5v14M14 16l3 3 3-3"/>',
   folder: '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
 };
 const fmt = n => Number(n).toLocaleString('vi-VN') + ' ₫';
@@ -374,7 +390,7 @@ const incomeEvents = () => state.jobs.flatMap(j => {
 });
 const matches = j => !query || (j.title + ' ' + j.client + ' ' + (j.phone || '')).toLowerCase().includes(query.toLowerCase());
 
-const NAV = [['jobs', 'Job', 'list'], ['drive', 'Drive', 'folder'], ['overview', 'Tổng quan', 'home'], ['chi', 'Chi', 'arrow'], ['thu', 'Thu', 'in']];
+const NAV = [['jobs', 'Job Đang Thực Hiện', 'list'], ['drive', 'Drive', 'folder'], ['overview', 'Tổng Quan', 'home'], ['chi', 'Chi Tiêu', 'arrow'], ['thu', 'Thu Nhập', 'in']];
 const JOB_TABS = ['todo', 'unpaid', 'paid', 'all'];
 const navOf = t => JOB_TABS.includes(t) ? 'jobs' : t;
 let lastJobTab = 'all', homeList = 'todo', chartMode = 'week';
@@ -542,6 +558,7 @@ function expenseForm(x, kinds) {
   const kind = $('select', {}, kinds.map(k => $('option', { value: k, selected: dflt === k }, KIND[k])));
   const hint = $('div', { className: 'hint' });
   const kindF = field('kind', 'Loại', kind, true);
+  const labelF = field('label', 'Nhãn', $('select', {}, LABELS.map(l => $('option', { value: l, selected: (x ? labelOf(x) : 'Ăn Uống') === l }, l))), true);
   const noteF = field('note', 'Nội dung *', $('input', { required: true, value: v('note'), placeholder: 'VD: ăn trưa, vay anh A...' }), true);
   const amountF = field('amount', 'Số tiền (₫) *', $('input', { type: 'number', min: 0, step: 'any', required: true, value: v('amount') }));
   const dateF = field('date', 'Ngày *', $('input', { type: 'date', required: true, value: v('date', period.mode === 'day' ? period.date : today()) }));
@@ -551,6 +568,7 @@ function expenseForm(x, kinds) {
   const sync = () => {
     const debt = kind.value === 'vay' || kind.value === 'chovay';
     personF.style.display = dueF.style.display = debt ? '' : 'none';
+    labelF.style.display = kind.value === 'chi' ? '' : 'none';
     fields.person.required = debt;
     hint.textContent = HINTS[kind.value];
   };
@@ -558,7 +576,7 @@ function expenseForm(x, kinds) {
   const submit = () => {
     if (!Object.values(fields).every(e => e.reportValidity())) return;
     const k = kind.value, debt = k === 'vay' || k === 'chovay';
-    const data = { kind: k, note: fields.note.value.trim(), amount: Number(fields.amount.value), date: fields.date.value, person: debt ? fields.person.value.trim() : '', due: debt ? fields.due.value : '' };
+    const data = { kind: k, note: fields.note.value.trim(), amount: Number(fields.amount.value), date: fields.date.value, person: debt ? fields.person.value.trim() : '', due: debt ? fields.due.value : '', label: k === 'chi' ? fields.label.value : '' };
     if (x) Object.assign(x, data);
     else { const ne = { id: Date.now() + Math.random(), settled: false, settledDate: null, ...data }; state.expenses.push(ne); freshId = ne.id; }
     if (!inPeriod(data.date)) period = { mode: 'month', ym: data.date.slice(0, 7) };
@@ -566,7 +584,7 @@ function expenseForm(x, kinds) {
   };
   box.textContent = '';
   box.className = 'box wide';
-  box.append($('h3', {}, x ? 'Sửa khoản' : 'Thêm khoản'), $('div', { className: 'form-grid' }, [kindF, noteF, amountF, dateF, personF, dueF]), hint,
+  box.append($('h3', {}, x ? 'Sửa khoản' : 'Thêm khoản'), $('div', { className: 'form-grid' }, [kindF, labelF, noteF, amountF, dateF, personF, dueF]), hint,
     $('div', { className: 'actions' }, [$('button', { className: 'btn ghost', type: 'button', onclick: closeModal }, 'Huỷ'), $('button', { className: 'btn', type: 'button', onclick: submit }, x ? 'Lưu' : 'Thêm')]));
   showModal();
   fields.note.focus();
@@ -673,13 +691,26 @@ function viewList(jobs, empty, extra) {
     $('div', { className: 'ic' }, svg(ICON.brief)),
     $('div', { className: 'info' }, [$('div', { className: 'lnk', onclick: () => showJob(j) }, j.title), $('small', {}, [when(j), j.client || '—', j.phone].filter(Boolean).join(' · ') + (j.paidDate ? ' · thu ' + fmtDate(j.paidDate) : ''))]),
     $('span', { className: 'tag ' + j.status }, STATUS[j.status]),
+    $('div', { className: 'qacts' }, [
+      j.phone ? $('a', { className: 'qbtn', href: 'tel:' + j.phone.replace(/[^\d+]/g, ''), title: 'Gọi Khách' }, svg(ICON.phone)) : '',
+      j.status !== 'paid' ? $('button', { className: 'qbtn go', title: j.status === 'todo' ? 'Đánh Dấu Xong' : 'Đã Thu Tiền', onclick: e => leave(e.currentTarget.closest('.row'), () => setStatus(j, j.status === 'todo' ? 'done' : 'paid')) }, svg(ICON.check)) : '',
+    ]),
     $('div', { className: 'amt' }, [fmt(shown(j)), $('small', {}, j.status === 'paid' ? 'đã thu đủ' : 'còn phải thu')]),
     $('button', { className: 'dots', onclick: e => openMenu(e, jobActions(j)) }, '···'),
   ]))) : $('div', { className: 'empty' }, empty));
   return card;
 }
-const viewJobs = (jobs, empty, extra) => $('div', {}, [jobChips(), viewList(jobs, empty, extra)]);
-let expFilter = 'all', thuFilter = 'all';
+let jobSort = 'date-desc';
+const sortSelect = (cur, opts, set) => $('label', { className: 'sortbar' }, [svg(ICON.sort), $('span', {}, 'Sắp Xếp'),
+  $('select', { onchange: e => { set(e.target.value); render(); } }, opts.map(([k, l]) => $('option', { value: k, selected: cur === k }, l)))]);
+const jobKey = j => (j.created || '') + ' ' + (j.time || '');
+const sortJobs = a => a.slice().sort(jobSort === 'date-asc' ? (x, y) => jobKey(x).localeCompare(jobKey(y)) : jobSort === 'amt-desc' ? (x, y) => y.amount - x.amount : jobSort === 'amt-asc' ? (x, y) => x.amount - y.amount : (x, y) => jobKey(y).localeCompare(jobKey(x)));
+const viewJobs = (jobs, empty, extra) => $('div', {}, [jobChips(),
+  sortSelect(jobSort, [['date-desc', 'Ngày Thực Hiện: Mới Nhất'], ['date-asc', 'Ngày Thực Hiện: Cũ Nhất'], ['amt-desc', 'Số Tiền: Cao Nhất'], ['amt-asc', 'Số Tiền: Thấp Nhất']], k => { jobSort = k; }),
+  viewList(sortJobs(jobs), empty, extra)]);
+let expFilter = 'all', thuFilter = 'all', expSort = 'date-desc', labelFilter = 'all';
+const LABELS = ['Ăn Uống', 'Đi Lại', 'Mua Sắm', 'Khác'];
+const labelOf = x => x.label || 'Khác';
 const tabForKind = k => k === 'vay' || k === 'thu' ? 'thu' : 'chi';
 const statCard = (cls, label, n) => $('div', { className: 'card ' + cls }, [$('div', { className: 'sub' }, label), $('div', { className: 'stat-n' }, fmt(n))]);
 const chipRow = (cur, opts, set, ctaLabel, onCta) => $('div', { className: 'chips' }, [
@@ -702,7 +733,7 @@ function entryRow(x) {
   const sign = x.kind === 'vay' || x.kind === 'thu' ? '+' : '-';
   const who = x.person ? (x.kind === 'vay' ? 'vay của ' + x.person : 'cho ' + x.person + ' vay') : '';
   const info = [fmtDate(x.date), who, x.settled ? (x.kind === 'vay' ? 'đã trả ' : 'đã thu lại ') + fmtDate(x.settledDate) : dueText(x)].filter(Boolean).join(' · ');
-  return listRow({ id: x.id, title: x.note, sub: info, tag: KIND[x.kind] + (x.settled ? ' ✓' : ''), tagCls: x.kind, amount: sign + fmt(x.amount), items: entryItems(x) });
+  return listRow({ id: x.id, title: x.note, sub: info, tag: x.kind === 'chi' ? labelOf(x) : KIND[x.kind] + (x.settled ? ' ✓' : ''), tagCls: x.kind, amount: sign + fmt(x.amount), items: entryItems(x) });
 }
 const listCard = (rows, empty) => {
   const card = $('div', { className: 'card' }, banner());
@@ -717,23 +748,41 @@ function viewChi() {
   const rows = [];
   for (const x of state.expenses) {
     if (x.kind === 'thu' || x.kind === 'vay') continue;
-    if ((expFilter === 'all' || expFilter === x.kind) && visible(x) && hit(x.note + ' ' + (x.person || ''))) rows.push({ date: x.date, el: entryRow(x) });
+    if (labelFilter !== 'all' && !(x.kind === 'chi' && labelOf(x) === labelFilter)) continue;
+    if ((expFilter === 'all' || expFilter === x.kind) && visible(x) && hit(x.note + ' ' + (x.person || ''))) rows.push({ date: x.date, amount: x.amount, el: entryRow(x) });
   }
-  if (expFilter === 'all' || expFilter === 'tra') {
+  if (labelFilter === 'all' && (expFilter === 'all' || expFilter === 'tra')) {
     for (const x of state.expenses) {
       if (x.kind === 'vay' && x.settled && x.settledDate && inPeriod(x.settledDate) && hit(x.note + ' ' + (x.person || ''))) {
-        rows.push({ date: x.settledDate, el: listRow({ id: x.id, title: 'Trả Nợ · ' + (x.person || x.note), sub: fmtDate(x.settledDate) + ' · ' + x.note, tag: 'Trả nợ', tagCls: 'vay', amount: '-' + fmt(x.amount), items: [['Huỷ đã trả', () => settle(x, false)], ['Sửa khoản vay', () => expenseForm(x)]] }) });
+        rows.push({ date: x.settledDate, amount: x.amount, el: listRow({ id: x.id, title: 'Trả Nợ · ' + (x.person || x.note), sub: fmtDate(x.settledDate) + ' · ' + x.note, tag: 'Trả nợ', tagCls: 'vay', amount: '-' + fmt(x.amount), items: [['Huỷ đã trả', () => settle(x, false)], ['Sửa khoản vay', () => expenseForm(x)]] }) });
       }
     }
   }
+  // tổng chi theo từng ngày để tìm ngày chi nhiều nhất / ít nhất
+  const days = {};
+  rows.forEach(r => { const d = days[r.date] || (days[r.date] = { date: r.date, total: 0, rows: [] }); d.total += r.amount; d.rows.push(r); });
+  const dayList = Object.values(days);
+  let body;
+  if (expSort === 'day-high' || expSort === 'day-low') {
+    dayList.sort((a, b) => expSort === 'day-high' ? b.total - a.total : a.total - b.total);
+    body = dayList.flatMap(d => [$('div', { className: 'dayhead' }, [$('span', {}, fmtDate(d.date)), $('b', {}, fmt(d.total))]), ...d.rows.sort((a, b) => b.amount - a.amount).map(r => r.el)]);
+  } else {
+    body = rows.sort((a, b) => expSort === 'date-asc' ? a.date.localeCompare(b.date) : b.date.localeCompare(a.date)).map(r => r.el);
+  }
+  const hi = dayList.reduce((m, d) => !m || d.total > m.total ? d : m, null), lo = dayList.reduce((m, d) => !m || d.total < m.total ? d : m, null);
+  const card = $('div', { className: 'card' }, banner());
+  card.append(body.length ? $('div', {}, body) : $('div', { className: 'empty' }, 'Chưa có khoản chi nào'));
   return $('div', {}, [
     $('div', { className: 'stat3' }, [
       statCard('black', 'Tổng chi (kỳ đang xem)', sum(outflows().filter(e => inPeriod(e.date)))),
       statCard('peach', 'Chi tiêu thường', sum(state.expenses.filter(x => x.kind === 'chi' && inPeriod(x.date)))),
       statCard('mint', 'Cho vay · cần thu lại', openOf('chovay')),
     ]),
-    chipRow(expFilter, [['all', 'Tất cả'], ['chi', 'Chi'], ['chovay', 'Cho vay'], ['tra', 'Trả nợ']], k => { expFilter = k; }, '+ Thêm khoản chi', () => expenseForm(null, ['chi', 'chovay'])),
-    listCard(rows, 'Chưa có khoản chi nào'),
+    chipRow(expFilter, [['all', 'Tất cả'], ['chi', 'Chi'], ['chovay', 'Cho vay'], ['tra', 'Trả nợ']], k => { expFilter = k; if (k !== 'all' && k !== 'chi') labelFilter = 'all'; }, '+ Thêm khoản chi', () => expenseForm(null, ['chi', 'chovay'])),
+    $('div', { className: 'chips' }, [['all', 'Mọi Nhãn'], ...LABELS.map(l => [l, l])].map(([k, l]) => $('button', { className: labelFilter === k ? 'on' : '', onclick: () => { labelFilter = k; if (k !== 'all') expFilter = 'chi'; render(); } }, l))),
+    sortSelect(expSort, [['date-desc', 'Ngày: Mới Nhất'], ['date-asc', 'Ngày: Cũ Nhất'], ['day-high', 'Ngày Chi Nhiều Nhất'], ['day-low', 'Ngày Chi Ít Nhất']], k => { expSort = k; }),
+    hi ? $('div', { className: 'daycap' }, ['Chi nhiều nhất: ', $('b', {}, fmtDate(hi.date) + ' · ' + fmt(hi.total)), '   ·   Chi ít nhất: ', $('b', {}, fmtDate(lo.date) + ' · ' + fmt(lo.total))]) : '',
+    card,
   ]);
 }
 
@@ -795,10 +844,10 @@ function renderNav() {
   badge.textContent = c ? String(c) : ''; badge.style.display = c ? '' : 'none';
   movePill();
   const TITLES = { overview: ['Xin Chào! 👋', greet() + ' · ' + new Date().toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric' })],
-    jobs: ['Job', byStatus('todo').length + ' chưa làm · ' + byStatus('done').length + ' chờ thu tiền'],
+    jobs: ['Job Đang Thực Hiện', byStatus('todo').length + ' chưa làm · ' + byStatus('done').length + ' chờ thu tiền'],
     drive: ['Drive', 'Sắp có: kết nối Google Drive'],
-    chi: ['Chi', 'Chi tiêu, cho vay và trả nợ'],
-    thu: ['Thu', 'Thu từ job, vay và thu khác'] };
+    chi: ['Chi Tiêu', 'Chi tiêu, cho vay và trả nợ'],
+    thu: ['Thu Nhập', 'Thu từ job, vay và thu khác'] };
   document.getElementById('title').textContent = TITLES[cur][0];
   document.getElementById('subtitle').textContent = TITLES[cur][1];
 }
