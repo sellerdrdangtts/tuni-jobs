@@ -480,31 +480,32 @@ function swipeable(row, onDone, label = 'Xong', cls = '', gate = null) {
 }
 const normLink = v => {
   let t = String(v || '').trim();
-  if (!t) return '';
+  if (!t || /\s/.test(t)) return '';
   if (!/^https?:\/\//i.test(t)) t = 'https://' + t;
   try { const u = new URL(t); return u.hostname.includes('.') ? u.href : ''; } catch (e) { return ''; }
 };
-// chuyển job sang "đã xong": bắt buộc nhập link sản phẩm mới cho qua
-function askLink(j) {
-  const input = $('input', { type: 'text', inputMode: 'url', autocapitalize: 'off', autocomplete: 'off', spellcheck: false, placeholder: 'https://...', value: j.link || '' });
+const deliverOf = j => j.deliver || j.link || '';   // job cũ lưu ở trường link
+const urlOf = t => normLink(t);                       // chỉ coi là link khi nội dung là một đường dẫn
+// chuyển job sang "đã xong": bắt buộc điền nội dung bàn giao (bất kỳ chữ nào) mới cho qua
+function askDone(j) {
+  const input = $('textarea', { rows: 3, autocomplete: 'off', placeholder: 'Ví dụ: đã giao 120 ảnh qua Zalo, hoặc dán link Drive...', value: deliverOf(j) });
   const err = $('div', { className: 'err' });
   const submit = () => {
-    const link = normLink(input.value);
-    if (!link) { err.textContent = 'Bắt buộc phải nhập một link hợp lệ (ví dụ https://drive.google.com/...).'; input.focus(); return; }
-    j.link = link; closeModal(); setStatus(j, 'done');
+    const text = input.value.trim();
+    if (!text) { err.textContent = 'Bắt buộc phải điền nội dung mới đánh dấu xong được.'; input.focus(); return; }
+    j.deliver = text; delete j.link; closeModal(); setStatus(j, 'done');
   };
   box.textContent = '';
   box.className = 'box';
-  box.append($('h3', {}, 'Link Sản Phẩm'),
-    $('div', { className: 'hint' }, 'Dán link sản phẩm đã giao cho khách của job "' + j.title + '" (Google Drive, ảnh, video...). Phải điền thì mới đánh dấu xong được.'),
-    $('label', { className: 'fld' }, [$('span', {}, 'Link *'), input]), err,
+  box.append($('h3', {}, 'Nội Dung Bàn Giao'),
+    $('div', { className: 'hint' }, 'Ghi lại nội dung đã giao cho khách của job "' + j.title + '" (link, ghi chú, số lượng ảnh...). Phải điền thì mới đánh dấu xong được.'),
+    $('label', { className: 'fld' }, [$('span', {}, 'Nội dung *'), input]), err,
     $('div', { className: 'actions' }, [$('button', { className: 'btn ghost', type: 'button', onclick: closeModal }, 'Huỷ'), $('button', { className: 'btn', type: 'button', onclick: submit }, 'Xác Nhận Đã Xong')]));
-  input.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
   input.addEventListener('input', () => { err.textContent = ''; });
   showModal();
   input.focus();
 }
-const swipeRow = (j, row) => j.status === 'paid' ? row : swipeable(row, () => setStatus(j, 'paid'), j.status === 'todo' ? 'Xong' : 'Đã Thu', '', j.status === 'todo' ? () => { askLink(j); return true; } : null);
+const swipeRow = (j, row) => j.status === 'paid' ? row : swipeable(row, () => setStatus(j, 'paid'), j.status === 'todo' ? 'Xong' : 'Đã Thu', '', j.status === 'todo' ? () => { askDone(j); return true; } : null);
 const tick = (e, fn) => { const c = e.currentTarget; c.classList.add('done'); leave(c.parentElement, fn); };
 
 const lastVals = {};
@@ -549,7 +550,7 @@ const delJob = j => askConfirm('Xoá job "' + j.title + '"? Không thể hoàn t
 const jobActions = j => [
   ['Chi tiết', () => showJob(j)],
   j.status !== 'todo' && ['Về chưa làm', () => setStatus(j, 'todo')],
-  j.status === 'todo' && ['Đánh dấu đã xong', () => askLink(j)],
+  j.status === 'todo' && ['Đánh dấu đã xong', () => askDone(j)],
   j.status === 'done' && ['Đã thu tiền', () => setStatus(j, 'paid')],
   j.status === 'paid' && ['Huỷ thu tiền', () => setStatus(j, 'done')],
   ['Sửa', () => jobForm(j)],
@@ -613,16 +614,14 @@ function jobForm(j) {
     field('amount', 'Chi phí (₫) *', { type: 'number', min: 0, step: 'any', required: true, value: v('amount') }),
     field('deposit', 'Tiền cọc (₫)', { type: 'number', min: 0, step: 'any', value: v('deposit', '') }),
     field('deadline', 'Deadline (nếu có)', { type: 'date', value: v('deadline') }, true),
-    field('link', 'Link Sản Phẩm', { type: 'text', inputMode: 'url', autocapitalize: 'off', value: v('link'), placeholder: 'https://... (bắt buộc khi đánh dấu xong)' }, true),
+    field('deliver', 'Nội Dung Bàn Giao', { rows: 2, value: j ? deliverOf(j) : '', placeholder: 'Điền khi đánh dấu xong (link, ghi chú...)' }, true, 'textarea'),
   ]);
   const submit = () => {
     const amount = Number(fields.amount.value), deposit = Number(fields.deposit.value || 0);
     fields.deposit.setCustomValidity(deposit > amount ? 'Tiền cọc lớn hơn chi phí' : '');
-    const lk = fields.link.value.trim();
-    fields.link.setCustomValidity(lk && !normLink(lk) ? 'Link không hợp lệ' : '');
     if (!Object.values(fields).every(e => e.reportValidity())) return;
     const data = { title: fields.title.value.trim(), client: fields.client.value.trim(), phone: fields.phone.value.trim(), address: fields.address.value.trim(),
-      created: fields.created.value, time: fields.time.value, desc: fields.desc.value.trim(), amount, deposit, deadline: fields.deadline.value, link: lk ? normLink(lk) : '' };
+      created: fields.created.value, time: fields.time.value, desc: fields.desc.value.trim(), amount, deposit, deadline: fields.deadline.value, deliver: fields.deliver.value.trim(), link: '' };
     if (j) { const had = (j.deposit || 0) > 0; Object.assign(j, data); if (!had && deposit > 0) j.depositDate = today(); }
     else { const nj = { id: Date.now() + Math.random(), status: 'todo', paidDate: null, depositDate: today(), ...data }; state.jobs.push(nj); freshId = nj.id; }
     if (!jobIn({ created: data.created, paidDate: j ? j.paidDate : null })) period = { mode: 'month', ym: data.created.slice(0, 7) };
@@ -647,7 +646,7 @@ function showJob(j) {
     $('div', {}, [
       line('Khách hàng', j.client), line('Số điện thoại', j.phone), line('Địa chỉ', j.address), line('Thời gian', when(j)), line('Deadline', fmtDate(j.deadline)), line('Mô tả', j.desc),
       line('Chi phí', fmt(j.amount)), line('Tiền cọc', fmt(j.deposit || 0)), line('Ngày nhận cọc', j.deposit > 0 ? fmtDate(depDate(j)) : ''), line('Còn phải thu', fmt(owed(j))), line('Ngày thu đủ', fmtDate(j.paidDate)),
-      j.link ? $('div', { className: 'kv' }, [$('span', {}, 'Link Sản Phẩm'), $('a', { href: j.link, target: '_blank', rel: 'noopener', style: 'font-weight:500;text-align:right;word-break:break-all;color:inherit;text-decoration:underline' }, j.link)]) : '',
+      deliverOf(j) ? $('div', { className: 'kv' }, [$('span', {}, 'Nội Dung Bàn Giao'), urlOf(deliverOf(j)) ? $('a', { href: urlOf(deliverOf(j)), target: '_blank', rel: 'noopener', style: 'font-weight:500;text-align:right;word-break:break-all;color:inherit;text-decoration:underline' }, deliverOf(j)) : $('b', {}, deliverOf(j))]) : '',
     ]),
     $('div', { className: 'actions' }, [$('button', { className: 'btn ghost', onclick: closeModal }, 'Đóng'), $('button', { className: 'btn', onclick: () => jobForm(j) }, 'Sửa')]));
   showModal();
@@ -756,8 +755,8 @@ function viewOverview() {
       $('div', { className: 'ic' }, svg(ICON.brief)),
       $('div', { className: 'in lnk', onclick: () => showJob(j) }, [$('div', { className: 'nm' }, j.title), $('small', {}, [when(j), j.client].filter(Boolean).join(' · '))]),
       $('div', { className: 'am' }, [fmt(owed(j)), $('small', {}, 'còn thu')]),
-      $('button', { className: 'ok', title: homeList === 'todo' ? 'Đánh dấu đã xong' : 'Đã thu tiền', onclick: e => homeList === 'todo' ? askLink(j) : leave(e.currentTarget.closest('.sw') || e.currentTarget.closest('.jrow'), () => setStatus(j, 'paid')) }, svg(ICON.check)),
-    ]), () => homeList === 'todo' ? askLink(j) : setStatus(j, 'paid'), homeList === 'todo' ? 'Xong' : 'Đã Thu', 'sw-dark', homeList === 'todo' ? () => { askLink(j); return true; } : null)) : [$('div', { className: 'empty dim' }, homeList === 'todo' ? 'Không còn job nào chưa làm' : 'Không có khoản nào đang chờ thu')]),
+      $('button', { className: 'ok', title: homeList === 'todo' ? 'Đánh dấu đã xong' : 'Đã thu tiền', onclick: e => homeList === 'todo' ? askDone(j) : leave(e.currentTarget.closest('.sw') || e.currentTarget.closest('.jrow'), () => setStatus(j, 'paid')) }, svg(ICON.check)),
+    ]), () => homeList === 'todo' ? askDone(j) : setStatus(j, 'paid'), homeList === 'todo' ? 'Xong' : 'Đã Thu', 'sw-dark', homeList === 'todo' ? () => { askDone(j); return true; } : null)) : [$('div', { className: 'empty dim' }, homeList === 'todo' ? 'Không còn job nào chưa làm' : 'Không có khoản nào đang chờ thu')]),
     list.length > 5 ? $('div', { className: 'more', onclick: () => go(homeList) }, 'Xem tất cả (' + list.length + ') ›') : '',
     $('div', { className: 'jtotal' }, [$('span', {}, 'Tổng tiền chờ thu'), $('b', {}, fmt(sumOwed(unpaid)))]),
   ]);
@@ -794,9 +793,9 @@ function viewList(jobs, empty, extra) {
     $('div', { className: 'info' }, [$('div', { className: 'lnk', onclick: () => showJob(j) }, j.title), $('small', {}, [when(j), j.client || '—', j.phone].filter(Boolean).join(' · ') + (j.paidDate ? ' · thu ' + fmtDate(j.paidDate) : ''))]),
     $('span', { className: 'tag ' + j.status }, STATUS[j.status]),
     $('div', { className: 'qacts' }, [
-      j.link ? $('a', { className: 'qbtn', href: j.link, target: '_blank', rel: 'noopener', title: 'Mở Link Sản Phẩm' }, svg(ICON.link)) : '',
+      urlOf(deliverOf(j)) ? $('a', { className: 'qbtn', href: urlOf(deliverOf(j)), target: '_blank', rel: 'noopener', title: 'Mở Link' }, svg(ICON.link)) : '',
       j.phone ? $('a', { className: 'qbtn', href: 'tel:' + j.phone.replace(/[^\d+]/g, ''), title: 'Gọi Khách' }, svg(ICON.phone)) : '',
-      j.status !== 'paid' ? $('button', { className: 'qbtn go', title: j.status === 'todo' ? 'Đánh Dấu Xong' : 'Đã Thu Tiền', onclick: e => j.status === 'todo' ? askLink(j) : leave(e.currentTarget.closest('.sw') || e.currentTarget.closest('.row'), () => setStatus(j, 'paid')) }, svg(ICON.check)) : '',
+      j.status !== 'paid' ? $('button', { className: 'qbtn go', title: j.status === 'todo' ? 'Đánh Dấu Xong' : 'Đã Thu Tiền', onclick: e => j.status === 'todo' ? askDone(j) : leave(e.currentTarget.closest('.sw') || e.currentTarget.closest('.row'), () => setStatus(j, 'paid')) }, svg(ICON.check)) : '',
     ]),
     $('div', { className: 'amt' }, [fmt(shown(j)), $('small', {}, j.status === 'paid' ? 'đã thu đủ' : 'còn phải thu')]),
     $('button', { className: 'dots', onclick: e => openMenu(e, jobActions(j)) }, '···'),
