@@ -264,6 +264,13 @@
   .btn, .act, .chips button, .seg button, .jt button, .tag, #menu button, .title-block h1, .title-block p, .card h3, #modal h3:not(.raw), .fld > span, .card .sub, .hero .lbl,
   .cnt span, .mini .mt span, .mini small, .legend span, .banner span, .banner a, .empty, .more, .jtotal span, .remain span, .kv span, .sumline span, .am small, .amt small, .alert, .cal-title, .row .info small, .jrow small { text-transform:capitalize; }
 
+  .sortbar span { white-space:nowrap; }
+  @media (max-width: 340px) {
+    .jobchips button { font-size:10.5px !important; letter-spacing:-.2px; }
+    .ibtn { width:42px; height:42px; } .top-r { gap:6px; } .brand { height:30px; }
+    .sortbar select { font-size:14px !important; }
+  }
+
   /* motion */
   @keyframes fade { from { opacity:0; } }
   @keyframes pop { from { opacity:0; transform:translateY(8px) scale(.96); } }
@@ -300,6 +307,8 @@
     .stat3 .card { padding:18px; }
     .stat3 .stat-n { font-size:19px; }
     .chips button { padding:9px 13px; font-size:12.5px; }
+    .jobchips { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:6px; }
+    .jobchips button { padding:10px 2px; font-size:11.5px; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .title-block h1 { font-size:30px; }
     .row { flex-wrap:wrap; }
     .row .info { flex:1 1 calc(100% - 60px); }
@@ -737,7 +746,7 @@ function banner() {
   return $('div', { className: 'banner' }, period.mode === 'all' ? [$('span', {}, 'Đang xem tất cả thời gian')] :
     [$('span', {}, ['Đang xem: ', $('b', {}, periodLabel())]), $('a', { onclick: () => { period = { mode: 'all' }; render(); } }, 'Xem tất cả thời gian')]);
 }
-const jobChips = () => $('div', { className: 'chips' }, [
+const jobChips = () => $('div', { className: 'chips jobchips' }, [
   ...[['all', 'Tất cả', state.jobs.length], ['todo', 'Chưa làm', byStatus('todo').length], ['unpaid', 'Chờ thu', byStatus('done').length], ['paid', 'Đã thu', byStatus('paid').length]]
     .map(([k, l, c]) => $('button', { className: tab === k ? 'on' : '', onclick: () => go(k) }, l + ' ' + c)),
 ]);
