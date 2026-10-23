@@ -170,6 +170,9 @@
   .drive p { margin:0 0 18px; line-height:1.6; color:rgba(0,0,0,.65); max-width:520px; }
   a.btn { display:inline-block; text-decoration:none; }
 
+  /* lớp mờ che nội dung dưới dock */
+  .veil { position:fixed; left:0; right:0; bottom:0; height:calc(108px + env(safe-area-inset-bottom)); z-index:14; -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); background:linear-gradient(to top, var(--bg) 0, var(--bg) 78%, rgba(238,238,239,0) 100%); -webkit-mask-image:linear-gradient(to top, #000 82%, transparent 100%); mask-image:linear-gradient(to top, #000 82%, transparent 100%); }
+
   /* dock */
   .dock { position:fixed; left:50%; bottom:calc(14px + env(safe-area-inset-bottom)); transform:translateX(-50%); width:min(calc(100% - 20px),390px); height:78px; background:var(--black); border-radius:39px; padding:9px; display:flex; z-index:15; box-shadow:0 16px 36px rgba(0,0,0,.28); }
   .dock .nav { flex:1; height:60px; border:0; background:none; color:#fff; border-radius:50%; position:relative; z-index:1; cursor:pointer; display:grid; place-items:center; transition:color .45s var(--ease), transform .12s; }
@@ -284,6 +287,7 @@
   </div>
   <div id="main"></div>
 </div>
+<div class="veil"></div>
 <nav class="dock" id="nav"></nav>
 <div id="menu"></div>
 <div id="modal"><div class="box" id="box"></div></div>
@@ -354,10 +358,11 @@ const inflows = () => incomeEvents().concat(loanIn());
 const settle = (x, on = true) => { x.settled = on; x.settledDate = on ? today() : null; save(); render(); };
 const fmtDate = d => d ? d.split('-').reverse().join('/') : '';
 const when = j => fmtDate(j.created) + (j.time ? ' ' + j.time : '');
-// tiền cọc tính vào ngày tạo job, phần còn lại tính vào ngày thu đủ
+// tiền cọc tính vào ngày thực bấm Tạo job (depositDate), phần còn lại tính vào ngày bấm Đã thu tiền. Job cũ chưa có depositDate thì lấy ngày của job.
+const depDate = j => j.depositDate || j.created;
 const incomeEvents = () => state.jobs.flatMap(j => {
   const dep = Math.min(j.deposit || 0, j.amount);
-  return [dep > 0 && { date: j.created, amount: dep }, j.status === 'paid' && j.paidDate && { date: j.paidDate, amount: j.amount - dep }].filter(Boolean);
+  return [dep > 0 && { date: depDate(j), amount: dep }, j.status === 'paid' && j.paidDate && { date: j.paidDate, amount: j.amount - dep }].filter(Boolean);
 });
 const matches = j => !query || (j.title + ' ' + j.client + ' ' + (j.phone || '')).toLowerCase().includes(query.toLowerCase());
 
@@ -479,7 +484,7 @@ function jobForm(j) {
     field('client', 'Khách hàng', { value: v('client') }),
     field('phone', 'Số điện thoại', { type: 'tel', value: v('phone') }),
     field('address', 'Địa chỉ', { value: v('address') }, true),
-    field('created', 'Ngày *', { type: 'date', required: true, value: v('created', period.mode === 'day' ? period.date : today()) }),
+    field('created', 'Ngày thực hiện *', { type: 'date', required: true, value: v('created', period.mode === 'day' ? period.date : today()) }),
     field('time', 'Giờ', { type: 'time', value: v('time') }),
     field('desc', 'Mô tả', { rows: 3, value: v('desc') }, true, 'textarea'),
     field('amount', 'Chi phí (₫) *', { type: 'number', min: 0, step: 'any', required: true, value: v('amount') }),
@@ -492,8 +497,8 @@ function jobForm(j) {
     if (!Object.values(fields).every(e => e.reportValidity())) return;
     const data = { title: fields.title.value.trim(), client: fields.client.value.trim(), phone: fields.phone.value.trim(), address: fields.address.value.trim(),
       created: fields.created.value, time: fields.time.value, desc: fields.desc.value.trim(), amount, deposit, deadline: fields.deadline.value };
-    if (j) Object.assign(j, data);
-    else { const nj = { id: Date.now() + Math.random(), status: 'todo', paidDate: null, ...data }; state.jobs.push(nj); freshId = nj.id; }
+    if (j) { const had = (j.deposit || 0) > 0; Object.assign(j, data); if (!had && deposit > 0) j.depositDate = today(); }
+    else { const nj = { id: Date.now() + Math.random(), status: 'todo', paidDate: null, depositDate: today(), ...data }; state.jobs.push(nj); freshId = nj.id; }
     if (!jobIn({ created: data.created, paidDate: j ? j.paidDate : null })) period = { mode: 'month', ym: data.created.slice(0, 7) };
     closeModal(); save(); render();
   };
@@ -501,6 +506,7 @@ function jobForm(j) {
   box.className = 'box wide';
   box.append($('h3', {}, j ? 'Sửa job' : 'Tạo job mới'), grid,
     $('div', { className: 'remain' }, [$('span', {}, 'Còn phải thu (chi phí − tiền cọc)'), remain]),
+    $('div', { className: 'hint' }, 'Tiền cọc được tính vào ngày bạn bấm ' + (j ? 'Lưu' : 'Tạo job') + '. Phần còn lại tính vào ngày bạn bấm Đã thu tiền.'),
     $('div', { className: 'actions' }, [$('button', { className: 'btn ghost', type: 'button', onclick: closeModal }, 'Huỷ'), $('button', { className: 'btn', type: 'button', onclick: submit }, j ? 'Lưu' : 'Tạo job')]));
   fields.amount.oninput = fields.deposit.oninput = upd;
   upd();
@@ -514,7 +520,7 @@ function showJob(j) {
   box.append($('h3', {}, j.title), $('span', { className: 'tag ' + j.status, style: 'justify-self:start' }, STATUS[j.status]),
     $('div', {}, [
       line('Khách hàng', j.client), line('Số điện thoại', j.phone), line('Địa chỉ', j.address), line('Thời gian', when(j)), line('Deadline', fmtDate(j.deadline)), line('Mô tả', j.desc),
-      line('Chi phí', fmt(j.amount)), line('Tiền cọc', fmt(j.deposit || 0)), line('Còn phải thu', fmt(owed(j))), line('Ngày thu đủ', fmtDate(j.paidDate)),
+      line('Chi phí', fmt(j.amount)), line('Tiền cọc', fmt(j.deposit || 0)), line('Ngày nhận cọc', j.deposit > 0 ? fmtDate(depDate(j)) : ''), line('Còn phải thu', fmt(owed(j))), line('Ngày thu đủ', fmtDate(j.paidDate)),
     ]),
     $('div', { className: 'actions' }, [$('button', { className: 'btn ghost', onclick: closeModal }, 'Đóng'), $('button', { className: 'btn', onclick: () => jobForm(j) }, 'Sửa')]));
   showModal();
@@ -729,7 +735,7 @@ function viewThu() {
   if (thuFilter === 'all' || thuFilter === 'job') {
     for (const j of state.jobs) {
       const dep = Math.min(j.deposit || 0, j.amount), name = j.title + ' ' + (j.client || '');
-      if (dep > 0 && inPeriod(j.created) && hit(name)) rows.push({ date: j.created, el: listRow({ id: j.id, title: 'Cọc · ' + j.title, sub: [fmtDate(j.created), j.client].filter(Boolean).join(' · '), tag: 'Từ job', tagCls: 'thu', amount: '+' + fmt(dep), items: [['Xem job', () => showJob(j)]] }) });
+      if (dep > 0 && inPeriod(depDate(j)) && hit(name)) rows.push({ date: depDate(j), el: listRow({ id: j.id, title: 'Cọc · ' + j.title, sub: [fmtDate(depDate(j)), j.client].filter(Boolean).join(' · '), tag: 'Từ job', tagCls: 'thu', amount: '+' + fmt(dep), items: [['Xem job', () => showJob(j)]] }) });
       if (j.status === 'paid' && j.paidDate && j.amount - dep > 0 && inPeriod(j.paidDate) && hit(name)) rows.push({ date: j.paidDate, el: listRow({ id: j.id + 'p', title: 'Thu đủ · ' + j.title, sub: [fmtDate(j.paidDate), j.client].filter(Boolean).join(' · '), tag: 'Từ job', tagCls: 'thu', amount: '+' + fmt(j.amount - dep), items: [['Xem job', () => showJob(j)], ['Huỷ thu tiền', () => setStatus(j, 'done')]] }) });
     }
   }
@@ -822,7 +828,7 @@ const WD = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
 const setPeriod = p => { period = p; cal.style.display = 'none'; render(); };
 function activityDays(ym) {
   const s = new Set();
-  for (const j of state.jobs) { if (j.created.startsWith(ym)) s.add(j.created); if (j.paidDate && j.paidDate.startsWith(ym)) s.add(j.paidDate); }
+  for (const j of state.jobs) { if (j.created.startsWith(ym)) s.add(j.created); if (j.paidDate && j.paidDate.startsWith(ym)) s.add(j.paidDate); if (j.depositDate && j.depositDate.startsWith(ym)) s.add(j.depositDate); }
   for (const x of state.expenses) if (x.date.startsWith(ym)) s.add(x.date);
   return s;
 }
