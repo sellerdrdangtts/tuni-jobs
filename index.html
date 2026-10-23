@@ -13,6 +13,10 @@
 <script src="config.js"></script>
 <title>Job Manager</title>
 <style>
+  @font-face { font-family:'Gilroy'; font-weight:400; font-display:swap; src:url(Gilroy-Regular.woff2) format('woff2'); }
+  @font-face { font-family:'Gilroy'; font-weight:500; font-display:swap; src:url(Gilroy-Medium.woff2) format('woff2'); }
+  @font-face { font-family:'Gilroy'; font-weight:600; font-display:swap; src:url(Gilroy-SemiBold.woff2) format('woff2'); }
+  @font-face { font-family:'Gilroy'; font-weight:700; font-display:swap; src:url(Gilroy-Bold.woff2) format('woff2'); }
   @font-face { font-family:'Inter'; font-weight:100 900; src:url(Inter.woff2) format('woff2');
     unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
   @font-face { font-family:'Inter'; font-weight:100 900; src:url(Inter-ext.woff2) format('woff2');
@@ -21,7 +25,7 @@
   :root { --ease:cubic-bezier(.22,.8,.24,1); --ink:#111; --black:#141414; --dark:#141414; --mute:#8b8b90; --bg:#eeeeef; --mint:#cfe9e4; --peach:#fbe4c6; --lav:#e8dcf7; --line:rgba(0,0,0,.08); }
   * { box-sizing:border-box; }
   html { background:var(--bg); }
-  body { margin:0; font:14px/1.45 'Inter',-apple-system,sans-serif; color:var(--ink); background:var(--bg); -webkit-user-select:none; -webkit-tap-highlight-color:transparent; }
+  body { margin:0; font:14px/1.45 'Gilroy','Inter',-apple-system,sans-serif; color:var(--ink); background:var(--bg); -webkit-user-select:none; -webkit-tap-highlight-color:transparent; }
   .app { max-width:1100px; margin:0 auto; padding:calc(env(safe-area-inset-top) + 16px) 22px calc(130px + env(safe-area-inset-bottom)); }
 
   /* top */
@@ -144,6 +148,7 @@
   .row .amt { font-weight:600; white-space:nowrap; text-align:right; }
   .amt small { display:block; font-size:11px; font-weight:400; color:var(--mute); text-align:right; }
   .tag { font-size:11px; padding:3px 11px; border-radius:999px; background:#ececee; white-space:nowrap; }
+  .tag.thu { background:var(--mint); }
   .tag.todo, .tag.vay { background:var(--peach); } .tag.done { background:var(--lav); } .tag.paid, .tag.chovay { background:var(--mint); }
   .dots { border:0; background:none; cursor:pointer; font-size:20px; line-height:1; color:var(--ink); padding:0 4px; }
   .lnk { cursor:pointer; }
@@ -158,8 +163,15 @@
   .btn { font:inherit; font-size:13px; font-weight:500; padding:10px 20px; border-radius:999px; border:1px solid var(--black); background:var(--black); color:#fff; cursor:pointer; }
   .btn.ghost { background:#fff; color:var(--ink); }
 
+  .drive { padding:26px; }
+  .drive .mt2 { display:flex; align-items:center; gap:14px; margin-bottom:12px; }
+  .drive .mt2 i { width:52px; height:52px; border-radius:50%; background:var(--black); color:#fff; display:grid; place-items:center; flex:none; }
+  .drive .mt2 svg { width:24px; height:24px; }
+  .drive p { margin:0 0 18px; line-height:1.6; color:rgba(0,0,0,.65); max-width:520px; }
+  a.btn { display:inline-block; text-decoration:none; }
+
   /* dock */
-  .dock { position:fixed; left:50%; bottom:calc(14px + env(safe-area-inset-bottom)); transform:translateX(-50%); width:min(calc(100% - 28px),340px); height:78px; background:var(--black); border-radius:39px; padding:9px; display:flex; z-index:15; box-shadow:0 16px 36px rgba(0,0,0,.28); }
+  .dock { position:fixed; left:50%; bottom:calc(14px + env(safe-area-inset-bottom)); transform:translateX(-50%); width:min(calc(100% - 20px),390px); height:78px; background:var(--black); border-radius:39px; padding:9px; display:flex; z-index:15; box-shadow:0 16px 36px rgba(0,0,0,.28); }
   .dock .nav { flex:1; height:60px; border:0; background:none; color:#fff; border-radius:50%; position:relative; z-index:1; cursor:pointer; display:grid; place-items:center; transition:color .45s var(--ease), transform .12s; }
   .dock .nav.on { color:var(--black); }
   .dock .nav svg { width:25px; height:25px; }
@@ -298,6 +310,8 @@ const ICON = {
   plus: '<path d="M12 5v14M5 12h14"/>',
   check: '<path d="M5 12.5l4.5 4.5L19 7"/>',
   arrow: '<path d="M7 17L17 7M8 7h9v9"/>',
+  in: '<path d="M17 7L7 17M16 17H7V8"/>',
+  folder: '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
 };
 const fmt = n => Number(n).toLocaleString('vi-VN') + ' ₫';
 const short = n => { n = Number(n); const a = Math.abs(n); return a >= 1e9 ? (n / 1e9).toFixed(1) + ' tỷ' : a >= 1e6 ? (n / 1e6).toFixed(1).replace('.0', '') + ' tr' : a >= 1e3 ? Math.round(n / 1e3) + 'k' : String(n); };
@@ -329,13 +343,13 @@ const sum = a => a.reduce((s, x) => s + x.amount, 0);
 const owed = j => j.status === 'paid' ? 0 : Math.max(0, j.amount - (j.deposit || 0));
 const sumOwed = a => a.reduce((s, j) => s + owed(j), 0);
 const shown = j => j.status === 'paid' ? j.amount : owed(j);
-const KIND = { chi: 'Chi', vay: 'Vay', chovay: 'Cho vay' };
+const KIND = { chi: 'Chi', vay: 'Vay', chovay: 'Cho vay', thu: 'Thu khác' };
 const isDebt = x => x.kind === 'vay' || x.kind === 'chovay';
 const daysLeft = d => Math.round((new Date(d + 'T00:00') - new Date(today() + 'T00:00')) / 864e5);
 const dueText = x => { if (!x.due) return ''; const n = daysLeft(x.due); return 'hạn ' + fmtDate(x.due) + ' (' + (n < 0 ? 'quá hạn ' + (-n) + ' ngày' : n === 0 ? 'hôm nay' : 'còn ' + n + ' ngày') + ')'; };
 // vay: tiền vào lúc vay, tiền ra lúc trả nợ. cho vay: tiền ra lúc cho vay, tiền vào lúc thu lại.
-const loanIn = () => state.expenses.flatMap(x => x.kind === 'vay' ? [{ date: x.date, amount: x.amount }] : x.kind === 'chovay' && x.settled && x.settledDate ? [{ date: x.settledDate, amount: x.amount }] : []);
-const outflows = () => state.expenses.flatMap(x => x.kind === 'vay' ? (x.settled && x.settledDate ? [{ date: x.settledDate, amount: x.amount }] : []) : [{ date: x.date, amount: x.amount }]);
+const loanIn = () => state.expenses.flatMap(x => x.kind === 'thu' ? [{ date: x.date, amount: x.amount }] : x.kind === 'vay' ? [{ date: x.date, amount: x.amount }] : x.kind === 'chovay' && x.settled && x.settledDate ? [{ date: x.settledDate, amount: x.amount }] : []);
+const outflows = () => state.expenses.flatMap(x => x.kind === 'thu' ? [] : x.kind === 'vay' ? (x.settled && x.settledDate ? [{ date: x.settledDate, amount: x.amount }] : []) : [{ date: x.date, amount: x.amount }]);
 const inflows = () => incomeEvents().concat(loanIn());
 const settle = (x, on = true) => { x.settled = on; x.settledDate = on ? today() : null; save(); render(); };
 const fmtDate = d => d ? d.split('-').reverse().join('/') : '';
@@ -347,7 +361,7 @@ const incomeEvents = () => state.jobs.flatMap(j => {
 });
 const matches = j => !query || (j.title + ' ' + j.client + ' ' + (j.phone || '')).toLowerCase().includes(query.toLowerCase());
 
-const NAV = [['jobs', 'Job', 'list'], ['overview', 'Tổng quan', 'home'], ['expense', 'Chi tiêu', 'exp']];
+const NAV = [['jobs', 'Job', 'list'], ['drive', 'Drive', 'folder'], ['overview', 'Tổng quan', 'home'], ['chi', 'Chi', 'arrow'], ['thu', 'Thu', 'in']];
 const JOB_TABS = ['todo', 'unpaid', 'paid', 'all'];
 const navOf = t => JOB_TABS.includes(t) ? 'jobs' : t;
 let lastJobTab = 'all', homeList = 'todo', chartMode = 'week';
@@ -505,11 +519,13 @@ function showJob(j) {
     $('div', { className: 'actions' }, [$('button', { className: 'btn ghost', onclick: closeModal }, 'Đóng'), $('button', { className: 'btn', onclick: () => jobForm(j) }, 'Sửa')]));
   showModal();
 }
-function expenseForm(x) {
+function expenseForm(x, kinds) {
+  kinds = kinds || (x ? (x.kind === 'vay' || x.kind === 'thu' ? ['thu', 'vay'] : ['chi', 'chovay']) : ['chi', 'chovay', 'vay', 'thu']);
   const fields = {};
   const field = (key, label, el, wide = false) => { fields[key] = el; return $('label', { className: 'fld' + (wide ? ' wide' : '') }, [$('span', {}, label), el]); };
   const v = (k, d = '') => x && x[k] != null ? x[k] : d;
-  const kind = $('select', {}, Object.entries(KIND).map(([k, l]) => $('option', { value: k, selected: v('kind', 'chi') === k }, l)));
+  const dflt = kinds.includes(v('kind', 'chi')) ? v('kind', 'chi') : kinds[0];
+  const kind = $('select', {}, kinds.map(k => $('option', { value: k, selected: dflt === k }, KIND[k])));
   const hint = $('div', { className: 'hint' });
   const kindF = field('kind', 'Loại', kind, true);
   const noteF = field('note', 'Nội dung *', $('input', { required: true, value: v('note'), placeholder: 'VD: ăn trưa, vay anh A...' }), true);
@@ -517,9 +533,9 @@ function expenseForm(x) {
   const dateF = field('date', 'Ngày *', $('input', { type: 'date', required: true, value: v('date', period.mode === 'day' ? period.date : today()) }));
   const personF = field('person', 'Người vay / cho vay *', $('input', { value: v('person'), placeholder: 'Tên người' }));
   const dueF = field('due', 'Hạn trả / thu (nếu có)', $('input', { type: 'date', value: v('due') }));
-  const HINTS = { chi: 'Khoản chi thông thường (ăn uống, đi lại...).', vay: 'Bạn đi vay: tính là tiền thu vào, và cần trả lại.', chovay: 'Bạn cho người khác vay: tính là chi, và cần thu lại.' };
+  const HINTS = { chi: 'Khoản chi thông thường (ăn uống, đi lại...).', thu: 'Khoản thu ngoài job (bán đồ, tiền lãi...).', vay: 'Bạn đi vay: tính là tiền thu vào, và cần trả lại.', chovay: 'Bạn cho người khác vay: tính là chi, và cần thu lại.' };
   const sync = () => {
-    const debt = kind.value !== 'chi';
+    const debt = kind.value === 'vay' || kind.value === 'chovay';
     personF.style.display = dueF.style.display = debt ? '' : 'none';
     fields.person.required = debt;
     hint.textContent = HINTS[kind.value];
@@ -527,7 +543,7 @@ function expenseForm(x) {
   kind.onchange = sync; sync();
   const submit = () => {
     if (!Object.values(fields).every(e => e.reportValidity())) return;
-    const k = kind.value, debt = k !== 'chi';
+    const k = kind.value, debt = k === 'vay' || k === 'chovay';
     const data = { kind: k, note: fields.note.value.trim(), amount: Number(fields.amount.value), date: fields.date.value, person: debt ? fields.person.value.trim() : '', due: debt ? fields.due.value : '' };
     if (x) Object.assign(x, data);
     else { const ne = { id: Date.now() + Math.random(), settled: false, settledDate: null, ...data }; state.expenses.push(ne); freshId = ne.id; }
@@ -572,7 +588,7 @@ const dueLine = x => (x.kind === 'vay' ? 'Trả ' : 'Thu lại ') + (x.person ||
 function reminders() {
   const soon = dueSoon();
   if (!soon.length) return '';
-  return $('div', { className: 'alert', onclick: () => { expFilter = 'all'; go('expense'); } }, [$('b', {}, 'Nhắc nhở · ')].concat(soon.map((x, i) => (i ? ' — ' : '') + dueLine(x))));
+  return $('div', { className: 'alert', onclick: () => go(tabForKind(soon[0].kind)) }, [$('b', {}, 'Nhắc nhở · ')].concat(soon.map((x, i) => (i ? ' — ' : '') + dueLine(x))));
 }
 function viewOverview() {
   const thu = sum(inflows().filter(e => inPeriod(e.date))), chi = sum(outflows().filter(e => inPeriod(e.date)));
@@ -617,11 +633,11 @@ function viewOverview() {
     $('div', { className: 'counts' }, [cnt('todo', todo.length, 'k-peach', 'Chưa làm'), cnt('unpaid', unpaid.length, 'k-lav', 'Chờ thu'), cnt('paid', paidJobs.length, 'k-mint', 'Đã thu')]),
     $('div', { className: 'pbar' }, [$('div', { className: 'a', style: 'width:' + pPaid + '%' }, pPaid + '%'), $('div', { className: 'b' }, (100 - pPaid) + '%')]),
   ]);
-  const mini = (cls, title, list, filter) => $('div', { className: 'mini card ' + cls, onclick: () => { expFilter = filter; go('expense'); } }, [
+  const mini = (cls, title, list, onGo) => $('div', { className: 'mini card ' + cls, onclick: onGo }, [
     $('div', { className: 'mt' }, [$('span', {}, title), $('i', {}, svg(ICON.arrow))]),
     $('div', { className: 'mn' }, fmt(sum(list))), $('small', {}, nextDue(list)),
   ]);
-  const debts = $('div', { className: 'pair2 ga-debt' }, [mini('peach', 'Phải trả (đang vay)', open('vay'), 'vay'), mini('lav', 'Cần thu lại (cho vay)', open('chovay'), 'chovay')]);
+  const debts = $('div', { className: 'pair2 ga-debt' }, [mini('peach', 'Phải trả (đang vay)', open('vay'), () => { thuFilter = 'vay'; go('thu'); }), mini('lav', 'Cần thu lại (cho vay)', open('chovay'), () => { expFilter = 'chovay'; go('chi'); })]);
 
   return $('div', {}, [reminders(), $('div', { className: 'home' }, [hero, chart, jobsCard, prog, debts])]);
 }
@@ -649,44 +665,97 @@ function viewList(jobs, empty, extra) {
   return card;
 }
 const viewJobs = (jobs, empty, extra) => $('div', {}, [jobChips(), viewList(jobs, empty, extra)]);
-let expFilter = 'all';
-function viewExpense() {
-  const q = query.toLowerCase();
-  const rows = state.expenses.filter(x => (expFilter === 'all' || x.kind === expFilter)
-    && (inPeriod(x.date) || inPeriod(x.settledDate) || (isDebt(x) && !x.settled))
-    && (!q || (x.note + ' ' + (x.person || '')).toLowerCase().includes(q))).sort((a, b) => b.date.localeCompare(a.date));
-  const open = k => sum(state.expenses.filter(x => x.kind === k && !x.settled));
-  const statCard = (cls, label, n) => $('div', { className: 'card ' + cls }, [$('div', { className: 'sub' }, label), $('div', { className: 'stat-n' }, fmt(n))]);
-  const w = $('div');
-  w.append(
-    $('div', { className: 'stat3' }, [
-      statCard('black', 'Chi tiêu (kỳ đang xem)', sum(state.expenses.filter(x => x.kind === 'chi' && inPeriod(x.date)))),
-      statCard('peach', 'Đang vay · phải trả', open('vay')),
-      statCard('mint', 'Cho vay · cần thu lại', open('chovay')),
-    ]),
-    $('div', { className: 'chips' }, [
-      ...[['all', 'Tất cả'], ['chi', 'Chi'], ['vay', 'Vay'], ['chovay', 'Cho vay']].map(([k, l]) => $('button', { className: expFilter === k ? 'on' : '', onclick: () => { expFilter = k; render(); } }, l)),
-      $('span', { className: 'sp' }), $('button', { className: 'cta', onclick: () => expenseForm() }, '+ Thêm khoản'),
-    ]));
+let expFilter = 'all', thuFilter = 'all';
+const tabForKind = k => k === 'vay' || k === 'thu' ? 'thu' : 'chi';
+const statCard = (cls, label, n) => $('div', { className: 'card ' + cls }, [$('div', { className: 'sub' }, label), $('div', { className: 'stat-n' }, fmt(n))]);
+const chipRow = (cur, opts, set, ctaLabel, onCta) => $('div', { className: 'chips' }, [
+  ...opts.map(([k, l]) => $('button', { className: cur === k ? 'on' : '', onclick: () => { set(k); render(); } }, l)),
+  $('span', { className: 'sp' }), $('button', { className: 'cta', onclick: onCta }, ctaLabel),
+]);
+const listRow = ({ id, title, sub, tag, tagCls, amount, items }) => $('div', { className: 'row', 'data-id': id }, [
+  $('div', { className: 'info' }, [$('div', {}, title), $('small', {}, sub)]),
+  $('span', { className: 'tag ' + tagCls }, tag),
+  $('span', { className: 'amt' }, amount),
+  $('button', { className: 'dots', onclick: e => openMenu(e, items) }, '···'),
+]);
+const entryItems = x => [
+  isDebt(x) && !x.settled && [x.kind === 'vay' ? 'Đã trả nợ' : 'Đã thu lại', () => settle(x)],
+  isDebt(x) && x.settled && [x.kind === 'vay' ? 'Huỷ đã trả' : 'Huỷ đã thu lại', () => settle(x, false)],
+  ['Sửa', () => expenseForm(x)],
+  ['Xoá', () => askConfirm('Xoá khoản "' + x.note + '"? Không thể hoàn tác.', () => { state.expenses = state.expenses.filter(y => y !== x); save(); render(); })],
+].filter(Boolean);
+function entryRow(x) {
+  const sign = x.kind === 'vay' || x.kind === 'thu' ? '+' : '-';
+  const who = x.person ? (x.kind === 'vay' ? 'vay của ' + x.person : 'cho ' + x.person + ' vay') : '';
+  const info = [fmtDate(x.date), who, x.settled ? (x.kind === 'vay' ? 'đã trả ' : 'đã thu lại ') + fmtDate(x.settledDate) : dueText(x)].filter(Boolean).join(' · ');
+  return listRow({ id: x.id, title: x.note, sub: info, tag: KIND[x.kind] + (x.settled ? ' ✓' : ''), tagCls: x.kind, amount: sign + fmt(x.amount), items: entryItems(x) });
+}
+const listCard = (rows, empty) => {
   const card = $('div', { className: 'card' }, banner());
-  card.append(rows.length ? $('div', {}, rows.map(x => {
-    const sign = x.kind === 'vay' ? '+' : '-';
-    const who = x.person ? (x.kind === 'vay' ? 'vay của ' + x.person : 'cho ' + x.person + ' vay') : '';
-    const info = [fmtDate(x.date), who, x.settled ? (x.kind === 'vay' ? 'đã trả ' : 'đã thu lại ') + fmtDate(x.settledDate) : dueText(x)].filter(Boolean).join(' · ');
-    return $('div', { className: 'row', 'data-id': x.id }, [
-      $('div', { className: 'info' }, [$('div', {}, x.note), $('small', {}, info)]),
-      $('span', { className: 'tag ' + x.kind }, KIND[x.kind] + (x.settled ? ' ✓' : '')),
-      $('span', { className: 'amt' }, sign + fmt(x.amount)),
-      $('button', { className: 'dots', onclick: e => openMenu(e, [
-        isDebt(x) && !x.settled && [x.kind === 'vay' ? 'Đã trả nợ' : 'Đã thu lại', () => settle(x)],
-        isDebt(x) && x.settled && [x.kind === 'vay' ? 'Huỷ đã trả' : 'Huỷ đã thu lại', () => settle(x, false)],
-        ['Sửa', () => expenseForm(x)],
-        ['Xoá', () => askConfirm('Xoá khoản "' + x.note + '"? Không thể hoàn tác.', () => { state.expenses = state.expenses.filter(y => y !== x); save(); render(); })],
-      ].filter(Boolean)) }, '···'),
-    ]);
-  })) : $('div', { className: 'empty' }, 'Chưa có khoản nào'));
-  w.append(card);
-  return w;
+  card.append(rows.length ? $('div', {}, rows.sort((a, b) => b.date.localeCompare(a.date)).map(r => r.el)) : $('div', { className: 'empty' }, empty));
+  return card;
+};
+const openOf = k => sum(state.expenses.filter(x => x.kind === k && !x.settled));
+const visible = x => inPeriod(x.date) || inPeriod(x.settledDate) || (isDebt(x) && !x.settled);
+
+function viewChi() {
+  const q = query.toLowerCase(), hit = t => !q || t.toLowerCase().includes(q);
+  const rows = [];
+  for (const x of state.expenses) {
+    if (x.kind === 'thu' || x.kind === 'vay') continue;
+    if ((expFilter === 'all' || expFilter === x.kind) && visible(x) && hit(x.note + ' ' + (x.person || ''))) rows.push({ date: x.date, el: entryRow(x) });
+  }
+  if (expFilter === 'all' || expFilter === 'tra') {
+    for (const x of state.expenses) {
+      if (x.kind === 'vay' && x.settled && x.settledDate && inPeriod(x.settledDate) && hit(x.note + ' ' + (x.person || ''))) {
+        rows.push({ date: x.settledDate, el: listRow({ id: x.id, title: 'Trả nợ · ' + (x.person || x.note), sub: fmtDate(x.settledDate) + ' · ' + x.note, tag: 'Trả nợ', tagCls: 'vay', amount: '-' + fmt(x.amount), items: [['Huỷ đã trả', () => settle(x, false)], ['Sửa khoản vay', () => expenseForm(x)]] }) });
+      }
+    }
+  }
+  return $('div', {}, [
+    $('div', { className: 'stat3' }, [
+      statCard('black', 'Tổng chi (kỳ đang xem)', sum(outflows().filter(e => inPeriod(e.date)))),
+      statCard('peach', 'Chi tiêu thường', sum(state.expenses.filter(x => x.kind === 'chi' && inPeriod(x.date)))),
+      statCard('mint', 'Cho vay · cần thu lại', openOf('chovay')),
+    ]),
+    chipRow(expFilter, [['all', 'Tất cả'], ['chi', 'Chi'], ['chovay', 'Cho vay'], ['tra', 'Trả nợ']], k => { expFilter = k; }, '+ Thêm khoản chi', () => expenseForm(null, ['chi', 'chovay'])),
+    listCard(rows, 'Chưa có khoản chi nào'),
+  ]);
+}
+
+function viewThu() {
+  const q = query.toLowerCase(), hit = t => !q || t.toLowerCase().includes(q);
+  const rows = [];
+  if (thuFilter === 'all' || thuFilter === 'job') {
+    for (const j of state.jobs) {
+      const dep = Math.min(j.deposit || 0, j.amount), name = j.title + ' ' + (j.client || '');
+      if (dep > 0 && inPeriod(j.created) && hit(name)) rows.push({ date: j.created, el: listRow({ id: j.id, title: 'Cọc · ' + j.title, sub: [fmtDate(j.created), j.client].filter(Boolean).join(' · '), tag: 'Từ job', tagCls: 'thu', amount: '+' + fmt(dep), items: [['Xem job', () => showJob(j)]] }) });
+      if (j.status === 'paid' && j.paidDate && j.amount - dep > 0 && inPeriod(j.paidDate) && hit(name)) rows.push({ date: j.paidDate, el: listRow({ id: j.id + 'p', title: 'Thu đủ · ' + j.title, sub: [fmtDate(j.paidDate), j.client].filter(Boolean).join(' · '), tag: 'Từ job', tagCls: 'thu', amount: '+' + fmt(j.amount - dep), items: [['Xem job', () => showJob(j)], ['Huỷ thu tiền', () => setStatus(j, 'done')]] }) });
+    }
+  }
+  for (const x of state.expenses) {
+    if ((x.kind === 'vay' || x.kind === 'thu') && (thuFilter === 'all' || thuFilter === x.kind) && visible(x) && hit(x.note + ' ' + (x.person || ''))) rows.push({ date: x.date, el: entryRow(x) });
+    if (x.kind === 'chovay' && x.settled && x.settledDate && (thuFilter === 'all' || thuFilter === 'thu') && inPeriod(x.settledDate) && hit(x.note + ' ' + (x.person || ''))) {
+      rows.push({ date: x.settledDate, el: listRow({ id: x.id, title: 'Thu lại · ' + (x.person || x.note), sub: fmtDate(x.settledDate) + ' · ' + x.note, tag: 'Thu lại', tagCls: 'chovay', amount: '+' + fmt(x.amount), items: [['Huỷ đã thu lại', () => settle(x, false)], ['Sửa khoản cho vay', () => expenseForm(x)]] }) });
+    }
+  }
+  return $('div', {}, [
+    $('div', { className: 'stat3' }, [
+      statCard('black', 'Tổng thu (kỳ đang xem)', sum(inflows().filter(e => inPeriod(e.date)))),
+      statCard('mint', 'Thu từ job', sum(incomeEvents().filter(e => inPeriod(e.date)))),
+      statCard('peach', 'Đang vay · phải trả', openOf('vay')),
+    ]),
+    chipRow(thuFilter, [['all', 'Tất cả'], ['job', 'Từ job'], ['vay', 'Vay'], ['thu', 'Thu khác']], k => { thuFilter = k; }, '+ Thêm khoản thu', () => expenseForm(null, ['thu', 'vay'])),
+    listCard(rows, 'Chưa có khoản thu nào'),
+  ]);
+}
+
+function viewDrive() {
+  return $('div', {}, [$('div', { className: 'card lav drive' }, [
+    $('div', { className: 'mt2' }, [$('i', {}, svg(ICON.folder)), $('h3', {}, 'Google Drive')]),
+    $('p', {}, 'Tính năng này sắp có: xem và quản lý file ảnh, hợp đồng của từng job ngay trong app, lưu trên Drive của bạn.'),
+    $('a', { className: 'btn', href: 'https://drive.google.com', target: '_blank', rel: 'noopener' }, 'Mở Google Drive ↗'),
+  ])]);
 }
 
 let goTimer = null;
@@ -711,9 +780,13 @@ function renderNav() {
   const c = byStatus('todo').length + byStatus('done').length, badge = nav.querySelector('[data-tab="jobs"] .c');
   badge.textContent = c ? String(c) : ''; badge.style.display = c ? '' : 'none';
   movePill();
-  document.getElementById('title').textContent = cur === 'overview' ? 'Xin chào! 👋' : cur === 'jobs' ? 'Job' : 'Chi tiêu';
-  document.getElementById('subtitle').textContent = cur === 'overview' ? greet() + ' · ' + new Date().toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric' })
-    : cur === 'jobs' ? byStatus('todo').length + ' chưa làm · ' + byStatus('done').length + ' chờ thu tiền' : 'Thu chi, vay và cho vay';
+  const TITLES = { overview: ['Xin chào! 👋', greet() + ' · ' + new Date().toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric' })],
+    jobs: ['Job', byStatus('todo').length + ' chưa làm · ' + byStatus('done').length + ' chờ thu tiền'],
+    drive: ['Drive', 'Sắp có: kết nối Google Drive'],
+    chi: ['Chi', 'Chi tiêu, cho vay và trả nợ'],
+    thu: ['Thu', 'Thu từ job, vay và thu khác'] };
+  document.getElementById('title').textContent = TITLES[cur][0];
+  document.getElementById('subtitle').textContent = TITLES[cur][1];
 }
 function render() { renderNav(); renderMain(); }
 function renderMain() {
@@ -732,7 +805,7 @@ function renderMain() {
     tab === 'unpaid' ? viewJobs(pStatus('done'), 'Không có job nào đang chờ thu tiền', unpaidHead) :
     tab === 'paid' ? viewJobs(pStatus('paid').sort((a, b) => (b.paidDate || '').localeCompare(a.paidDate || '')), 'Chưa có job nào được thu tiền') :
     tab === 'all' ? viewJobs(state.jobs.filter(jobIn).sort((a, b) => b.id - a.id), 'Không có job nào trong khoảng này') :
-    viewExpense());
+    tab === 'drive' ? viewDrive() : tab === 'chi' ? viewChi() : viewThu());
   if (enterNext && !REDUCED) {
     main.classList.add('enter');
     main.querySelectorAll('.card, .hero, .pair2, .alert, .chips').forEach((el, i) => el.style.setProperty('--i', Math.min(i, 8)));
@@ -791,7 +864,7 @@ document.getElementById('period').onclick = e => {
 document.addEventListener('click', () => { cal.style.display = 'none'; });
 document.getElementById('bell').onclick = e => {
   const soon = dueSoon();
-  openMenu(e, soon.length ? soon.map(x => [dueLine(x), () => { expFilter = 'all'; go('expense'); }]) : [['Không có nhắc nhở', () => {}]]);
+  openMenu(e, soon.length ? soon.map(x => [dueLine(x), () => go(tabForKind(x.kind))]) : [['Không có nhắc nhở', () => {}]]);
 };
 document.getElementById('q').oninput = e => { query = e.target.value; if (query && ['overview'].includes(tab)) tab = 'all'; render(); };
 /* ---------- đăng nhập Google + đồng bộ Drive (chỉ bản web) ---------- */

@@ -1,5 +1,5 @@
-const CACHE = 'tuni-v1';
-const CORE = ['./', 'index.html', 'config.js', 'Inter.woff2', 'Inter-ext.woff2', 'bg.jpg', 'logo.png', 'manifest.webmanifest', 'icon-192.png'];
+const CACHE = 'tuni-v2';
+const CORE = ['./', 'index.html', 'config.js', 'Inter.woff2', 'Inter-ext.woff2', 'Gilroy-Regular.woff2', 'Gilroy-Medium.woff2', 'Gilroy-SemiBold.woff2', 'Gilroy-Bold.woff2', 'bg.jpg', 'logo.png', 'manifest.webmanifest', 'icon-192.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
 });
