@@ -804,7 +804,7 @@ document.getElementById('q').oninput = e => { query = e.target.value; if (query 
 /* ---------- đăng nhập Google + đồng bộ Drive (chỉ bản web) ---------- */
 const CLIENT_ID = window.GOOGLE_CLIENT_ID || '';
 const FLAG = 'tuni-signedin', FILE_NAME = 'tunigraphy-data.json';
-const SYNC = { token: null, exp: 0, client: null, fileId: null, status: 'local', last: null, busy: false, again: false, timer: null };
+const SYNC = { token: null, exp: 0, client: null, fileId: null, status: 'local', last: null, choose: false, busy: false, again: false, timer: null };
 const signedIn = () => { try { return localStorage.getItem(FLAG) === '1'; } catch (e) { return false; } };
 const STATUS_TEXT = { local: 'Đăng nhập', busy: 'Đang đồng bộ…', ok: 'Đã đồng bộ', auth: 'Đăng nhập lại', err: 'Lỗi đồng bộ' };
 function setSync(st) {
@@ -837,6 +837,8 @@ async function getToken(interactive) {
   await loadGIS();
   if (!SYNC.client) SYNC.client = google.accounts.oauth2.initTokenClient({ client_id: CLIENT_ID, scope: 'https://www.googleapis.com/auth/drive.appdata', callback: () => {} });
   return new Promise((resolve, reject) => {
+    const prompt = interactive ? (SYNC.choose ? 'select_account' : '') : 'none';
+    SYNC.choose = false;
     SYNC.client.callback = r => {
       if (r.error) return reject(new Error('auth: ' + r.error));
       SYNC.token = r.access_token; SYNC.exp = Date.now() + Number(r.expires_in) * 1000;
@@ -844,7 +846,7 @@ async function getToken(interactive) {
       resolve(SYNC.token);
     };
     SYNC.client.error_callback = e => reject(new Error('auth: ' + (e.type || 'popup')));
-    SYNC.client.requestAccessToken({ prompt: interactive ? '' : 'none' });
+    SYNC.client.requestAccessToken({ prompt });
   });
 }
 const gfetch = async (url, token, opts = {}) => {
@@ -907,6 +909,18 @@ function signOut() {
   if (t && window.google && google.accounts) google.accounts.oauth2.revoke(t, () => {});
   setSync('local');
 }
+// đăng xuất / đổi tài khoản: đẩy nốt dữ liệu lên Drive rồi xoá sạch dữ liệu trên máy để không lẫn sang tài khoản khác
+function leaveAccount(thenSignIn) {
+  askConfirm('Dữ liệu của tài khoản hiện tại đã nằm trong Drive của nó. Máy này sẽ được xoá sạch dữ liệu để không bị lẫn sang tài khoản khác. Tiếp tục?', async () => {
+    while (SYNC.busy) await new Promise(r => setTimeout(r, 200));
+    await syncNow(false);
+    if (SYNC.status !== 'ok') return notice('Chưa đồng bộ được', 'Chưa đẩy được dữ liệu lên Drive nên chưa thể đăng xuất. Hãy kiểm tra mạng rồi thử lại, hoặc xuất file sao lưu trước.');
+    signOut();
+    state = { jobs: [], expenses: [], updatedAt: 0 };
+    persistLocal(); render();
+    if (thenSignIn) { SYNC.choose = true; syncNow(true); }
+  }, thenSignIn ? 'Đổi tài khoản' : 'Đăng xuất');
+}
 function exportJson() {
   const a = $('a', { href: URL.createObjectURL(new Blob([JSON.stringify(state, null, 1)], { type: 'application/json' })), download: 'tuni-graphy-sao-luu-' + today() + '.json' });
   document.body.append(a); a.click(); a.remove();
@@ -933,7 +947,7 @@ else {
     else if (!signedIn()) items.push(['Đăng nhập Google', () => syncNow(true)]);
     else items.push([SYNC.last ? 'Đồng bộ ngay (lần cuối ' + pad(SYNC.last.getHours()) + ':' + pad(SYNC.last.getMinutes()) + ')' : 'Đồng bộ ngay', () => syncNow(true)]);
     items.push(['Xuất file sao lưu', exportJson], ['Nhập file sao lưu', importJson]);
-    if (CLIENT_ID && signedIn()) items.push(['Đăng xuất Google', signOut]);
+    if (CLIENT_ID && signedIn()) items.push(['Đổi tài khoản Google', () => leaveAccount(true)], ['Đăng xuất', () => leaveAccount(false)]);
     openMenu(e, items);
   };
   document.addEventListener('visibilitychange', () => { if (!document.hidden && signedIn() && (!SYNC.last || Date.now() - SYNC.last > 30000)) syncNow(false); });
