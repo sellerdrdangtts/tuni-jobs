@@ -994,6 +994,8 @@ document.getElementById('bell').onclick = e => {
 document.getElementById('q').oninput = e => { query = e.target.value; if (query && ['overview'].includes(tab)) tab = 'all'; render(); };
 /* ---------- đăng nhập Google + đồng bộ Drive (chỉ bản web) ---------- */
 const CLIENT_ID = window.GOOGLE_CLIENT_ID || '';
+// có AUTH_URL (Cloudflare Worker) thì đăng nhập bằng mã + thẻ làm mới: không bị hết phiên mỗi giờ; không có thì dùng cách cũ
+const AUTH_URL = (window.AUTH_URL || '').replace(/\/+$/, ''), useCode = !!(CLIENT_ID && AUTH_URL), RT_KEY = 'tuni-refresh';
 const FLAG = 'tuni-signedin', FILE_NAME = 'tunigraphy-data.json';
 const SCOPE = 'https://www.googleapis.com/auth/drive.appdata', TOKEN_KEY = 'tuni-token';
 const SYNC = { token: null, exp: 0, client: null, fileId: null, status: 'local', msg: '', last: null, choose: false, busy: false, again: false, timer: null, needGesture: false };
@@ -1030,8 +1032,56 @@ function loadGIS() {
     document.head.append(sc);
   });
 }
+const getRT = () => { try { return localStorage.getItem(RT_KEY); } catch (e) { return null; } };
+const saveToken = (t, expiresIn) => {
+  SYNC.token = t; SYNC.exp = Date.now() + Number(expiresIn) * 1000;
+  try { localStorage.setItem(FLAG, '1'); localStorage.setItem(TOKEN_KEY, JSON.stringify({ t, exp: SYNC.exp })); } catch (e) {}
+};
+async function authPost(path, body) {
+  const r = await fetch(AUTH_URL + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  return { ok: r.ok, status: r.status, j: await r.json().catch(() => ({})) };
+}
+const redirectUri = () => location.origin + location.pathname.replace(/index\.html$/, '');
+function loginUrl(choose) {
+  const st = Math.random().toString(36).slice(2) + Date.now().toString(36);
+  try { localStorage.setItem('tuni-oauth-state', st); } catch (e) {}
+  return 'https://accounts.google.com/o/oauth2/v2/auth?' + new URLSearchParams({ client_id: CLIENT_ID, redirect_uri: redirectUri(), response_type: 'code', scope: SCOPE, access_type: 'offline', include_granted_scopes: 'true', prompt: choose ? 'consent select_account' : 'consent', state: st });
+}
+// quay lại từ Google với ?code=...: đổi mã lấy thẻ, lưu thẻ làm mới
+async function finishLogin() {
+  const u = new URL(location.href), code = u.searchParams.get('code'), st = u.searchParams.get('state'), err = u.searchParams.get('error');
+  if (!code && !err) return;
+  history.replaceState(null, '', location.pathname);
+  let saved = null; try { saved = localStorage.getItem('tuni-oauth-state'); localStorage.removeItem('tuni-oauth-state'); } catch (e) {}
+  if (err) return notice('Đăng nhập Google chưa thành công', 'Google báo: ' + err + '. Hãy thử đăng nhập lại.');
+  if (!st || st !== saved) return notice('Đăng nhập Google chưa thành công', 'Phiên đăng nhập không khớp. Hãy bấm đăng nhập lại.');
+  setSync('busy');
+  try {
+    const res = await authPost('/token', { code, redirect_uri: redirectUri() });
+    if (!res.ok || !res.j.access_token) throw new Error('auth: ' + (res.j.detail || res.j.error || res.status));
+    if (!String(res.j.scope || '').includes('drive.appdata')) throw new Error('scope: chưa cấp quyền Google Drive, hãy đăng nhập lại và tick ô quyền truy cập Drive');
+    if (!res.j.refresh_token) throw new Error('auth: Google không cấp quyền duy trì đăng nhập, hãy đăng nhập lại');
+    try { localStorage.setItem(RT_KEY, res.j.refresh_token); localStorage.removeItem('tuni-synced'); } catch (e) {}
+    saveToken(res.j.access_token, res.j.expires_in);
+  } catch (e) {
+    setSync('local', e.message);
+    notice('Đăng nhập Google chưa thành công', e.message.replace(/^(auth|scope): /, ''));
+  }
+}
 async function getToken(interactive) {
   if (SYNC.token && Date.now() < SYNC.exp - 60000) return SYNC.token;
+  if (useCode) {
+    const rt = getRT();
+    if (rt) {
+      let res;
+      try { res = await authPost('/refresh', { refresh_token: rt }); } catch (e) { throw new Error('net: không kết nối được máy chủ đăng nhập'); }
+      if (res.ok && res.j.access_token) { saveToken(res.j.access_token, res.j.expires_in); return SYNC.token; }
+      if (res.status === 401) { try { localStorage.removeItem(RT_KEY); } catch (e) {} throw new Error('auth: phiên đăng nhập Google đã hết hạn'); }
+      throw new Error('net: máy chủ đăng nhập báo lỗi ' + res.status);
+    }
+    if (interactive) { const c = SYNC.choose; SYNC.choose = false; location.href = loginUrl(c); return new Promise(() => {}); }
+    throw new Error('auth: chưa đăng nhập');
+  }
   await loadGIS();
   if (!SYNC.client) SYNC.client = google.accounts.oauth2.initTokenClient({ client_id: CLIENT_ID, scope: SCOPE, callback: () => {} });
   return new Promise((resolve, reject) => {
@@ -1040,17 +1090,20 @@ async function getToken(interactive) {
     SYNC.client.callback = r => {
       if (r.error) return reject(new Error('auth: ' + r.error));
       if (typeof google.accounts.oauth2.hasGrantedAllScopes === 'function' && !google.accounts.oauth2.hasGrantedAllScopes(r, SCOPE)) return reject(new Error('scope: chưa cấp quyền Google Drive, hãy đăng nhập lại và tick ô quyền truy cập Drive'));
-      SYNC.token = r.access_token; SYNC.exp = Date.now() + Number(r.expires_in) * 1000;
-      try { localStorage.setItem(FLAG, '1'); localStorage.setItem(TOKEN_KEY, JSON.stringify({ t: SYNC.token, exp: SYNC.exp })); } catch (e) {}
+      saveToken(r.access_token, r.expires_in);
       resolve(SYNC.token);
     };
     SYNC.client.error_callback = e => reject(new Error('auth: ' + (e.type || 'popup')));
     SYNC.client.requestAccessToken({ prompt });
   });
 }
-const gfetch = async (url, token, opts = {}) => {
+const gfetch = async (url, token, opts = {}, retried = false) => {
   const r = await fetch(url, { ...opts, headers: { Authorization: 'Bearer ' + token, ...(opts.headers || {}) } });
-  if (r.status === 401) { SYNC.token = null; try { localStorage.removeItem(TOKEN_KEY); } catch (e) {} throw new Error('auth: 401'); }
+  if (r.status === 401) {
+    SYNC.token = null; try { localStorage.removeItem(TOKEN_KEY); } catch (e) {}
+    if (useCode && !retried) return gfetch(url, await getToken(false), opts, true);   // thẻ vừa hết hạn: tự làm mới rồi thử lại
+    throw new Error('auth: 401');
+  }
   if (!r.ok) throw new Error('drive: ' + r.status);
   return r;
 };
@@ -1092,7 +1145,7 @@ async function syncNow(interactive) {
     console.error(e);
     const isAuth = /^auth/.test(e.message);
     // phiên hết hạn mà không có thao tác của người dùng thì trình duyệt chặn cửa sổ đăng nhập: chờ lần chạm tiếp theo
-    if (isAuth && !interactive && signedIn()) SYNC.needGesture = true;
+    if (isAuth && !interactive && signedIn() && !useCode) SYNC.needGesture = true;
     setSync(!signedIn() ? 'local' : isAuth ? 'auth' : 'err', e.message);
     if (interactive && /^scope/.test(e.message)) notice('Chưa cấp quyền Google Drive', 'Khi đăng nhập, Google hiện ô chọn quyền. Bạn cần tick vào ô cho phép app lưu dữ liệu vào Google Drive, nếu không dữ liệu không thể đồng bộ giữa các thiết bị. Hãy bấm đăng nhập lại và tick ô đó.');
   } finally {
@@ -1106,8 +1159,9 @@ function pushSoon() {
   SYNC.timer = setTimeout(() => syncNow(false), 1500);
 }
 function signOut() {
-  const t = SYNC.token;
-  try { localStorage.removeItem(FLAG); localStorage.removeItem('tuni-synced'); localStorage.removeItem(TOKEN_KEY); } catch (e) {}
+  const t = SYNC.token, rt = getRT();
+  if (useCode && rt) authPost('/revoke', { token: rt }).catch(() => {});
+  try { localStorage.removeItem(FLAG); localStorage.removeItem('tuni-synced'); localStorage.removeItem(TOKEN_KEY); localStorage.removeItem(RT_KEY); } catch (e) {}
   SYNC.needGesture = false;
   SYNC.token = null; SYNC.fileId = null; SYNC.last = null;
   if (t && window.google && google.accounts) google.accounts.oauth2.revoke(t, () => {});
@@ -1155,7 +1209,8 @@ else {
     openMenu(e, items);
   };
   document.addEventListener('visibilitychange', () => { if (!document.hidden && signedIn() && (!SYNC.last || Date.now() - SYNC.last > 30000)) syncNow(false); });
-  if (signedIn()) syncNow(false);
+  if (useCode) finishLogin().then(() => { if (signedIn()) syncNow(false); });
+  else if (signedIn()) syncNow(false);
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 // chạm lần đầu sau khi phiên hết hạn: xin lại thẻ đăng nhập ngay trong thao tác chạm để không bị chặn
