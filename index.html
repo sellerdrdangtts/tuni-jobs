@@ -186,6 +186,17 @@
   .daycap { font-size:12px; color:var(--mute); margin:-4px 2px 12px; line-height:1.6; }
   .daycap b { color:var(--ink); }
 
+  /* vuốt trái để đánh dấu xong */
+  .sw { position:relative; overflow:hidden; border-top:1px solid var(--line); }
+  .sw:first-child { border-top:0; }
+  .sw .row { border-top:0; background:#fff; position:relative; z-index:1; touch-action:pan-y; }
+  .sw-bg { position:absolute; inset:0; background:var(--mint); display:flex; align-items:center; justify-content:flex-end; gap:8px; padding-right:22px; font-weight:600; font-size:13px; transition:background .2s; }
+  .sw-bg svg { width:20px; height:20px; }
+  .sw.armed .sw-bg { background:#7fd1b9; }
+  .sw.sw-dark { border:0; border-radius:24px; margin-bottom:8px; }
+  .sw-dark .jrow { margin-bottom:0; position:relative; z-index:1; touch-action:pan-y; }
+  .syncbar { background:var(--peach); border-radius:20px; padding:12px 18px; margin-bottom:14px; font-size:13px; line-height:1.5; cursor:pointer; box-shadow:inset 0 0 0 1.5px var(--black); }
+
   /* lớp mờ che nội dung dưới dock */
   .veil { position:fixed; left:0; right:0; bottom:0; height:calc(108px + env(safe-area-inset-bottom)); z-index:14; -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); background:linear-gradient(to top, var(--bg) 0, var(--bg) 78%, rgba(238,238,239,0) 100%); -webkit-mask-image:linear-gradient(to top, #000 82%, transparent 100%); mask-image:linear-gradient(to top, #000 82%, transparent 100%); }
 
@@ -307,6 +318,7 @@
     <div class="rel"><button class="pill" id="period"></button><div id="cal"></div></div>
     <label class="pill search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" placeholder="Tìm Kiếm..."></label>
   </div>
+  <div id="syncbar" class="syncbar" style="display:none"></div>
   <div id="main"></div>
 </div>
 <div class="veil"></div>
@@ -406,6 +418,41 @@ function leave(el, fn) {
   requestAnimationFrame(() => { el.style.maxHeight = '0px'; });
   setTimeout(fn, 270);
 }
+function swipeable(row, onDone, label = 'Xong', cls = '') {
+  const wrap = $('div', { className: 'sw ' + cls }, [row, $('div', { className: 'sw-bg' }, [svg(ICON.check), label])]);
+  const TH = 88, MAX = 150;
+  let x0 = 0, y0 = 0, dx = 0, mode = null, active = false, moved = false;
+  const setX = v => { row.style.transform = v ? 'translateX(' + v + 'px)' : ''; };
+  row.addEventListener('pointerdown', e => {
+    if ((e.pointerType === 'mouse' && e.button !== 0) || e.target.closest('a, button, input, select, textarea')) return;
+    x0 = e.clientX; y0 = e.clientY; dx = 0; mode = null; active = true; moved = false;
+  });
+  row.addEventListener('pointermove', e => {
+    if (!active) return;
+    dx = e.clientX - x0;
+    const dy = e.clientY - y0;
+    if (!mode && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) mode = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+    if (mode !== 'x') return;
+    if (!moved) { moved = true; row.style.transition = 'none'; try { row.setPointerCapture(e.pointerId); } catch (_) {} }
+    const v = Math.max(-MAX, Math.min(0, dx));
+    setX(v); wrap.classList.toggle('armed', v <= -TH);
+  });
+  const end = () => {
+    if (!active) return;
+    active = false;
+    if (mode === 'x') {
+      row.style.transition = 'transform .25s var(--ease)';
+      if (dx <= -TH) { setX(-row.offsetWidth); leave(wrap, onDone); } else { setX(0); wrap.classList.remove('armed'); }
+    }
+    mode = null;
+    setTimeout(() => { moved = false; }, 60);
+  };
+  row.addEventListener('pointerup', end);
+  row.addEventListener('pointercancel', end);
+  row.addEventListener('click', e => { if (moved) { e.stopPropagation(); e.preventDefault(); } }, true);
+  return wrap;
+}
+const swipeRow = (j, row) => j.status === 'paid' ? row : swipeable(row, () => setStatus(j, j.status === 'todo' ? 'done' : 'paid'), j.status === 'todo' ? 'Xong' : 'Đã Thu');
 const tick = (e, fn) => { const c = e.currentTarget; c.classList.add('done'); leave(c.parentElement, fn); };
 
 const lastVals = {};
@@ -649,12 +696,12 @@ function viewOverview() {
   const jobsCard = $('div', { className: 'card black ga-jobs' }, [
     $('div', { className: 'sec' }, [$('h3', {}, 'Công việc'),
       $('div', { className: 'jt' }, [['todo', 'Chưa làm (' + todo.length + ')'], ['unpaid', 'Chờ thu (' + unpaid.length + ')']].map(([k, l]) => $('button', { className: homeList === k ? 'on' : '', onclick: () => { homeList = k; render(); } }, l)))]),
-    ...(list.length ? list.slice(0, 5).map(j => $('div', { className: 'jrow', 'data-id': j.id }, [
+    ...(list.length ? list.slice(0, 5).map(j => swipeable($('div', { className: 'jrow', 'data-id': j.id }, [
       $('div', { className: 'ic' }, svg(ICON.brief)),
       $('div', { className: 'in lnk', onclick: () => showJob(j) }, [$('div', { className: 'nm' }, j.title), $('small', {}, [when(j), j.client].filter(Boolean).join(' · '))]),
       $('div', { className: 'am' }, [fmt(owed(j)), $('small', {}, 'còn thu')]),
-      $('button', { className: 'ok', title: homeList === 'todo' ? 'Đánh dấu đã xong' : 'Đã thu tiền', onclick: e => leave(e.currentTarget.closest('.jrow'), () => setStatus(j, homeList === 'todo' ? 'done' : 'paid')) }, svg(ICON.check)),
-    ])) : [$('div', { className: 'empty dim' }, homeList === 'todo' ? 'Không còn job nào chưa làm' : 'Không có khoản nào đang chờ thu')]),
+      $('button', { className: 'ok', title: homeList === 'todo' ? 'Đánh dấu đã xong' : 'Đã thu tiền', onclick: e => leave(e.currentTarget.closest('.sw') || e.currentTarget.closest('.jrow'), () => setStatus(j, homeList === 'todo' ? 'done' : 'paid')) }, svg(ICON.check)),
+    ]), () => setStatus(j, homeList === 'todo' ? 'done' : 'paid'), homeList === 'todo' ? 'Xong' : 'Đã Thu', 'sw-dark')) : [$('div', { className: 'empty dim' }, homeList === 'todo' ? 'Không còn job nào chưa làm' : 'Không có khoản nào đang chờ thu')]),
     list.length > 5 ? $('div', { className: 'more', onclick: () => go(homeList) }, 'Xem tất cả (' + list.length + ') ›') : '',
     $('div', { className: 'jtotal' }, [$('span', {}, 'Tổng tiền chờ thu'), $('b', {}, fmt(sumOwed(unpaid)))]),
   ]);
@@ -687,17 +734,17 @@ function viewList(jobs, empty, extra) {
   jobs = jobs.filter(matches);
   const card = $('div', { className: 'card' }, banner());
   if (extra) card.append(extra);
-  card.append(jobs.length ? $('div', {}, jobs.map(j => $('div', { className: 'row', 'data-id': j.id }, [
+  card.append(jobs.length ? $('div', {}, jobs.map(j => swipeRow(j, $('div', { className: 'row', 'data-id': j.id }, [
     $('div', { className: 'ic' }, svg(ICON.brief)),
     $('div', { className: 'info' }, [$('div', { className: 'lnk', onclick: () => showJob(j) }, j.title), $('small', {}, [when(j), j.client || '—', j.phone].filter(Boolean).join(' · ') + (j.paidDate ? ' · thu ' + fmtDate(j.paidDate) : ''))]),
     $('span', { className: 'tag ' + j.status }, STATUS[j.status]),
     $('div', { className: 'qacts' }, [
       j.phone ? $('a', { className: 'qbtn', href: 'tel:' + j.phone.replace(/[^\d+]/g, ''), title: 'Gọi Khách' }, svg(ICON.phone)) : '',
-      j.status !== 'paid' ? $('button', { className: 'qbtn go', title: j.status === 'todo' ? 'Đánh Dấu Xong' : 'Đã Thu Tiền', onclick: e => leave(e.currentTarget.closest('.row'), () => setStatus(j, j.status === 'todo' ? 'done' : 'paid')) }, svg(ICON.check)) : '',
+      j.status !== 'paid' ? $('button', { className: 'qbtn go', title: j.status === 'todo' ? 'Đánh Dấu Xong' : 'Đã Thu Tiền', onclick: e => leave(e.currentTarget.closest('.sw') || e.currentTarget.closest('.row'), () => setStatus(j, j.status === 'todo' ? 'done' : 'paid')) }, svg(ICON.check)) : '',
     ]),
     $('div', { className: 'amt' }, [fmt(shown(j)), $('small', {}, j.status === 'paid' ? 'đã thu đủ' : 'còn phải thu')]),
     $('button', { className: 'dots', onclick: e => openMenu(e, jobActions(j)) }, '···'),
-  ]))) : $('div', { className: 'empty' }, empty));
+  ])))) : $('div', { className: 'empty' }, empty));
   return card;
 }
 let jobSort = 'date-desc';
@@ -708,7 +755,7 @@ const sortJobs = a => a.slice().sort(jobSort === 'date-asc' ? (x, y) => jobKey(x
 const viewJobs = (jobs, empty, extra) => $('div', {}, [jobChips(),
   sortSelect(jobSort, [['date-desc', 'Ngày Thực Hiện: Mới Nhất'], ['date-asc', 'Ngày Thực Hiện: Cũ Nhất'], ['amt-desc', 'Số Tiền: Cao Nhất'], ['amt-asc', 'Số Tiền: Thấp Nhất']], k => { jobSort = k; }),
   viewList(sortJobs(jobs), empty, extra)]);
-let expFilter = 'all', thuFilter = 'all', expSort = 'date-desc', labelFilter = 'all';
+let expFilter = 'all', thuFilter = 'all', expSort = 'date-desc', thuSort = 'date-desc';
 const LABELS = ['Ăn Uống', 'Đi Lại', 'Mua Sắm', 'Khác'];
 const labelOf = x => x.label || 'Khác';
 const tabForKind = k => k === 'vay' || k === 'thu' ? 'thu' : 'chi';
@@ -733,7 +780,8 @@ function entryRow(x) {
   const sign = x.kind === 'vay' || x.kind === 'thu' ? '+' : '-';
   const who = x.person ? (x.kind === 'vay' ? 'vay của ' + x.person : 'cho ' + x.person + ' vay') : '';
   const info = [fmtDate(x.date), who, x.settled ? (x.kind === 'vay' ? 'đã trả ' : 'đã thu lại ') + fmtDate(x.settledDate) : dueText(x)].filter(Boolean).join(' · ');
-  return listRow({ id: x.id, title: x.note, sub: info, tag: x.kind === 'chi' ? labelOf(x) : KIND[x.kind] + (x.settled ? ' ✓' : ''), tagCls: x.kind, amount: sign + fmt(x.amount), items: entryItems(x) });
+  const row = listRow({ id: x.id, title: x.note, sub: info, tag: x.kind === 'chi' ? labelOf(x) : KIND[x.kind] + (x.settled ? ' ✓' : ''), tagCls: x.kind, amount: sign + fmt(x.amount), items: entryItems(x) });
+  return isDebt(x) && !x.settled ? swipeable(row, () => settle(x), x.kind === 'vay' ? 'Đã Trả' : 'Đã Thu Lại') : row;
 }
 const listCard = (rows, empty) => {
   const card = $('div', { className: 'card' }, banner());
@@ -743,46 +791,53 @@ const listCard = (rows, empty) => {
 const openOf = k => sum(state.expenses.filter(x => x.kind === k && !x.settled));
 const visible = x => inPeriod(x.date) || inPeriod(x.settledDate) || (isDebt(x) && !x.settled);
 
+// gom các dòng theo ngày: ngày chi/thu nhiều nhất hoặc ít nhất lên đầu, kèm tổng mỗi ngày
+function arrange(rows, sortKey) {
+  const days = {};
+  rows.forEach(r => { const d = days[r.date] || (days[r.date] = { date: r.date, total: 0, rows: [] }); d.total += r.amount; d.rows.push(r); });
+  const list = Object.values(days);
+  let body;
+  if (sortKey === 'day-high' || sortKey === 'day-low') {
+    list.sort((a, b) => sortKey === 'day-high' ? b.total - a.total : a.total - b.total);
+    body = list.flatMap(d => [$('div', { className: 'dayhead' }, [$('span', {}, fmtDate(d.date)), $('b', {}, fmt(d.total))]), ...d.rows.sort((a, b) => b.amount - a.amount).map(r => r.el)]);
+  } else {
+    const cmp = sortKey === 'date-asc' ? (a, b) => a.date.localeCompare(b.date) : sortKey === 'amt-desc' ? (a, b) => b.amount - a.amount : sortKey === 'amt-asc' ? (a, b) => a.amount - b.amount : (a, b) => b.date.localeCompare(a.date);
+    body = rows.sort(cmp).map(r => r.el);
+  }
+  const hi = list.reduce((m, d) => !m || d.total > m.total ? d : m, null), lo = list.reduce((m, d) => !m || d.total < m.total ? d : m, null);
+  return { body, hi, lo };
+}
+const sortOpts = w => [['date-desc', 'Ngày: Mới Nhất'], ['date-asc', 'Ngày: Cũ Nhất'], ['day-high', 'Ngày ' + w + ' Nhiều Nhất'], ['day-low', 'Ngày ' + w + ' Ít Nhất'], ['amt-desc', 'Số Tiền: Cao Nhất'], ['amt-asc', 'Số Tiền: Thấp Nhất']];
+const dayCaption = (w, hi, lo) => hi ? $('div', { className: 'daycap' }, [w + ' nhiều nhất: ', $('b', {}, fmtDate(hi.date) + ' · ' + fmt(hi.total)), '   ·   ' + w + ' ít nhất: ', $('b', {}, fmtDate(lo.date) + ' · ' + fmt(lo.total))]) : '';
+const bodyCard = (body, empty) => { const c = $('div', { className: 'card' }, banner()); c.append(body.length ? $('div', {}, body) : $('div', { className: 'empty' }, empty)); return c; };
+
 function viewChi() {
   const q = query.toLowerCase(), hit = t => !q || t.toLowerCase().includes(q);
+  const lab = expFilter.startsWith('label:') ? expFilter.slice(6) : null;
   const rows = [];
   for (const x of state.expenses) {
     if (x.kind === 'thu' || x.kind === 'vay') continue;
-    if (labelFilter !== 'all' && !(x.kind === 'chi' && labelOf(x) === labelFilter)) continue;
-    if ((expFilter === 'all' || expFilter === x.kind) && visible(x) && hit(x.note + ' ' + (x.person || ''))) rows.push({ date: x.date, amount: x.amount, el: entryRow(x) });
+    const okKind = expFilter === 'all' || (lab ? x.kind === 'chi' && labelOf(x) === lab : expFilter === x.kind);
+    if (okKind && visible(x) && hit(x.note + ' ' + (x.person || ''))) rows.push({ date: x.date, amount: x.amount, el: entryRow(x) });
   }
-  if (labelFilter === 'all' && (expFilter === 'all' || expFilter === 'tra')) {
+  if (expFilter === 'all' || expFilter === 'tra') {
     for (const x of state.expenses) {
       if (x.kind === 'vay' && x.settled && x.settledDate && inPeriod(x.settledDate) && hit(x.note + ' ' + (x.person || ''))) {
         rows.push({ date: x.settledDate, amount: x.amount, el: listRow({ id: x.id, title: 'Trả Nợ · ' + (x.person || x.note), sub: fmtDate(x.settledDate) + ' · ' + x.note, tag: 'Trả nợ', tagCls: 'vay', amount: '-' + fmt(x.amount), items: [['Huỷ đã trả', () => settle(x, false)], ['Sửa khoản vay', () => expenseForm(x)]] }) });
       }
     }
   }
-  // tổng chi theo từng ngày để tìm ngày chi nhiều nhất / ít nhất
-  const days = {};
-  rows.forEach(r => { const d = days[r.date] || (days[r.date] = { date: r.date, total: 0, rows: [] }); d.total += r.amount; d.rows.push(r); });
-  const dayList = Object.values(days);
-  let body;
-  if (expSort === 'day-high' || expSort === 'day-low') {
-    dayList.sort((a, b) => expSort === 'day-high' ? b.total - a.total : a.total - b.total);
-    body = dayList.flatMap(d => [$('div', { className: 'dayhead' }, [$('span', {}, fmtDate(d.date)), $('b', {}, fmt(d.total))]), ...d.rows.sort((a, b) => b.amount - a.amount).map(r => r.el)]);
-  } else {
-    body = rows.sort((a, b) => expSort === 'date-asc' ? a.date.localeCompare(b.date) : b.date.localeCompare(a.date)).map(r => r.el);
-  }
-  const hi = dayList.reduce((m, d) => !m || d.total > m.total ? d : m, null), lo = dayList.reduce((m, d) => !m || d.total < m.total ? d : m, null);
-  const card = $('div', { className: 'card' }, banner());
-  card.append(body.length ? $('div', {}, body) : $('div', { className: 'empty' }, 'Chưa có khoản chi nào'));
+  const { body, hi, lo } = arrange(rows, expSort);
   return $('div', {}, [
     $('div', { className: 'stat3' }, [
       statCard('black', 'Tổng chi (kỳ đang xem)', sum(outflows().filter(e => inPeriod(e.date)))),
       statCard('peach', 'Chi tiêu thường', sum(state.expenses.filter(x => x.kind === 'chi' && inPeriod(x.date)))),
       statCard('mint', 'Cho vay · cần thu lại', openOf('chovay')),
     ]),
-    chipRow(expFilter, [['all', 'Tất cả'], ['chi', 'Chi'], ['chovay', 'Cho vay'], ['tra', 'Trả nợ']], k => { expFilter = k; if (k !== 'all' && k !== 'chi') labelFilter = 'all'; }, '+ Thêm khoản chi', () => expenseForm(null, ['chi', 'chovay'])),
-    $('div', { className: 'chips' }, [['all', 'Mọi Nhãn'], ...LABELS.map(l => [l, l])].map(([k, l]) => $('button', { className: labelFilter === k ? 'on' : '', onclick: () => { labelFilter = k; if (k !== 'all') expFilter = 'chi'; render(); } }, l))),
-    sortSelect(expSort, [['date-desc', 'Ngày: Mới Nhất'], ['date-asc', 'Ngày: Cũ Nhất'], ['day-high', 'Ngày Chi Nhiều Nhất'], ['day-low', 'Ngày Chi Ít Nhất']], k => { expSort = k; }),
-    hi ? $('div', { className: 'daycap' }, ['Chi nhiều nhất: ', $('b', {}, fmtDate(hi.date) + ' · ' + fmt(hi.total)), '   ·   Chi ít nhất: ', $('b', {}, fmtDate(lo.date) + ' · ' + fmt(lo.total))]) : '',
-    card,
+    chipRow(expFilter, [['all', 'Tất cả'], ...LABELS.map(l => ['label:' + l, l]), ['chovay', 'Cho vay'], ['tra', 'Trả nợ']], k => { expFilter = k; }, '+ Thêm khoản chi', () => expenseForm(null, ['chi', 'chovay'])),
+    sortSelect(expSort, sortOpts('Chi'), k => { expSort = k; }),
+    dayCaption('Chi', hi, lo),
+    bodyCard(body, 'Chưa có khoản chi nào'),
   ]);
 }
 
@@ -792,24 +847,27 @@ function viewThu() {
   if (thuFilter === 'all' || thuFilter === 'job') {
     for (const j of state.jobs) {
       const dep = Math.min(j.deposit || 0, j.amount), name = j.title + ' ' + (j.client || '');
-      if (dep > 0 && inPeriod(depDate(j)) && hit(name)) rows.push({ date: depDate(j), el: listRow({ id: j.id, title: 'Cọc · ' + j.title, sub: [fmtDate(depDate(j)), j.client].filter(Boolean).join(' · '), tag: 'Từ job', tagCls: 'thu', amount: '+' + fmt(dep), items: [['Xem job', () => showJob(j)]] }) });
-      if (j.status === 'paid' && j.paidDate && j.amount - dep > 0 && inPeriod(j.paidDate) && hit(name)) rows.push({ date: j.paidDate, el: listRow({ id: j.id + 'p', title: 'Thu Đủ · ' + j.title, sub: [fmtDate(j.paidDate), j.client].filter(Boolean).join(' · '), tag: 'Từ job', tagCls: 'thu', amount: '+' + fmt(j.amount - dep), items: [['Xem job', () => showJob(j)], ['Huỷ thu tiền', () => setStatus(j, 'done')]] }) });
+      if (dep > 0 && inPeriod(depDate(j)) && hit(name)) rows.push({ date: depDate(j), amount: dep, el: listRow({ id: j.id, title: 'Cọc · ' + j.title, sub: [fmtDate(depDate(j)), j.client].filter(Boolean).join(' · '), tag: 'Từ job', tagCls: 'thu', amount: '+' + fmt(dep), items: [['Xem job', () => showJob(j)]] }) });
+      if (j.status === 'paid' && j.paidDate && j.amount - dep > 0 && inPeriod(j.paidDate) && hit(name)) rows.push({ date: j.paidDate, amount: j.amount - dep, el: listRow({ id: j.id + 'p', title: 'Thu Đủ · ' + j.title, sub: [fmtDate(j.paidDate), j.client].filter(Boolean).join(' · '), tag: 'Từ job', tagCls: 'thu', amount: '+' + fmt(j.amount - dep), items: [['Xem job', () => showJob(j)], ['Huỷ thu tiền', () => setStatus(j, 'done')]] }) });
     }
   }
   for (const x of state.expenses) {
-    if ((x.kind === 'vay' || x.kind === 'thu') && (thuFilter === 'all' || thuFilter === x.kind) && visible(x) && hit(x.note + ' ' + (x.person || ''))) rows.push({ date: x.date, el: entryRow(x) });
-    if (x.kind === 'chovay' && x.settled && x.settledDate && (thuFilter === 'all' || thuFilter === 'thu') && inPeriod(x.settledDate) && hit(x.note + ' ' + (x.person || ''))) {
-      rows.push({ date: x.settledDate, el: listRow({ id: x.id, title: 'Thu Lại · ' + (x.person || x.note), sub: fmtDate(x.settledDate) + ' · ' + x.note, tag: 'Thu lại', tagCls: 'chovay', amount: '+' + fmt(x.amount), items: [['Huỷ đã thu lại', () => settle(x, false)], ['Sửa khoản cho vay', () => expenseForm(x)]] }) });
+    if ((x.kind === 'vay' || x.kind === 'thu') && (thuFilter === 'all' || thuFilter === x.kind) && visible(x) && hit(x.note + ' ' + (x.person || ''))) rows.push({ date: x.date, amount: x.amount, el: entryRow(x) });
+    if (x.kind === 'chovay' && x.settled && x.settledDate && (thuFilter === 'all' || thuFilter === 'lai') && inPeriod(x.settledDate) && hit(x.note + ' ' + (x.person || ''))) {
+      rows.push({ date: x.settledDate, amount: x.amount, el: listRow({ id: x.id, title: 'Thu Lại · ' + (x.person || x.note), sub: fmtDate(x.settledDate) + ' · ' + x.note, tag: 'Thu lại', tagCls: 'chovay', amount: '+' + fmt(x.amount), items: [['Huỷ đã thu lại', () => settle(x, false)], ['Sửa khoản cho vay', () => expenseForm(x)]] }) });
     }
   }
+  const { body, hi, lo } = arrange(rows, thuSort);
   return $('div', {}, [
     $('div', { className: 'stat3' }, [
       statCard('black', 'Tổng thu (kỳ đang xem)', sum(inflows().filter(e => inPeriod(e.date)))),
       statCard('mint', 'Thu từ job', sum(incomeEvents().filter(e => inPeriod(e.date)))),
       statCard('peach', 'Đang vay · phải trả', openOf('vay')),
     ]),
-    chipRow(thuFilter, [['all', 'Tất cả'], ['job', 'Từ job'], ['vay', 'Vay'], ['thu', 'Thu khác']], k => { thuFilter = k; }, '+ Thêm khoản thu', () => expenseForm(null, ['thu', 'vay'])),
-    listCard(rows, 'Chưa có khoản thu nào'),
+    chipRow(thuFilter, [['all', 'Tất cả'], ['job', 'Từ job'], ['vay', 'Vay'], ['thu', 'Thu khác'], ['lai', 'Thu lại']], k => { thuFilter = k; }, '+ Thêm khoản thu', () => expenseForm(null, ['thu', 'vay'])),
+    sortSelect(thuSort, sortOpts('Thu'), k => { thuSort = k; }),
+    dayCaption('Thu', hi, lo),
+    bodyCard(body, 'Chưa có khoản thu nào'),
   ]);
 }
 
@@ -937,14 +995,21 @@ document.getElementById('q').oninput = e => { query = e.target.value; if (query 
 /* ---------- đăng nhập Google + đồng bộ Drive (chỉ bản web) ---------- */
 const CLIENT_ID = window.GOOGLE_CLIENT_ID || '';
 const FLAG = 'tuni-signedin', FILE_NAME = 'tunigraphy-data.json';
-const SYNC = { token: null, exp: 0, client: null, fileId: null, status: 'local', last: null, choose: false, busy: false, again: false, timer: null };
+const SCOPE = 'https://www.googleapis.com/auth/drive.appdata', TOKEN_KEY = 'tuni-token';
+const SYNC = { token: null, exp: 0, client: null, fileId: null, status: 'local', msg: '', last: null, choose: false, busy: false, again: false, timer: null, needGesture: false };
+// giữ thẻ đăng nhập qua các lần tải lại trang (thẻ Google chỉ sống 1 giờ)
+try { const t = JSON.parse(localStorage.getItem(TOKEN_KEY) || 'null'); if (t && t.exp > Date.now() + 60000) { SYNC.token = t.t; SYNC.exp = t.exp; } } catch (e) {}
 const signedIn = () => { try { return localStorage.getItem(FLAG) === '1'; } catch (e) { return false; } };
 const STATUS_TEXT = { local: 'Đăng nhập', busy: 'Đang đồng bộ…', ok: 'Đã đồng bộ', auth: 'Đăng nhập lại', err: 'Lỗi đồng bộ' };
-function setSync(st) {
-  SYNC.status = st;
+function setSync(st, msg = '') {
+  SYNC.status = st; SYNC.msg = msg;
   const b = document.getElementById('sync');
   b.querySelector('#syncText').textContent = CLIENT_ID ? STATUS_TEXT[st] : 'Chỉ lưu trên máy';
   b.querySelector('.st').className = 'st ' + (CLIENT_ID ? st : 'local');
+  const bar = document.getElementById('syncbar');
+  const bad = CLIENT_ID && !native && signedIn() && (st === 'auth' || st === 'err');
+  bar.style.display = bad ? '' : 'none';
+  if (bad) bar.textContent = st === 'auth' ? 'Chưa đồng bộ lên Google Drive vì phiên đăng nhập đã hết hạn. Chạm vào đây để đăng nhập lại.' : 'Lỗi đồng bộ: ' + (msg || 'không rõ') + '. Chạm vào đây để thử lại.';
 }
 function notice(title, msg) {
   box.textContent = '';
@@ -968,14 +1033,15 @@ function loadGIS() {
 async function getToken(interactive) {
   if (SYNC.token && Date.now() < SYNC.exp - 60000) return SYNC.token;
   await loadGIS();
-  if (!SYNC.client) SYNC.client = google.accounts.oauth2.initTokenClient({ client_id: CLIENT_ID, scope: 'https://www.googleapis.com/auth/drive.appdata', callback: () => {} });
+  if (!SYNC.client) SYNC.client = google.accounts.oauth2.initTokenClient({ client_id: CLIENT_ID, scope: SCOPE, callback: () => {} });
   return new Promise((resolve, reject) => {
     const prompt = interactive ? (SYNC.choose ? 'select_account' : '') : 'none';
     SYNC.choose = false;
     SYNC.client.callback = r => {
       if (r.error) return reject(new Error('auth: ' + r.error));
+      if (typeof google.accounts.oauth2.hasGrantedAllScopes === 'function' && !google.accounts.oauth2.hasGrantedAllScopes(r, SCOPE)) return reject(new Error('scope: chưa cấp quyền Google Drive, hãy đăng nhập lại và tick ô quyền truy cập Drive'));
       SYNC.token = r.access_token; SYNC.exp = Date.now() + Number(r.expires_in) * 1000;
-      try { localStorage.setItem(FLAG, '1'); } catch (e) {}
+      try { localStorage.setItem(FLAG, '1'); localStorage.setItem(TOKEN_KEY, JSON.stringify({ t: SYNC.token, exp: SYNC.exp })); } catch (e) {}
       resolve(SYNC.token);
     };
     SYNC.client.error_callback = e => reject(new Error('auth: ' + (e.type || 'popup')));
@@ -984,7 +1050,7 @@ async function getToken(interactive) {
 }
 const gfetch = async (url, token, opts = {}) => {
   const r = await fetch(url, { ...opts, headers: { Authorization: 'Bearer ' + token, ...(opts.headers || {}) } });
-  if (r.status === 401) { SYNC.token = null; throw new Error('auth: 401'); }
+  if (r.status === 401) { SYNC.token = null; try { localStorage.removeItem(TOKEN_KEY); } catch (e) {} throw new Error('auth: 401'); }
   if (!r.ok) throw new Error('drive: ' + r.status);
   return r;
 };
@@ -1024,7 +1090,11 @@ async function syncNow(interactive) {
     SYNC.last = new Date(); setSync('ok');
   } catch (e) {
     console.error(e);
-    setSync(!signedIn() ? 'local' : /^auth/.test(e.message) ? 'auth' : 'err');
+    const isAuth = /^auth/.test(e.message);
+    // phiên hết hạn mà không có thao tác của người dùng thì trình duyệt chặn cửa sổ đăng nhập: chờ lần chạm tiếp theo
+    if (isAuth && !interactive && signedIn()) SYNC.needGesture = true;
+    setSync(!signedIn() ? 'local' : isAuth ? 'auth' : 'err', e.message);
+    if (interactive && /^scope/.test(e.message)) notice('Chưa cấp quyền Google Drive', 'Khi đăng nhập, Google hiện ô chọn quyền. Bạn cần tick vào ô cho phép app lưu dữ liệu vào Google Drive, nếu không dữ liệu không thể đồng bộ giữa các thiết bị. Hãy bấm đăng nhập lại và tick ô đó.');
   } finally {
     SYNC.busy = false;
     if (SYNC.again) { SYNC.again = false; syncNow(false); }
@@ -1037,7 +1107,8 @@ function pushSoon() {
 }
 function signOut() {
   const t = SYNC.token;
-  try { localStorage.removeItem(FLAG); localStorage.removeItem('tuni-synced'); } catch (e) {}
+  try { localStorage.removeItem(FLAG); localStorage.removeItem('tuni-synced'); localStorage.removeItem(TOKEN_KEY); } catch (e) {}
+  SYNC.needGesture = false;
   SYNC.token = null; SYNC.fileId = null; SYNC.last = null;
   if (t && window.google && google.accounts) google.accounts.oauth2.revoke(t, () => {});
   setSync('local');
@@ -1087,6 +1158,9 @@ else {
   if (signedIn()) syncNow(false);
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
 }
+// chạm lần đầu sau khi phiên hết hạn: xin lại thẻ đăng nhập ngay trong thao tác chạm để không bị chặn
+document.addEventListener('click', () => { if (SYNC.needGesture && !SYNC.busy && signedIn()) { SYNC.needGesture = false; syncNow(true); } }, true);
+document.getElementById('syncbar').onclick = () => syncNow(true);
 window.addEventListener('resize', movePill);
 render();
 </script>
