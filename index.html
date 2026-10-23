@@ -197,6 +197,55 @@
   .sw-dark .jrow { margin-bottom:0; position:relative; z-index:1; touch-action:pan-y; }
   .syncbar { background:var(--peach); border-radius:20px; padding:12px 18px; margin-bottom:14px; font-size:13px; line-height:1.5; cursor:pointer; box-shadow:inset 0 0 0 1.5px var(--black); }
 
+  /* Drive (bản demo) */
+  .demo-note { background:var(--peach); border-radius:18px; padding:10px 14px; font-size:12.5px; line-height:1.45; margin-bottom:10px; box-shadow:inset 0 0 0 1.5px var(--black); }
+  .dstore { display:flex; align-items:center; gap:12px; margin-bottom:12px; padding:12px 18px; border-radius:24px; font-size:13px; }
+  .dstore .meter { flex:1; height:8px; border-radius:4px; background:rgba(255,255,255,.18); overflow:hidden; }
+  .dstore .meter i { display:block; height:100%; width:0; background:var(--mint); border-radius:4px; }
+  .dstore b { font-size:14px; white-space:nowrap; }
+  .crumbs { display:flex; align-items:center; gap:4px; flex-wrap:wrap; font-size:13px; margin-bottom:12px; }
+  .crumb { border:0; background:#fff; border-radius:999px; padding:8px 14px; font:inherit; font-size:13px; cursor:pointer; color:var(--ink); }
+  .crumb.on { background:var(--black); color:#fff; }
+  .crumbs .sep { color:var(--mute); }
+  .dtools { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .dtools .sortbar { margin:0; flex:1; min-width:0; }
+  .dtools .sortbar span { display:none; }
+  .dtools .sortbar select { width:100%; }
+  .vtog { display:flex; background:#fff; border-radius:999px; padding:3px; gap:2px; height:44px; align-items:center; }
+  .vtog button { width:42px; height:38px; border:0; background:none; border-radius:999px; display:grid; place-items:center; cursor:pointer; color:var(--ink); transition:background .2s, color .2s; }
+  .vtog button.on { background:var(--black); color:#fff; }
+  .vtog svg { width:18px; height:18px; }
+  .dgrid { display:grid; grid-template-columns:repeat(auto-fill, minmax(130px, 1fr)); gap:14px 12px; }
+  .dcard { cursor:pointer; min-width:0; }
+  .dth { width:100%; aspect-ratio:1 / 1; border-radius:22px; object-fit:cover; display:block; background:#e9e9ea; }
+  .dth.tile { display:grid; place-content:center; justify-items:center; gap:6px; }
+  .dth.tile svg { width:40px; height:40px; }
+  .dth.tile b { font-size:12px; font-weight:600; }
+  .dth.c0 { background:var(--peach); } .dth.c1 { background:var(--mint); } .dth.c2 { background:var(--lav); }
+  .dth.video { background:var(--black); color:#fff; }
+  .dth.vid-img { position:relative; }
+  .dname { display:flex; align-items:center; gap:4px; margin-top:8px; font-size:13px; font-weight:500; }
+  .dname span { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .dmeta { font-size:11px; color:var(--mute); margin-top:-2px; }
+  .drow { cursor:pointer; }
+  .row.drow { flex-wrap:nowrap !important; }
+  .row.drow .info { flex:1 1 0 !important; min-width:0; }
+  .row.drow .info div, .row.drow .info small { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .drow .dth { width:46px; height:46px; border-radius:14px; flex:none; aspect-ratio:auto; }
+  .drow .dth.tile svg { width:22px; height:22px; } .drow .dth.tile b { display:none; }
+  .toast { position:fixed; left:50%; bottom:calc(128px + env(safe-area-inset-bottom)); transform:translateX(-50%) translateY(12px); background:var(--black); color:#fff; padding:12px 18px; border-radius:999px; font-size:13px; font-weight:600; opacity:0; pointer-events:none; transition:opacity .3s, transform .3s var(--ease); z-index:50; max-width:calc(100% - 32px); text-align:center; box-shadow:0 10px 24px rgba(0,0,0,.25); }
+  .toast.show { opacity:1; transform:translateX(-50%); }
+  #viewer { position:fixed; inset:0; background:#0c0c0c; z-index:45; display:none; flex-direction:column; color:#fff; padding-top:env(safe-area-inset-top); }
+  #viewer .vbar { display:flex; align-items:center; gap:12px; padding:14px 16px; }
+  #viewer .vbar .ibtn { background:rgba(255,255,255,.14); color:#fff; flex:none; }
+  #viewer .vtitle { flex:1; min-width:0; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #viewer .vcount { font-size:13px; color:#b9b9be; flex:none; }
+  #viewer .stage { flex:1; min-height:0; display:grid; place-items:center; overflow:hidden; touch-action:none; padding:0 14px; }
+  #viewer img { max-width:100%; max-height:100%; border-radius:16px; transition:transform .3s var(--ease), opacity .3s; -webkit-user-drag:none; }
+  #viewer .vacts { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; padding:14px 16px calc(18px + env(safe-area-inset-bottom)); }
+  #viewer .vacts .btn { background:rgba(255,255,255,.14); border-color:transparent; color:#fff; }
+  #viewer .vacts .btn.pri { background:#fff; color:var(--ink); }
+
   /* nút nổi kiểu AssistiveTouch: di chuyển bằng transform (GPU), không dùng bộ lọc mờ để kéo mượt trên iPhone */
   .fab { position:fixed; left:0; top:0; width:58px; height:58px; z-index:16; display:none; touch-action:none; cursor:grab; outline:0; will-change:transform; transition:transform .45s var(--ease), opacity .4s; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
   .fab::after { content:''; position:absolute; inset:-8px; }
@@ -348,6 +397,7 @@
 <div class="veil"></div>
 <div class="fab" id="fab" role="button" tabindex="0"><div class="fab-body"><i></i></div><span class="fab-label" id="fabLabel"></span></div>
 <nav class="dock" id="nav"></nav>
+<div id="viewer"><div class="vbar"><button class="ibtn" id="vclose" title="Đóng"></button><div class="vtitle" id="vtitle"></div><div class="vcount" id="vcount"></div></div><div class="stage" id="vstage"><img id="vimg" alt=""></div><div class="vacts" id="vacts"></div></div>
 <div id="menu"></div>
 <div id="modal"><div class="box" id="box"></div></div>
 
@@ -376,6 +426,8 @@ const ICON = {
   in: '<path d="M17 7L7 17M16 17H7V8"/>',
   link: '<path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/>',
   phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.2-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
+  play: '<path d="M8 5.5v13l11-6.5z"/>',
+  file: '<path d="M6 3h8l5 5v13H6z"/><path d="M14 3v6h5"/>',
   sort: '<path d="M4 7h10M4 12h7M4 17h4"/><path d="M17 5v14M14 16l3 3 3-3"/>',
   folder: '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
 };
@@ -925,13 +977,164 @@ function viewThu() {
   ]);
 }
 
-function viewDrive() {
-  return $('div', {}, [$('div', { className: 'card lav drive' }, [
-    $('div', { className: 'mt2' }, [$('i', {}, svg(ICON.folder)), $('h3', {}, 'Google Drive')]),
-    $('p', {}, 'Tính năng này sắp có: xem và quản lý file ảnh, hợp đồng của từng job ngay trong app, lưu trên Drive của bạn.'),
-    $('a', { className: 'btn', href: 'https://drive.google.com', target: '_blank', rel: 'noopener' }, 'Mở Google Drive ↗'),
-  ])]);
+/* ---------- Drive (bản demo, dữ liệu mẫu, chưa nối Drive thật) ---------- */
+const PALETTES = [['#cfe9e4', '#fbe4c6'], ['#e8dcf7', '#cfe9e4'], ['#fbe4c6', '#e8dcf7'], ['#d9e4f5', '#f6d9e4'], ['#e6efd0', '#cfe9e4'], ['#f1e0d0', '#d8d8e8']];
+const hashStr = str => { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; };
+const rnd = seed => { let t = seed >>> 0; return () => { t = (t + 0x6D2B79F5) >>> 0; let r = Math.imul(t ^ t >>> 15, 1 | t); r = r + Math.imul(r ^ r >>> 7, 61 | r) ^ r; return ((r ^ r >>> 14) >>> 0) / 4294967296; }; };
+const photoCache = {};
+function photoUri(seed, w = 360, h = 360) {
+  const key = seed + ':' + w + 'x' + h;
+  if (photoCache[key]) return photoCache[key];
+  const r = rnd(seed), [c1, c2] = PALETTES[seed % PALETTES.length];
+  const sun = '<circle cx="' + Math.round(w * (.2 + r() * .6)) + '" cy="' + Math.round(h * (.18 + r() * .22)) + '" r="' + Math.round(h * (.07 + r() * .08)) + '" fill="#fff" opacity=".85"/>';
+  const hills = [0, 1, 2].map(i => '<path d="M0 ' + h + ' L0 ' + Math.round(h * (.62 + i * .1 + r() * .06)) + ' Q' + Math.round(w * .3) + ' ' + Math.round(h * (.45 + i * .1 + r() * .1)) + ' ' + Math.round(w * .55) + ' ' + Math.round(h * (.6 + i * .1)) + ' T' + w + ' ' + Math.round(h * (.58 + i * .12)) + ' L' + w + ' ' + h + 'Z" fill="#141414" opacity="' + [.16, .3, .5][i] + '"/>').join('');
+  const svgT = '<svg xmlns="http://www.w3.org/2000/svg" width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + c1 + '"/><stop offset="1" stop-color="' + c2 + '"/></linearGradient></defs><rect width="' + w + '" height="' + h + '" fill="url(#g)"/>' + sun + hills + '</svg>';
+  return photoCache[key] = 'data:image/svg+xml;utf8,' + encodeURIComponent(svgT);
 }
+const fmtSize = b => b >= 1e9 ? (b / 1e9).toFixed(1) + ' GB' : b >= 1e6 ? Math.round(b / 1e6) + ' MB' : Math.max(1, Math.round(b / 1e3)) + ' KB';
+const drive = { nodes: null, sig: '', path: [], view: 'grid', sort: 'name', extra: [] };
+function buildDrive() {
+  const nodes = { root: { id: 'root', name: 'Drive Của Tôi', type: 'folder', parent: null, size: 0, date: '2026-01-01' } };
+  const add = (id, o) => { nodes[id] = { id, size: 0, date: today(), ...o }; return id; };
+  const jobs = state.jobs.length ? state.jobs.slice(0, 12) : [{ id: 'd1', title: 'Chụp Kỷ Yếu Lớp 12A', created: today() }, { id: 'd2', title: 'Chụp Cưới Anh Nam', created: today() }, { id: 'd3', title: 'Ảnh Sản Phẩm Shop XYZ', created: today() }];
+  for (const j of jobs) {
+    const seed = hashStr(String(j.id)), r = rnd(seed), d = j.created || today(), f = 'j' + j.id;
+    add(f, { name: j.title, type: 'folder', parent: 'root', date: d });
+    add(f + '-raw', { name: 'Ảnh Gốc', type: 'folder', parent: f, date: d });
+    add(f + '-fin', { name: 'Ảnh Đã Chỉnh', type: 'folder', parent: f, date: d });
+    const nRaw = 14 + Math.floor(r() * 14), nFin = 8 + Math.floor(r() * 8);
+    for (let i = 0; i < nRaw; i++) add(f + '-r' + i, { name: 'IMG_' + (1000 + i * 3 + Math.floor(r() * 3)) + '.jpg', type: 'image', parent: f + '-raw', date: d, size: 2e6 + Math.floor(r() * 7e6), seed: seed + i * 7 + 1 });
+    for (let i = 0; i < nFin; i++) add(f + '-f' + i, { name: 'Final_' + pad(i + 1) + '.jpg', type: 'image', parent: f + '-fin', date: d, size: 1.5e6 + Math.floor(r() * 4e6), seed: seed + i * 13 + 5 });
+    add(f + '-v', { name: 'Clip_01.mp4', type: 'video', parent: f + '-raw', date: d, size: 90e6 + Math.floor(r() * 80e6) });
+    add(f + '-c', { name: 'Hợp Đồng.pdf', type: 'pdf', parent: f, date: d, size: 340e3 });
+  }
+  add('hd', { name: 'Hợp Đồng Mẫu', type: 'folder', parent: 'root', date: '2026-01-05' });
+  add('hd-1', { name: 'Hợp Đồng Chụp Ảnh.docx', type: 'doc', parent: 'hd', date: '2026-01-05', size: 48e3 });
+  add('bg', { name: 'Bảng Giá 2026.pdf', type: 'pdf', parent: 'root', date: '2026-01-10', size: 820e3 });
+  return nodes;
+}
+const dkids = id => Object.values(drive.nodes).filter(x => x.parent === id);
+const driveLink = x => x.type === 'folder' ? 'https://drive.google.com/drive/folders/' + x.id : 'https://drive.google.com/file/d/' + x.id + '/view';
+const TYPE_LABEL = { folder: 'Thư mục', image: 'Ảnh', video: 'Video', pdf: 'PDF', doc: 'Tài liệu' };
+function toast(msg) {
+  let t = document.getElementById('toast');
+  if (!t) { t = $('div', { className: 'toast', id: 'toast' }); document.body.append(t); }
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2400);
+}
+async function copyText(t) {
+  try { await navigator.clipboard.writeText(t); return true; } catch (e) {}
+  const a = $('textarea', { value: t }); a.style.cssText = 'position:fixed;opacity:0;top:0';
+  document.body.append(a); a.select();
+  let ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+  a.remove(); return ok;
+}
+async function copyLink(x) { toast((await copyText(driveLink(x))) ? 'Đã sao chép link (link demo, chưa mở được)' : 'Không sao chép được link'); }
+const demoOnly = () => toast('Tính năng này sẽ hoạt động ở bản kết nối Drive thật');
+const curFolder = () => drive.path.length ? drive.path[drive.path.length - 1] : 'root';
+function openNode(x, list) {
+  if (x.type === 'folder') { drive.path.push(x.id); query = ''; document.getElementById('q').value = ''; return render(); }
+  if (x.type === 'image') { const imgs = (list || dkids(x.parent)).filter(y => y.type === 'image'); return openViewer(imgs, Math.max(0, imgs.indexOf(x))); }
+  toast(x.type === 'video' ? 'Xem trước video sẽ có ở bản Drive thật' : 'Xem trước tài liệu sẽ có ở bản Drive thật');
+}
+const nodeMenu = (x, list) => [['Mở', () => openNode(x, list)], ['Sao Chép Link', () => copyLink(x)], ['Chia Sẻ', demoOnly], ['Tải Về', demoOnly], ['Đổi Tên', demoOnly], ['Xoá', demoOnly]];
+function thumbOf(x) {
+  if (x.type === 'image') return $('img', { className: 'dth', src: x.url || photoUri(x.seed), loading: 'lazy', alt: x.name, draggable: false });
+  if (x.type === 'folder') return $('div', { className: 'dth tile c' + (hashStr(x.id) % 3) }, [svg(ICON.folder), $('b', {}, dkids(x.id).length + ' mục')]);
+  if (x.type === 'video') return $('div', { className: 'dth tile video' }, [svg(ICON.play), $('b', {}, 'Video')]);
+  return $('div', { className: 'dth tile c' + (x.type === 'pdf' ? 0 : 2) }, [svg(ICON.file), $('b', {}, x.type === 'pdf' ? 'PDF' : 'DOC')]);
+}
+function pathOf(x) { const out = []; let n = drive.nodes[x.parent]; while (n && n.id !== 'root') { out.unshift(n.name); n = drive.nodes[n.parent]; } return ['Drive', ...out].join(' › '); }
+function viewDrive() {
+  const sig = state.jobs.map(j => j.id + j.title).join('|');
+  if (!drive.nodes || drive.sig !== sig) { drive.nodes = buildDrive(); drive.sig = sig; drive.extra.forEach(x => { if (drive.nodes[x.parent]) drive.nodes[x.id] = x; }); }
+  if (!drive.path.every(id => drive.nodes[id])) drive.path = [];
+  const cur = curFolder(), q = query.trim().toLowerCase();
+  let items = q ? Object.values(drive.nodes).filter(x => x.id !== 'root' && x.name.toLowerCase().includes(q)) : dkids(cur);
+  const cmp = { name: (a, b) => a.name.localeCompare(b.name, 'vi'), 'date-desc': (a, b) => b.date.localeCompare(a.date), 'date-asc': (a, b) => a.date.localeCompare(b.date), 'size-desc': (a, b) => b.size - a.size }[drive.sort];
+  items.sort((a, b) => (a.type === 'folder') !== (b.type === 'folder') ? (a.type === 'folder' ? -1 : 1) : cmp(a, b));
+  const all = Object.values(drive.nodes).filter(x => x.type !== 'folder').reduce((t, x) => t + x.size, 0);
+  const used = Math.min(14.2e9, 10.4e9 + all / 4), pct = Math.round(used / 15e9 * 100);
+
+  const crumbs = $('div', { className: 'crumbs' }, q ? [$('span', {}, 'Kết quả tìm kiếm cho "' + query.trim() + '" (' + items.length + ')')] : [
+    $('button', { className: 'crumb' + (drive.path.length ? '' : ' on'), onclick: () => { drive.path = []; render(); } }, 'Drive'),
+    ...drive.path.flatMap((id, i) => [$('span', { className: 'sep' }, '›'), $('button', { className: 'crumb' + (i === drive.path.length - 1 ? ' on' : ''), onclick: () => { drive.path = drive.path.slice(0, i + 1); render(); } }, drive.nodes[id].name)]),
+  ]);
+  const tools = $('div', { className: 'dtools' }, [
+    $('div', { className: 'vtog' }, [['grid', ICON.grid, 'Dạng lưới'], ['list', ICON.list, 'Dạng danh sách']].map(([k, ic, t]) => $('button', { className: drive.view === k ? 'on' : '', title: t, onclick: () => { drive.view = k; render(); } }, svg(ic)))),
+    sortSelect(drive.sort, [['name', 'Tên: A → Z'], ['date-desc', 'Ngày: Mới Nhất'], ['date-asc', 'Ngày: Cũ Nhất'], ['size-desc', 'Dung Lượng: Lớn Nhất']], k => { drive.sort = k; }),
+  ]);
+  const meta = x => [TYPE_LABEL[x.type], x.type === 'folder' ? dkids(x.id).length + ' mục' : fmtSize(x.size), fmtDate(x.date)].join(' · ');
+  const body = !items.length ? $('div', { className: 'empty' }, q ? 'Không tìm thấy file nào' : 'Thư mục này đang trống')
+    : drive.view === 'grid' ? $('div', { className: 'dgrid' }, items.map(x => $('div', { className: 'dcard', onclick: () => openNode(x, items) }, [thumbOf(x),
+        $('div', { className: 'dname' }, [$('span', {}, x.name), $('button', { className: 'dots', onclick: e => openMenu(e, nodeMenu(x, items)) }, '···')]),
+        $('div', { className: 'dmeta' }, q ? pathOf(x) : TYPE_LABEL[x.type] + (x.type === 'folder' ? '' : ' · ' + fmtSize(x.size)))])))
+    : $('div', {}, items.map(x => $('div', { className: 'row drow', onclick: () => openNode(x, items) }, [thumbOf(x),
+        $('div', { className: 'info' }, [$('div', {}, x.name), $('small', {}, q ? pathOf(x) : meta(x))]),
+        $('button', { className: 'dots', onclick: e => openMenu(e, nodeMenu(x, items)) }, '···')])));
+  return $('div', {}, [
+    $('div', { className: 'demo-note' }, 'Bản demo với dữ liệu mẫu. Bản thật sẽ kết nối Drive của bạn: thư mục theo job, ảnh thật, link thật.'),
+    $('div', { className: 'card black dstore' }, [$('span', {}, 'Dung lượng (demo)'), $('div', { className: 'meter' }, $('i', { style: 'width:' + pct + '%' })), $('b', {}, (used / 1e9).toFixed(1) + ' / 15 GB')]),
+    crumbs, tools, $('div', { className: 'card' }, body),
+  ]);
+}
+function addUploads(files) {
+  if (!files.length) return;
+  let cur = curFolder();
+  if (cur === 'root') {
+    if (!drive.nodes['up']) { const f = { id: 'up', name: 'Tải Lên (Demo)', type: 'folder', parent: 'root', size: 0, date: today() }; drive.nodes.up = f; drive.extra.push(f); }
+    cur = 'up'; drive.path = ['up'];
+  }
+  files.forEach((f, i) => {
+    const isVid = /^video\//.test(f.type);
+    const node = { id: 'up-' + Date.now() + '-' + i, name: f.name, type: isVid ? 'video' : 'image', parent: cur, size: f.size, date: today(), url: isVid ? '' : URL.createObjectURL(f) };
+    drive.nodes[node.id] = node; drive.extra.push(node);
+  });
+  toast('Đã thêm ' + files.length + ' file (demo, chưa lưu lên Drive thật)');
+  render();
+}
+function demoUpload() {
+  const inp = $('input', { type: 'file', multiple: true, accept: 'image/*,video/*', style: 'display:none' });
+  inp.onchange = () => { const files = [...inp.files]; inp.remove(); addUploads(files); };
+  document.body.append(inp); inp.click();
+}
+
+/* trình xem ảnh toàn màn hình */
+const viewer = { list: [], i: 0 };
+const vEl = id => document.getElementById(id);
+function paintViewer(dir = 0) {
+  const x = viewer.list[viewer.i], img = vEl('vimg');
+  img.src = x.url || photoUri(x.seed || 1, 900, 900);
+  img.style.transition = 'none'; img.style.opacity = dir ? '0' : '1'; img.style.transform = dir ? 'translateX(' + (dir * 70) + 'px)' : '';
+  requestAnimationFrame(() => requestAnimationFrame(() => { img.style.transition = ''; img.style.transform = ''; img.style.opacity = '1'; }));
+  vEl('vtitle').textContent = x.name; vEl('vcount').textContent = (viewer.i + 1) + ' / ' + viewer.list.length;
+}
+function openViewer(list, i) {
+  viewer.list = list; viewer.i = i; paintViewer();
+  vEl('vacts').textContent = '';
+  vEl('vacts').append($('button', { className: 'btn pri', onclick: () => copyLink(viewer.list[viewer.i]) }, 'Sao Chép Link'), $('button', { className: 'btn', onclick: demoOnly }, 'Chia Sẻ'), $('button', { className: 'btn', onclick: demoOnly }, 'Tải Về'));
+  vEl('viewer').style.display = 'flex'; document.body.style.overflow = 'hidden';
+}
+function closeViewer() { vEl('viewer').style.display = 'none'; document.body.style.overflow = ''; }
+function stepViewer(d) {
+  const n = viewer.i + d;
+  if (n < 0 || n >= viewer.list.length) { const img = vEl('vimg'); img.style.transform = ''; return; }
+  viewer.i = n; paintViewer(d);
+}
+(() => {
+  vEl('vclose').append(svg('<path d="M6 6l12 12M18 6L6 18"/>'));
+  vEl('vclose').onclick = closeViewer;
+  const st = vEl('vstage'), img = vEl('vimg');
+  let x0 = 0, dx = 0, down = false;
+  st.addEventListener('pointerdown', e => { down = true; x0 = e.clientX; dx = 0; });
+  st.addEventListener('pointermove', e => { if (!down) return; dx = e.clientX - x0; img.style.transition = 'none'; img.style.transform = 'translateX(' + dx + 'px)'; });
+  const end = () => { if (!down) return; down = false; img.style.transition = ''; if (Math.abs(dx) > 70) stepViewer(dx < 0 ? 1 : -1); else img.style.transform = ''; };
+  st.addEventListener('pointerup', end); st.addEventListener('pointercancel', end);
+  document.addEventListener('keydown', e => {
+    if (vEl('viewer').style.display !== 'flex') return;
+    if (e.key === 'Escape') closeViewer(); else if (e.key === 'ArrowRight') stepViewer(1); else if (e.key === 'ArrowLeft') stepViewer(-1);
+  });
+})();
 
 let goTimer = null;
 function go(t) {
@@ -958,7 +1161,7 @@ function renderNav() {
   updateFab(cur);
   const TITLES = { overview: ['Xin Chào! 👋', greet() + ' · ' + new Date().toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric' })],
     jobs: ['Job Đang Thực Hiện', byStatus('todo').length + ' chưa làm · ' + byStatus('done').length + ' chờ thu tiền'],
-    drive: ['Drive', 'Sắp có: kết nối Google Drive'],
+    drive: ['Drive', 'Bản demo · dữ liệu mẫu'],
     chi: ['Chi Tiêu', 'Chi tiêu, cho vay và trả nợ'],
     thu: ['Thu Nhập', 'Thu từ job, vay và thu khác'] };
   document.getElementById('title').textContent = TITLES[cur][0];
@@ -968,6 +1171,7 @@ function render() { renderNav(); renderMain(); }
 function renderMain() {
   const main = document.getElementById('main');
   main.classList.remove('exit');
+  document.querySelector('.tools .rel').style.display = tab === 'drive' ? 'none' : '';
   const pb = document.getElementById('period');
   pb.textContent = '';
   pb.append(svg('<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>'), periodLabel());
@@ -1273,7 +1477,7 @@ document.addEventListener('click', () => { if (SYNC.needGesture && !SYNC.busy &&
 document.getElementById('syncbar').onclick = () => syncNow(true);
 /* nút nổi (kiểu AssistiveTouch): kéo đi đâu cũng được, thả ra tự hít vào mép trái hoặc phải, nhớ vị trí trên từng thiết bị */
 const FAB_KEY = 'tuni-fab', FAB = 58, FM = 12;
-const FAB_ACTIONS = { jobs: ['Tạo Job', () => jobForm()], chi: ['Thêm Khoản Chi', () => expenseForm(null, ['chi', 'chovay'])], thu: ['Thêm Khoản Thu', () => expenseForm(null, ['thu', 'vay'])] };
+const FAB_ACTIONS = { drive: ['Tải Ảnh Lên', () => demoUpload()], jobs: ['Tạo Job', () => jobForm()], chi: ['Thêm Khoản Chi', () => expenseForm(null, ['chi', 'chovay'])], thu: ['Thêm Khoản Thu', () => expenseForm(null, ['thu', 'vay'])] };
 const fab = document.getElementById('fab'), fabLabel = document.getElementById('fabLabel');
 fab.querySelector('i').append(svg(ICON.plus));
 let fabPos = { side: 'right', y: Infinity }, fabX = 0, fabY = 0, fabCur = null, fabIdle = null, fabLabelTimer = null;
