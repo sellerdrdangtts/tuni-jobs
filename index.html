@@ -356,7 +356,7 @@
   .btn:active, .pill:active, .chips button:active, .dots:active, .cal-nav:active, .day:active, .act:active, .jrow .ok:active { transform:scale(.95); }
   .mini:active { transform:scale(.97); } .dock .nav:active { transform:scale(.9); }
   .leaving { transition:opacity .2s, transform .22s var(--ease), max-height .26s var(--ease), padding .26s, margin .26s !important; opacity:0 !important; transform:translateX(16px) !important; padding-top:0 !important; padding-bottom:0 !important; margin-top:0 !important; margin-bottom:0 !important; }
-  @media (prefers-reduced-motion: reduce) { .kpibar i::after { animation:none !important; } *, *::before, *::after { animation-duration:.001ms !important; animation-delay:0ms !important; transition-duration:.001ms !important; } }
+  @media (prefers-reduced-motion: reduce) { .kpibar i::after, body::before, .empty::before { animation:none !important; } *, *::before, *::after { animation-duration:.001ms !important; animation-delay:0ms !important; transition-duration:.001ms !important; } }
 
   /* ===== làm đẹp 2026-10-24: một màu nhấn (cam), trắng ngà, kính mờ trung tính ===== */
   :root { --paper:#faf8f4; --mint:#e1e6e0; --peach:#fbdcc6; --lav:#e5e5e9; --mute:#85858b; }
@@ -437,6 +437,39 @@
   .row, .jrow { transition:background .2s; } .row:active { background:rgba(0,0,0,.035); }
   @media (hover:hover) { .card.tap:hover, .mini:hover { transform:translateY(-3px); box-shadow:0 16px 36px rgba(40,40,60,.13), inset 0 1px 0 rgba(255,255,255,.7); } .chips button:hover { transform:translateY(-1px); } }
 
+  /* ===== hiệu ứng 2026-10-24 ===== */
+  #main { --dir:0; }
+  #main.exit { opacity:0; transform:translateX(calc(var(--dir) * -26px)); }
+  @keyframes slidein { from { transform:translateX(calc(var(--dir) * 38px)); } }
+  #main.enter { animation:slidein .6s var(--ease); }
+  .bump { animation:bump .5s var(--ease); }
+  @keyframes bump { 35% { transform:scale(1.07); color:var(--orange); } }
+  .stamp svg { animation:stamp .5s var(--ease); }
+  .stamp svg path { stroke-dasharray:26; animation:draw .45s ease-out; }
+  @keyframes stamp { 40% { transform:scale(1.35) rotate(-8deg); } }
+  @keyframes draw { from { stroke-dashoffset:26; } to { stroke-dashoffset:0; } }
+  .conf { position:fixed; z-index:60; border-radius:2px; pointer-events:none; }
+  .card { position:relative; }
+  .card::after { content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none; opacity:0; transition:opacity .35s; background:radial-gradient(180px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.55), transparent 70%); }
+  .card.black::after { background:radial-gradient(180px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.16), transparent 70%); }
+  .card.lit::after { opacity:1; }
+  #ptr { position:fixed; left:50%; top:calc(env(safe-area-inset-top) + 56px); z-index:13; width:40px; height:40px; margin-left:0; border-radius:50%; background:var(--paper); box-shadow:0 6px 18px rgba(0,0,0,.18); display:grid; place-items:center; opacity:0; transform:translate(-50%,-8px); pointer-events:none; transition:opacity .25s, transform .3s var(--ease); }
+  #ptr svg { width:20px; height:20px; } #ptr.spin svg { animation:spin .7s linear infinite; }
+  .top { transition:box-shadow .3s, background .3s; } .top .brand { transition:transform .3s var(--ease); transform-origin:center; }
+  .top.scrolled { box-shadow:0 8px 24px rgba(0,0,0,.08); background:rgba(248,247,242,.78); } .top.scrolled .brand { transform:scale(.82); }
+  body.syncing .hero .val, body.syncing .kpibar { background-image:linear-gradient(100deg, transparent 30%, rgba(255,255,255,.7) 50%, transparent 70%); background-size:220% 100%; animation:sheen 1.2s linear infinite; }
+  body.syncing .hero .val { -webkit-background-clip:text; background-clip:text; }
+  @keyframes sheen { from { background-position:120% 0; } to { background-position:-120% 0; } }
+  #main.enter .bar { animation-delay:calc(.45s + var(--bi,0) * 70ms); }
+  .due.over { display:inline-block; animation:shake .7s ease .6s 1; }
+  @keyframes shake { 20% { transform:translateX(-4px); } 40% { transform:translateX(4px); } 60% { transform:translateX(-3px); } 80% { transform:translateX(2px); } }
+  body:not([data-tab="calendar"])::before { animation:breathe 9s ease-in-out infinite; }
+  @keyframes breathe { 50% { opacity:.72; } }
+  .calslide { animation:calslide .5s var(--ease); }
+  @keyframes calslide { from { opacity:0; transform:translateX(calc(var(--cd) * 44px)); } }
+  .empty::before { content:''; display:block; width:46px; height:46px; margin:0 auto 12px; border-radius:15px; border:2px dashed currentColor; opacity:.35; animation:floaty 3.2s ease-in-out infinite; }
+  @keyframes floaty { 50% { transform:translateY(-7px) rotate(4deg); } }
+
   /* phone */
   @media (max-width: 860px) {
     .app { padding-left:16px; padding-right:16px; }
@@ -489,6 +522,49 @@
 <script>
 const SVG = 'http://www.w3.org/2000/svg';
 document.addEventListener('click', e => { if (navigator.vibrate && e.target.closest && e.target.closest('.nav, .btn, .qbtn, .ok, .chips button, .cd')) { try { navigator.vibrate(8); } catch (_) {} } }, true);
+/* hiệu ứng cảm ứng: ánh sáng theo ngón tay, kéo xuống làm mới, vuốt ngang đổi tab, đầu trang thu nhỏ khi cuộn */
+(function () {
+  document.addEventListener('pointermove', e => {
+    const c = e.target.closest && e.target.closest('.card');
+    if (!c) return; const r = c.getBoundingClientRect();
+    c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px'); c.classList.add('lit');
+  }, { passive: true });
+  document.addEventListener('pointerleave', e => { if (e.target.classList && e.target.classList.remove) e.target.classList.remove('lit'); }, true);
+  document.addEventListener('pointerup', () => document.querySelectorAll('.card.lit').forEach(c => c.classList.remove('lit')), true);
+  addEventListener('scroll', () => document.querySelector('.top').classList.toggle('scrolled', scrollY > 24), { passive: true });
+
+  const ptr = document.createElement('div'); ptr.id = 'ptr'; ptr.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>'; document.body.append(ptr);
+  const busy = () => document.body.style.position === 'fixed' || modal.style.display === 'grid';
+  let sx = 0, sy = 0, st = 0, pull = 0, mode = '', t0 = 0;
+  addEventListener('touchstart', e => {
+    if (e.touches.length !== 1) { mode = ''; return; }
+    sx = e.touches[0].clientX; sy = e.touches[0].clientY; t0 = Date.now(); pull = 0;
+    const t = e.target.closest ? e.target : document.body;
+    mode = busy() || t.closest('input, select, textarea, #modal, #menu, #cal, .fab, .dock, .veil') ? '' : (scrollY <= 0 ? 'pull' : '');
+    st = t.closest('.sw, .calgrid, .bars, .seg, .jobchips') ? 0 : 1;
+  }, { passive: true });
+  addEventListener('touchmove', e => {
+    if (!e.touches.length) return;
+    const dx = e.touches[0].clientX - sx, dy = e.touches[0].clientY - sy;
+    if (mode === 'pull' && dy > 0 && Math.abs(dy) > Math.abs(dx)) {
+      pull = Math.min(110, dy * .5); ptr.style.transform = 'translate(-50%,' + (pull - 8) + 'px) rotate(' + pull * 4 + 'deg)'; ptr.style.opacity = Math.min(1, pull / 50);
+    } else if (pull && dy <= 0) { pull = 0; ptr.style.opacity = 0; }
+  }, { passive: true });
+  addEventListener('touchend', e => {
+    const ch = e.changedTouches[0], dx = ch.clientX - sx, dy = ch.clientY - sy;
+    if (mode === 'pull' && pull >= 55) {
+      ptr.classList.add('spin'); ptr.style.transform = 'translate(-50%,48px)'; ptr.style.opacity = 1;
+      const done = () => { ptr.classList.remove('spin'); ptr.style.opacity = 0; ptr.style.transform = ''; };
+      try { if (signedIn()) syncNow(false); } catch (_) {}
+      setTimeout(() => { done(); render(); }, 900);
+    } else { ptr.style.opacity = 0; ptr.style.transform = ''; }
+    if (st && !busy() && Date.now() - t0 < 650 && Math.abs(dx) > 90 && Math.abs(dy) < 36 && Math.abs(dx) > Math.abs(dy) * 3) {
+      const i = NAV_IDS.indexOf(navOf(tab)), n = NAV_IDS[i + (dx < 0 ? 1 : -1)];
+      if (n) go(n === 'jobs' ? lastJobTab : n);
+    }
+    mode = ''; pull = 0;
+  }, { passive: true });
+})();
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $ = (t, p = {}, kids = []) => {
   const e = document.createElement(t);
@@ -573,7 +649,20 @@ const greet = () => { const h = new Date().getHours(); return h < 11 ? 'Chào bu
 const STATUS = { todo: 'Chưa Làm', done: 'Chờ Thu Tiền', paid: 'Đã Thu' };
 
 /* actions */
-const setStatus = (j, s) => { j.status = s; j.paidDate = s === 'paid' ? today() : null; save(); render(); };
+let lastPt = { x: innerWidth / 2, y: innerHeight / 2 };
+document.addEventListener('pointerdown', e => { lastPt = { x: e.clientX, y: e.clientY }; const c = e.target.closest && e.target.closest('.qbtn.go, .jrow .ok'); if (c) { c.classList.remove('stamp'); void c.offsetWidth; c.classList.add('stamp'); } }, true);
+function burst(x, y) {
+  if (REDUCED || !document.body.animate) return;
+  const cols = ['#f26d21', '#ff9a5a', '#141414', '#faf8f4'];
+  for (let i = 0; i < 16; i++) {
+    const d = document.createElement('i'), a = Math.random() * Math.PI * 2, r = 50 + Math.random() * 70, sz = 5 + Math.random() * 5;
+    d.className = 'conf'; d.style.cssText = 'left:' + x + 'px;top:' + y + 'px;width:' + sz + 'px;height:' + sz + 'px;background:' + cols[i % 4];
+    document.body.append(d);
+    d.animate([{ transform: 'translate(-50%,-50%) scale(1)', opacity: 1 }, { transform: 'translate(' + (Math.cos(a) * r - sz / 2) + 'px,' + (Math.sin(a) * r - sz / 2 + 34) + 'px) scale(.3)', opacity: 0 }], { duration: 750 + Math.random() * 350, easing: 'cubic-bezier(.2,.8,.3,1)' }).onfinish = () => d.remove();
+    setTimeout(() => d.remove(), 1700);
+  }
+}
+const setStatus = (j, s) => { j.status = s; j.paidDate = s === 'paid' ? today() : null; save(); render(); if (s === 'paid') burst(lastPt.x, lastPt.y); };
 function leave(el, fn) {
   if (REDUCED || !el) return fn();
   el.style.maxHeight = el.offsetHeight + 'px'; el.style.overflow = 'hidden';
@@ -661,6 +750,7 @@ function animateCounts(fresh) {
     lastVals[key] = to;
     if (REDUCED || from === to) { put(el, f, to); return; }
     put(el, f, from);
+    if (!fresh) { el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
     const t0 = performance.now(), dur = 1200;
     const step = now => { const p = Math.min(1, (now - t0) / dur); put(el, f, from + (to - from) * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(step); };
     requestAnimationFrame(step);
@@ -1185,7 +1275,10 @@ function viewCalendar() {
 }
 
 let goTimer = null;
+const NAV_IDS = NAV.map(n => n[0]);
 function go(t) {
+  const from = NAV_IDS.indexOf(navOf(tab)), to = NAV_IDS.indexOf(navOf(t));
+  document.getElementById('main').style.setProperty('--dir', to === from ? 0 : to > from ? 1 : -1);
   tab = t; enterNext = true;
   if (JOB_TABS.includes(t)) lastJobTab = t;
   renderNav();
@@ -1216,6 +1309,7 @@ function renderNav() {
   document.getElementById('subtitle').textContent = TITLES[cur][1];
 }
 function render() { renderNav(); renderMain(); }
+let calKey = null;
 function renderMain() {
   const main = document.getElementById('main');
   main.classList.remove('exit');
@@ -1237,6 +1331,12 @@ function renderMain() {
     main.classList.add('enter');
     main.querySelectorAll('.card, .calhead, .calwrap, .hero, .pair2, .alert, .chips').forEach((el, i) => el.style.setProperty('--i', Math.min(i, 8)));
   } else main.classList.remove('enter');
+  main.querySelectorAll('.bars .grp').forEach((g, i) => g.style.setProperty('--bi', i));
+  if (tab === 'calendar') {
+    const key = cview.y * 12 + cview.m, g = main.querySelector('.calgrid');
+    if (calKey !== null && key !== calKey && g && !REDUCED) { g.style.setProperty('--cd', key > calKey ? 1 : -1); g.classList.add('calslide'); }
+    calKey = key;
+  }
   animateCounts(enterNext);
   enterNext = false;
   if (freshId) { document.querySelectorAll('[data-id="' + freshId + '"]').forEach(el => el.classList.add('fresh')); freshId = null; }
@@ -1307,6 +1407,7 @@ const signedIn = () => { try { return localStorage.getItem(FLAG) === '1'; } catc
 const STATUS_TEXT = { local: 'Đăng nhập', busy: 'Đang đồng bộ…', ok: 'Đã đồng bộ', auth: 'Đăng nhập lại', err: 'Lỗi đồng bộ' };
 function setSync(st, msg = '') {
   SYNC.status = st; SYNC.msg = msg;
+  document.body.classList.toggle('syncing', st === 'busy');
   const b = document.getElementById('sync');
   b.querySelector('#syncText').textContent = CLIENT_ID ? STATUS_TEXT[st] : 'Chỉ lưu trên máy';
   b.querySelector('.st').className = 'st ' + (CLIENT_ID ? st : 'local');
