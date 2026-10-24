@@ -358,13 +358,89 @@
   .leaving { transition:opacity .2s, transform .22s var(--ease), max-height .26s var(--ease), padding .26s, margin .26s !important; opacity:0 !important; transform:translateX(16px) !important; padding-top:0 !important; padding-bottom:0 !important; margin-top:0 !important; margin-bottom:0 !important; }
   @media (prefers-reduced-motion: reduce) { .kpibar i::after { animation:none !important; } *, *::before, *::after { animation-duration:.001ms !important; animation-delay:0ms !important; transition-duration:.001ms !important; } }
 
+  /* ===== làm đẹp 2026-10-24: một màu nhấn (cam), trắng ngà, kính mờ trung tính ===== */
+  :root { --paper:#faf8f4; --mint:#e1e6e0; --peach:#fbdcc6; --lav:#e5e5e9; --mute:#85858b; }
+  body::after { content:''; position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.07; mix-blend-mode:multiply; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  :focus-visible { outline:2px solid var(--orange); outline-offset:2px; }
+  .card { background:rgba(250,248,244,.6); }
+  .card.mint, .card.lav { background:rgba(250,248,244,.6); }
+  .card.peach { background:linear-gradient(135deg, rgba(242,109,33,.2), rgba(250,248,244,.6) 70%); }
+  .ibtn, .btn.ghost, .sortbar, .chips button.cta, .calnav .caltoday, #cal { background:var(--paper); }
+  #modal .box { background:var(--paper); }
+  #modal .actions { background:var(--paper); }
+  .fld input, .fld textarea, .fld select { background:rgba(255,255,255,.7); }
+  .pill, .chips button { background:rgba(250,248,244,.66); }
+  .chips button.on { box-shadow:0 6px 14px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.18); background:linear-gradient(180deg,#2a2a2d,#111); }
+  .seg button.on { background:var(--paper); box-shadow:0 2px 8px rgba(0,0,0,.1); }
+
+  /* tiêu đề số lớn kiểu SAFE / 70% */
+  .hero { padding:24px 18px 20px; }
+  .hero .lbl { font-family:ui-serif,'Iowan Old Style',Georgia,serif; font-style:italic; font-size:15px; }
+  .hero .val { font-size:60px; letter-spacing:-3px; font-weight:700; margin:4px 0 14px; }
+  .hstrip { display:grid; grid-template-columns:repeat(3,1fr); border-top:1px solid var(--line); padding-top:12px; }
+  .hstrip > div { display:grid; gap:2px; }
+  .hstrip > div + div { border-left:1px solid var(--line); }
+  .hstrip small { font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--mute); font-weight:500; }
+  .hstrip .wt { color:var(--orange); }
+
+  /* màu pastel -> trung tính + cam */
+  .tag { background:rgba(0,0,0,.07); }
+  .tag.todo, .tag.vay { background:rgba(242,109,33,.16); color:#a8470f; }
+  .tag.done { background:#141414; color:#fff; }
+  .tag.paid, .tag.chovay, .tag.thu { background:rgba(0,0,0,.07); }
+  .k-peach { background:var(--orange); box-shadow:none; } .k-lav { background:var(--black); box-shadow:none; } .k-mint { background:#b9b9bd; box-shadow:none; }
+  .pbar { background:rgba(0,0,0,.08); }
+  .pbar .a { background:linear-gradient(90deg,#f26d21,#ff9a5a); color:#fff; }
+  .mini.peach { background:linear-gradient(135deg, rgba(242,109,33,.2), rgba(250,248,244,.6) 70%); }
+  .mini.lav { background:rgba(250,248,244,.6); }
+  .dayhead { background:rgba(242,109,33,.14); }
+  .sw-bg { background:#dfe5df; }
+  .syncbar, .err { background:rgba(242,109,33,.14); }
+
+  /* KPI: thanh phân đoạn, cam, có vệt sáng */
+  .kpibar { height:16px; border-radius:0; background:rgba(0,0,0,.1); -webkit-mask:repeating-linear-gradient(90deg,#000 0 calc(5% - 3px),transparent calc(5% - 3px) 5%); mask:repeating-linear-gradient(90deg,#000 0 calc(5% - 3px),transparent calc(5% - 3px) 5%); }
+  .kpibar i { border-radius:0; background:linear-gradient(90deg,#f26d21,#ff9a5a); }
+  .kpihead b { color:var(--orange); font-size:20px; letter-spacing:-.5px; }
+
+  /* lịch: ô bo góc, chấm báo ngày có job */
+  .cd { border-radius:16px; background:rgba(20,20,22,.9); box-shadow:inset 0 1px 0 rgba(255,255,255,.12); }
+  .cd.sun { background:var(--orange); }
+  .cd.out { background:transparent; box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.12); }
+  .cd.today { text-decoration:none; box-shadow:0 0 0 2px var(--paper), 0 0 0 4px var(--orange); }
+  .cd.today.sel { box-shadow:0 0 0 2px var(--paper), 0 0 0 4px var(--black); }
+  .cd.has::after { bottom:7px; background:var(--orange); }
+  .cd.sun.has::after { background:#fff; }
+
+  /* nút */
+  .qbtn.go, .btn { box-shadow:0 5px 12px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.2); background-image:linear-gradient(180deg,#2c2c2f,#111); }
+  .btn.ghost { background-image:none; box-shadow:none; }
+  .qbtn { background:rgba(0,0,0,.06); }
+  .qbtn.go { background-color:#141414; }
+  .jrow .ok { border-color:rgba(255,255,255,.3); background:rgba(255,255,255,.08); }
+  .jrow .ok:hover, .jrow .ok:active { background:var(--orange); border-color:var(--orange); color:#fff; }
+
+  /* dock: chùm sáng chiếu xuống tab đang chọn, icon hai tông */
+  #pill { box-shadow:0 0 26px rgba(255,255,255,.28), 0 6px 14px rgba(0,0,0,.25); }
+  #pill::before { content:''; position:absolute; left:50%; top:-9px; width:34px; height:4px; margin-left:-17px; border-radius:0 0 4px 4px; background:#fff; box-shadow:0 0 14px 3px rgba(255,255,255,.55); }
+  #pill::after { content:''; position:absolute; left:50%; top:-5px; width:76px; height:36px; margin-left:-38px; background:linear-gradient(to bottom, rgba(255,255,255,.28), rgba(255,255,255,0)); clip-path:polygon(35% 0, 65% 0, 100% 100%, 0 100%); pointer-events:none; z-index:-1; }
+  .dock .nav svg { stroke-width:1.75; }
+  .dock .nav[data-tab="calendar"] svg, .dock .nav[data-tab="overview"] svg { fill:currentColor; fill-opacity:.16; }
+  .dock .nav .c { background:var(--orange); color:#fff; }
+
+  /* chuyển động: vào mượt hơn, chạm có phản hồi */
+  @keyframes rise { from { opacity:0; transform:translateY(26px) scale(.97); } }
+  .ibtn, .qbtn, .cd { transition:transform .14s var(--ease), background .2s, box-shadow .2s; }
+  .ibtn:active, .qbtn:active, .cd:active { transform:scale(.9); }
+  .row, .jrow { transition:background .2s; } .row:active { background:rgba(0,0,0,.035); }
+  @media (hover:hover) { .card.tap:hover, .mini:hover { transform:translateY(-3px); box-shadow:0 16px 36px rgba(40,40,60,.13), inset 0 1px 0 rgba(255,255,255,.7); } .chips button:hover { transform:translateY(-1px); } }
+
   /* phone */
   @media (max-width: 860px) {
     .app { padding-left:16px; padding-right:16px; }
     .top { margin-left:-16px; margin-right:-16px; padding-left:16px; padding-right:16px; }
     .home { grid-template-columns:1fr; grid-template-areas:none; }
     .ga-hero, .ga-chart, .ga-jobs, .ga-prog, .ga-debt, .ga-kpi { grid-area:auto; }
-    .hero .val { font-size:42px; }
+    .hero .val { font-size:52px; }
     .stat3 { grid-template-columns:1fr 1fr; gap:10px; }
     .stat3 .card:first-child { grid-column:1 / -1; }
     .stat3 .card { padding:18px; }
@@ -409,6 +485,7 @@
 
 <script>
 const SVG = 'http://www.w3.org/2000/svg';
+document.addEventListener('click', e => { if (navigator.vibrate && e.target.closest && e.target.closest('.nav, .btn, .qbtn, .ok, .chips button, .cd')) { try { navigator.vibrate(8); } catch (_) {} } }, true);
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $ = (t, p = {}, kids = []) => {
   const e = document.createElement(t);
@@ -828,7 +905,10 @@ function viewOverview() {
   const hero = $('div', { className: 'hero card ga-hero' }, [
     $('div', { className: 'lbl' }, 'Còn lại · ' + periodLabel()),
     num('left', thu - chi, 'fmt', 'val'),
-    $('div', { className: 'delta' }, [$('span', { className: 'up' }, '↑ Thu ' + short(thu)), '   ·   ', $('span', { className: 'dn' }, '↓ Chi ' + short(chi))]),
+    $('div', { className: 'delta hstrip' }, [
+      $('div', {}, [$('small', {}, 'Thu'), $('span', { className: 'up' }, '↑ ' + short(thu))]),
+      $('div', {}, [$('small', {}, 'Chi'), $('span', { className: 'dn' }, '↓ ' + short(chi))]),
+      $('div', {}, [$('small', {}, 'Chờ Thu'), $('span', { className: 'wt' }, short(sumOwed(unpaid)))])]),
   ]);
   const chart = $('div', { className: 'card mint ga-chart' }, [
     $('div', { className: 'card-top' }, [$('h3', {}, 'Thu – Chi'),
