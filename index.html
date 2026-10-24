@@ -29,7 +29,8 @@
   .app { max-width:1100px; margin:0 auto; padding:calc(env(safe-area-inset-top) + 16px) 22px calc(130px + env(safe-area-inset-bottom)); }
 
   /* top */
-  .top { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+  .top { position:sticky; top:0; z-index:12; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; background:var(--bg); margin:calc(-1 * (env(safe-area-inset-top) + 16px)) 0 6px; padding:calc(env(safe-area-inset-top) + 14px) 0 12px; box-shadow:0 0 0 100vmax var(--bg); clip-path:inset(0 -100vmax); }
+  .top #reload { justify-self:start; } .top #sync { justify-self:end; }
   .brand { height:34px; width:auto; display:block; }
   .top-r { display:flex; gap:10px; align-items:center; }
   .ibtn { width:48px; height:48px; border-radius:50%; border:0; background:#fff; display:grid; place-items:center; position:relative; cursor:pointer; color:var(--ink); font:inherit; }
@@ -62,17 +63,19 @@
   .card h3 { margin:0; font-size:19px; font-weight:600; letter-spacing:-.3px; }
   .card .sub { font-size:12px; color:var(--mute); }
   .card.black .sub { color:#a6a6ab; } .card.peach .sub, .card.mint .sub, .card.lav .sub { color:rgba(0,0,0,.55); }
+  .card.tap { cursor:pointer; transition:transform .14s var(--ease), box-shadow .2s; } .card.tap:active { transform:scale(.98); }
+  .card.active { box-shadow:0 0 0 3px var(--black); }
   .stat-n { font-size:24px; font-weight:600; letter-spacing:-.5px; }
   .stat3 { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:16px; }
 
   /* home */
   .home { display:grid; gap:16px; grid-template-columns:1.1fr 1fr; align-items:start; grid-template-areas:"hero chart" "jobs chart" "jobs prog" "jobs debt"; }
   .ga-hero { grid-area:hero; } .ga-chart { grid-area:chart; } .ga-jobs { grid-area:jobs; } .ga-prog { grid-area:prog; } .ga-debt { grid-area:debt; }
-  .hero { padding:4px 4px 0; }
+  .hero { padding:4px 4px 0; text-align:center; }
   .hero .lbl { color:var(--mute); font-size:13px; }
   .hero .val { font-size:48px; font-weight:600; letter-spacing:-2px; line-height:1.1; margin:2px 0 4px; }
-  .val .g { color:#a9a9ae; }
-  .hero .delta { font-size:12px; color:var(--mute); }
+  .hero .delta { font-size:14px; font-weight:600; }
+  .hero .delta .up { color:#1f9d55; } .hero .delta .dn { color:#d93025; }
   .acts { display:flex; margin-top:20px; }
   .act { flex:1; height:68px; border-radius:34px; display:flex; align-items:center; gap:12px; padding:0 10px; border:0; font:inherit; font-weight:500; font-size:15px; cursor:pointer; color:var(--ink); background:#fff; }
   .act i { width:48px; height:48px; border-radius:50%; display:grid; place-items:center; flex:none; }
@@ -194,15 +197,21 @@
 
 
 
+  .jsum { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+  .jsum .card { padding:14px 16px; border-radius:24px; min-width:0; }
+  .jsum .sub { white-space:nowrap; }
+  .jsum .jn { font-size:clamp(14px, 4.8vw, 20px); font-weight:600; letter-spacing:-.4px; white-space:nowrap; margin-top:2px; }
+
   /* Calendar */
   :root { --orange:#f26d21; }
   body[data-tab="calendar"] .title-block, body[data-tab="calendar"] .tools { display:none; }
-  .bigday { font-size:clamp(96px, 34vw, 150px); font-weight:700; letter-spacing:-.05em; line-height:.9; margin:4px 0 20px -4px; }
-  .calmeta { display:flex; justify-content:space-between; align-items:flex-end; }
-  .calmonth { font-size:24px; letter-spacing:.04em; text-transform:uppercase; }
-  .calyear { font-size:24px; color:var(--mute); line-height:1.15; }
-  .calwd { font-size:24px; }
-  .calnav { display:flex; align-items:center; gap:4px; margin:22px 0 18px -10px; }
+  .calmeta { display:flex; align-items:center; gap:14px; margin:2px 0 0; }
+  .bigday { font-size:46px; font-weight:700; letter-spacing:-.04em; line-height:1; }
+  .calmid { flex:1; min-width:0; }
+  .calmonth { font-size:18px; letter-spacing:.04em; text-transform:uppercase; line-height:1.15; }
+  .calyear { font-size:15px; color:var(--mute); line-height:1.15; }
+  .calwd { font-size:18px; text-align:right; }
+  .calnav { display:flex; align-items:center; gap:4px; margin:10px 0 14px -10px; }
   .calnav button { min-width:44px; height:44px; border:0; background:none; font:inherit; font-size:26px; line-height:1; cursor:pointer; color:var(--ink); border-radius:999px; transition:transform .14s var(--ease), background .2s; }
   .calnav button:active { transform:scale(.88); }
   .calnav .caltoday { font-size:13px; font-weight:600; padding:0 14px; background:#fff; margin-left:8px; }
@@ -214,10 +223,19 @@
   .cd.sun { background:var(--orange); }
   .cd.out { background:transparent; color:#a9a9ae; box-shadow:inset 0 0 0 2px #cfcfd2; font-weight:500; }
   .cd.today { text-decoration:underline; text-underline-offset:4px; text-decoration-thickness:2px; }
+  .cd.wk { box-shadow:0 0 0 3px var(--bg), 0 0 0 5px #9a9a9f; }
   .cd.sel { box-shadow:0 0 0 3px var(--bg), 0 0 0 5px var(--black); }
   .cd.out.sel { box-shadow:inset 0 0 0 2px #cfcfd2, 0 0 0 3px var(--bg), 0 0 0 5px #8b8b90; }
   .cd.has::after { content:''; position:absolute; bottom:6px; left:50%; width:5px; height:5px; margin-left:-2.5px; border-radius:50%; background:currentColor; }
   .cd.out.has::after { background:#8b8b90; }
+  .yrnav { display:flex; align-items:center; justify-content:space-between; margin:6px 0 10px; }
+  .yrnav button { width:40px; height:40px; border:0; background:#f1f1f2; border-radius:50%; font:inherit; font-size:20px; cursor:pointer; }
+  .yrnav b { font-size:18px; }
+  .mgrid { display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; }
+  .mbtn, .wkrow { border:0; background:#f3f3f4; border-radius:18px; padding:14px 8px; font:inherit; font-size:14px; font-weight:500; cursor:pointer; color:var(--ink); }
+  .mbtn.on, .wkrow.on { background:var(--black); color:#fff; }
+  .wkrow { display:flex; justify-content:space-between; width:100%; padding:14px 16px; margin-bottom:8px; text-align:left; }
+  .wkrow small { opacity:.65; }
   .calpanel .row .dl { color:var(--orange); font-weight:600; }
   #main.enter .calhead, #main.enter .calwrap { animation:rise .85s var(--ease) backwards; animation-delay:calc(var(--i, 0) * 110ms); }
 
@@ -283,8 +301,9 @@
   #menu { position:fixed; background:var(--black); color:#fff; border-radius:20px; padding:6px; display:none; z-index:40; min-width:150px; box-shadow:0 12px 32px rgba(0,0,0,.28); transform-origin:top left; }
   #menu button { display:block; width:100%; padding:10px 14px; background:none; border:0; color:#fff; font:inherit; font-size:13px; text-align:left; border-radius:14px; cursor:pointer; white-space:nowrap; }
   #menu button:hover { background:rgba(255,255,255,.14); }
-  #modal { position:fixed; inset:0; background:rgba(0,0,0,.32); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); display:none; place-items:center; z-index:30; }
+  #modal { overscroll-behavior:contain; position:fixed; inset:0; background:rgba(0,0,0,.32); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); display:none; place-items:center; z-index:30; }
   #modal .box { background:#fff; border-radius:32px; padding:26px; width:420px; max-width:calc(100vw - 24px); display:grid; gap:12px; }
+  #modal .box { overscroll-behavior:contain; }
   #modal .box.wide { width:560px; max-height:92vh; overflow:auto; }
   #modal h3 { margin:0 0 4px; font-size:21px; letter-spacing:-.4px; }
   #modal .actions { display:flex; gap:8px; justify-content:flex-end; margin-top:6px; }
@@ -296,7 +315,7 @@
   .sortbar span { white-space:nowrap; }
   @media (max-width: 340px) {
     .jobchips button { font-size:10.5px !important; letter-spacing:-.2px; }
-    .ibtn { width:42px; height:42px; } .top-r { gap:6px; } .brand { height:30px; }
+    .ibtn { width:42px; height:42px; } .brand { height:30px; }
   }
 
   /* motion */
@@ -354,12 +373,9 @@
 <body>
 <div class="app">
   <header class="top">
+    <button class="ibtn" id="reload" title="Tải Lại Trang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
     <img class="brand" src="logo.png" alt="Tuni.Graphy">
-    <div class="top-r">
-      <button class="ibtn" id="reload" title="Tải Lại Trang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
-      <button class="ibtn" id="bell" title="Nhắc nhở"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg><i class="dot"></i></button>
-      <button class="ibtn av" id="sync" title="Tài khoản và đồng bộ"><span>T</span><span id="syncText"></span><i class="st local"></i></button>
-    </div>
+    <button class="ibtn av" id="sync" title="Tài khoản và đồng bộ"><span>T</span><span id="syncText"></span><i class="st local"></i></button>
   </header>
   <div class="title-block"><h1 id="title"></h1><p id="subtitle"></p></div>
   <div class="tools">
@@ -596,12 +612,16 @@ const closeMenu = () => { menu.style.display = 'none'; };
 document.addEventListener('click', closeMenu);
 
 const modal = document.getElementById('modal'), box = document.getElementById('box');
-const showModal = () => { modal.classList.remove('closing'); modal.style.display = 'grid'; };
+let lockY = 0, pageLocked = false;
+function lockPage() { if (pageLocked) return; pageLocked = true; lockY = window.scrollY; const b = document.body.style; b.position = 'fixed'; b.top = -lockY + 'px'; b.left = '0'; b.right = '0'; }
+function unlockPage() { if (!pageLocked) return; pageLocked = false; const b = document.body.style; b.position = ''; b.top = ''; b.left = ''; b.right = ''; window.scrollTo(0, lockY); }
+const showModal = () => { lockPage(); modal.classList.remove('closing'); modal.style.display = 'grid'; };
 function closeModal() {
-  if (modal.style.display !== 'grid' || REDUCED) { modal.style.display = 'none'; return; }
+  if (modal.style.display !== 'grid' || REDUCED) { modal.style.display = 'none'; modal.classList.remove('closing'); unlockPage(); return; }
   modal.classList.add('closing');
-  setTimeout(() => { if (modal.classList.contains('closing')) { modal.style.display = 'none'; modal.classList.remove('closing'); } }, 170);
+  setTimeout(() => { if (modal.classList.contains('closing')) { modal.style.display = 'none'; modal.classList.remove('closing'); unlockPage(); } }, 170);
 }
+modal.addEventListener('touchmove', e => { if (!e.target.closest('.box')) e.preventDefault(); }, { passive: false });   // không cho lướt trang phía sau khi bảng đang mở
 modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeMenu(); } });
 function openModal(title, fields, onSubmit, submitLabel) {
@@ -757,8 +777,8 @@ function viewOverview() {
 
   const hero = $('div', { className: 'hero ga-hero' }, [
     $('div', { className: 'lbl' }, 'Còn lại · ' + periodLabel()),
-    num('left', thu - chi, 'duo', 'val'),
-    $('div', { className: 'delta' }, '↑ Thu ' + short(thu) + '   ·   ↓ Chi ' + short(chi)),
+    num('left', thu - chi, 'fmt', 'val'),
+    $('div', { className: 'delta' }, [$('span', { className: 'up' }, '↑ Thu ' + short(thu)), '   ·   ', $('span', { className: 'dn' }, '↓ Chi ' + short(chi))]),
     $('div', { className: 'acts' }, [
       $('button', { className: 'act a1', onclick: () => jobForm() }, [$('i', {}, svg(ICON.plus)), 'Tạo job']),
       $('button', { className: 'act a2', onclick: () => expenseForm() }, ['Thêm khoản', $('i', {}, svg(ICON.plus))]),
@@ -795,7 +815,7 @@ function viewOverview() {
     $('div', { className: 'mt' }, [$('span', {}, title), $('i', {}, svg(ICON.arrow))]),
     $('div', { className: 'mn' }, fmt(sum(list))), $('small', {}, nextDue(list)),
   ]);
-  const debts = $('div', { className: 'pair2 ga-debt' }, [mini('peach', 'Phải trả (đang vay)', open('vay'), () => { thuFilter = 'vay'; go('thu'); }), mini('lav', 'Cần thu lại (cho vay)', open('chovay'), () => go('chi'))]);
+  const debts = $('div', { className: 'pair2 ga-debt' }, [mini('peach', 'Phải trả (đang vay)', open('vay'), () => { thuFilter = 'vay'; go('thu'); }), mini('lav', 'Cần thu lại (cho vay)', open('chovay'), () => { expFilter = 'chovay'; go('chi'); })]);
 
   return $('div', {}, [reminders(), $('div', { className: 'home' }, [hero, chart, jobsCard, prog, debts])]);
 }
@@ -831,14 +851,19 @@ const sortSelect = (cur, opts, set) => $('label', { className: 'sortbar' }, [svg
   $('select', { onchange: e => { set(e.target.value); render(); } }, opts.map(([k, l]) => $('option', { value: k, selected: cur === k }, l)))]);
 const jobKey = j => (j.created || '') + ' ' + (j.time || '');
 const sortJobs = a => a.slice().sort(jobSort === 'date-asc' ? (x, y) => jobKey(x).localeCompare(jobKey(y)) : jobSort === 'amt-desc' ? (x, y) => y.amount - x.amount : jobSort === 'amt-asc' ? (x, y) => x.amount - y.amount : (x, y) => jobKey(y).localeCompare(jobKey(x)));
-const viewJobs = (jobs, empty, extra) => $('div', {}, [jobChips(),
+// đã thu = tiền cọc của job chưa xong + toàn bộ tiền của job đã thu; cần thu lại = phần còn lại của các job chưa thanh toán
+const jobTotals = () => { let got = 0, due = 0; for (const j of state.jobs) { got += j.status === 'paid' ? j.amount : Math.min(j.deposit || 0, j.amount); due += owed(j); } return { got, due }; };
+const jobSummary = () => { const t = jobTotals(); return $('div', { className: 'jsum' }, [
+  $('div', { className: 'card mint' }, [$('div', { className: 'sub' }, 'Tổng Tiền Job Đã Thu'), $('div', { className: 'jn' }, fmt(t.got))]),
+  $('div', { className: 'card peach' }, [$('div', { className: 'sub' }, 'Tổng Tiền Cần Thu Lại'), $('div', { className: 'jn' }, fmt(t.due))])]); };
+const viewJobs = (jobs, empty, extra) => $('div', {}, [jobSummary(), jobChips(),
   sortSelect(jobSort, [['date-desc', 'Ngày Thực Hiện: Mới Nhất'], ['date-asc', 'Ngày Thực Hiện: Cũ Nhất'], ['amt-desc', 'Số Tiền: Cao Nhất'], ['amt-asc', 'Số Tiền: Thấp Nhất']], k => { jobSort = k; }),
   viewList(sortJobs(jobs), empty, extra)]);
 let expFilter = 'all', thuFilter = 'all', expSort = 'date-desc', thuSort = 'date-desc';
 const LABELS = ['Ăn Uống', 'Đi Lại', 'Mua Sắm', 'Khác'];
 const labelOf = x => x.label || 'Khác';
 const tabForKind = k => k === 'vay' || k === 'thu' ? 'thu' : 'chi';
-const statCard = (cls, label, n) => $('div', { className: 'card ' + cls }, [$('div', { className: 'sub' }, label), $('div', { className: 'stat-n' }, fmt(n))]);
+const statCard = (cls, label, n, onclick, active) => $('div', { className: 'card ' + cls + (onclick ? ' tap' : '') + (active ? ' active' : ''), onclick }, [$('div', { className: 'sub' }, label), $('div', { className: 'stat-n' }, fmt(n))]);
 const chipRow = (cur, opts, set) => $('div', { className: 'chips' }, [
   ...opts.map(([k, l]) => $('button', { className: cur === k ? 'on' : '', onclick: () => { set(k); render(); } }, l)),
 ]);
@@ -890,16 +915,14 @@ const dayCaption = (w, hi, lo) => hi ? $('div', { className: 'daycap' }, [w + ' 
 const bodyCard = (body, empty) => { const c = $('div', { className: 'card' }, banner()); c.append(body.length ? $('div', {}, body) : $('div', { className: 'empty' }, empty)); return c; };
 
 function viewChi() {
-  expFilter = 'all';
-  const q = query.toLowerCase(), hit = t => !q || t.toLowerCase().includes(q);
-  const lab = expFilter.startsWith('label:') ? expFilter.slice(6) : null;
+  const q = query.toLowerCase(), hit = t => !q || t.toLowerCase().includes(q), onlyLoan = expFilter === 'chovay';
   const rows = [];
   for (const x of state.expenses) {
     if (x.kind === 'thu' || x.kind === 'vay') continue;
-    const okKind = expFilter === 'all' || (lab ? x.kind === 'chi' && labelOf(x) === lab : expFilter === x.kind);
-    if (okKind && visible(x) && hit(x.note + ' ' + (x.person || ''))) rows.push({ date: x.date, amount: x.amount, el: entryRow(x) });
+    if (onlyLoan ? x.kind !== 'chovay' : !visible(x)) continue;
+    if (hit(x.note + ' ' + (x.person || ''))) rows.push({ date: x.date, amount: x.amount, el: entryRow(x) });
   }
-  if (expFilter === 'all' || expFilter === 'tra') {
+  if (!onlyLoan) {
     for (const x of state.expenses) {
       if (x.kind === 'vay' && x.settled && x.settledDate && inPeriod(x.settledDate) && hit(x.note + ' ' + (x.person || ''))) {
         rows.push({ date: x.settledDate, amount: x.amount, el: listRow({ id: x.id, title: 'Trả Nợ · ' + (x.person || x.note), sub: fmtDate(x.settledDate) + ' · ' + x.note, tag: 'Trả nợ', tagCls: 'vay', amount: '-' + fmt(x.amount), items: [['Huỷ đã trả', () => settle(x, false)], ['Sửa khoản vay', () => expenseForm(x)]] }) });
@@ -911,11 +934,12 @@ function viewChi() {
     $('div', { className: 'stat3' }, [
       statCard('black', 'Tổng chi (kỳ đang xem)', sum(outflows().filter(e => inPeriod(e.date)))),
       statCard('peach', 'Chi tiêu thường', sum(state.expenses.filter(x => x.kind === 'chi' && inPeriod(x.date)))),
-      statCard('mint', 'Cho vay · cần thu lại', openOf('chovay')),
+      statCard('mint', 'Cho vay · cần thu lại', openOf('chovay'), () => { expFilter = onlyLoan ? 'all' : 'chovay'; render(); }, onlyLoan),
     ]),
+    onlyLoan ? $('div', { className: 'banner' }, [$('span', {}, ['Đang lọc: ', $('b', {}, 'Các khoản cho vay')]), $('a', { onclick: () => { expFilter = 'all'; render(); } }, 'Bỏ lọc')]) : '',
     sortSelect(expSort, sortOpts('Chi'), k => { expSort = k; }),
     dayCaption('Chi', hi, lo),
-    bodyCard(body, 'Chưa có khoản chi nào'),
+    bodyCard(body, onlyLoan ? 'Chưa có khoản cho vay nào' : 'Chưa có khoản chi nào'),
   ]);
 }
 
@@ -952,21 +976,49 @@ function viewThu() {
 /* ---------- Calendar ---------- */
 const WDS = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
 const WD_LONG = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
-const cview = { y: Number(today().slice(0, 4)), m: Number(today().slice(5, 7)), sel: today() };
+const cview = { range: null, y: Number(today().slice(0, 4)), m: Number(today().slice(5, 7)), sel: today() };
 const dstr = (y, m, d) => y + '-' + pad(m) + '-' + pad(d);
 // job rơi vào một ngày: theo ngày thực hiện hoặc theo deadline
 const jobsOnDay = ds => state.jobs.filter(j => j.created === ds || j.deadline === ds).sort((a, b) => (a.time || '99').localeCompare(b.time || '99'));
-function selectDay(ds) { cview.sel = ds; cview.y = Number(ds.slice(0, 4)); cview.m = Number(ds.slice(5, 7)); render(); }
+function selectDay(ds) { cview.range = null; cview.sel = ds; cview.y = Number(ds.slice(0, 4)); cview.m = Number(ds.slice(5, 7)); render(); }
 function shiftMonth(d) {
   const t = new Date(cview.y, cview.m - 1 + d, 1), y = t.getFullYear(), m = t.getMonth() + 1, dim = new Date(y, m, 0).getDate();
-  cview.y = y; cview.m = m; cview.sel = dstr(y, m, Math.min(Number(cview.sel.slice(8, 10)), dim));
+  cview.range = null; cview.y = y; cview.m = m; cview.sel = dstr(y, m, Math.min(Number(cview.sel.slice(8, 10)), dim));
   render();
 }
-function calJobRow(j, ds) {
-  const sub = [j.time, j.client, j.phone, j.address].filter(Boolean).join(' · ');
+const addDays = (ds, n) => { const d = new Date(Number(ds.slice(0, 4)), Number(ds.slice(5, 7)) - 1, Number(ds.slice(8, 10)) + n); return dstr(d.getFullYear(), d.getMonth() + 1, d.getDate()); };
+const mondayOf = ds => { const d = new Date(Number(ds.slice(0, 4)), Number(ds.slice(5, 7)) - 1, Number(ds.slice(8, 10))); return addDays(ds, -((d.getDay() + 6) % 7)); };
+const jobsInRange = (from, to) => state.jobs.flatMap(j => [j.created >= from && j.created <= to && { j, ds: j.created }, j.deadline && j.deadline !== j.created && j.deadline >= from && j.deadline <= to && { j, ds: j.deadline }].filter(Boolean)).sort((a, b) => (a.ds + (a.j.time || '99')).localeCompare(b.ds + (b.j.time || '99')));
+function gotoMonth(y, m) { const dim = new Date(y, m, 0).getDate(); cview.range = null; cview.y = y; cview.m = m; cview.sel = dstr(y, m, Math.min(Number(cview.sel.slice(8, 10)), dim)); render(); }
+function selectWeek(from) {
+  const to = addDays(from, 6), first = dstr(cview.y, cview.m, 1);
+  cview.range = { from, to }; cview.sel = from >= first ? from : first; render();
+}
+// bảng chọn tuần hoặc tháng bất kỳ
+function openCalPicker(mode = 'month', y = cview.y, m = cview.m) {
+  const seg = $('div', { className: 'seg', style: 'justify-self:start' }, [['month', 'Tháng'], ['week', 'Tuần']].map(([k, l]) => $('button', { className: mode === k ? 'on' : '', type: 'button', onclick: () => openCalPicker(k, y, m) }, l)));
+  let body;
+  if (mode === 'month') {
+    body = [$('div', { className: 'yrnav' }, [$('button', { type: 'button', onclick: () => openCalPicker('month', y - 1, m) }, '‹'), $('b', {}, String(y)), $('button', { type: 'button', onclick: () => openCalPicker('month', y + 1, m) }, '›')]),
+      $('div', { className: 'mgrid' }, Array.from({ length: 12 }, (_, i) => $('button', { className: 'mbtn' + (y === cview.y && i + 1 === cview.m ? ' on' : ''), type: 'button', onclick: () => { closeModal(); gotoMonth(y, i + 1); } }, 'Tháng ' + (i + 1))))];
+  } else {
+    const dim = new Date(y, m, 0).getDate(), weeks = []; let w = mondayOf(dstr(y, m, 1));
+    while (w <= dstr(y, m, dim)) { weeks.push(w); w = addDays(w, 7); }
+    const prev = new Date(y, m - 2, 1), next = new Date(y, m, 1);
+    body = [$('div', { className: 'yrnav' }, [$('button', { type: 'button', onclick: () => openCalPicker('week', prev.getFullYear(), prev.getMonth() + 1) }, '‹'), $('b', {}, 'Tháng ' + m + '/' + y), $('button', { type: 'button', onclick: () => openCalPicker('week', next.getFullYear(), next.getMonth() + 1) }, '›')]),
+      ...weeks.map((from, i) => { const to = addDays(from, 6), n = jobsInRange(from, to).length, on = cview.range && cview.range.from === from;
+        return $('button', { className: 'wkrow' + (on ? ' on' : ''), type: 'button', onclick: () => { closeModal(); cview.y = y; cview.m = m; selectWeek(from); } }, [$('span', {}, 'Tuần ' + (i + 1) + ' · ' + fmtDate(from).slice(0, 5) + ' – ' + fmtDate(to).slice(0, 5)), $('small', {}, n + ' job')]); })];
+  }
+  box.textContent = ''; box.className = 'box';
+  box.append($('h3', {}, 'Chọn Tuần / Tháng'), seg, ...body,
+    $('div', { className: 'actions' }, [$('button', { className: 'btn ghost', type: 'button', onclick: closeModal }, 'Đóng'), $('button', { className: 'btn', type: 'button', onclick: () => { closeModal(); selectDay(today()); } }, 'Về Hôm Nay')]));
+  showModal();
+}
+function calJobRow(j, ds, showDate) {
+  const sub = [showDate ? fmtDate(ds) : '', j.time, j.client, j.phone, j.address].filter(Boolean).join(' · ');
   return $('div', { className: 'row', 'data-id': j.id, onclick: () => showJob(j) }, [
     $('div', { className: 'ic' }, svg(ICON.brief)),
-    $('div', { className: 'info' }, [$('div', {}, j.title), $('small', {}, sub || '—'), j.deadline === ds && j.created !== ds ? $('small', { className: 'dl' }, 'Hạn chót hôm nay') : '']),
+    $('div', { className: 'info' }, [$('div', {}, j.title), $('small', {}, sub || '—'), j.deadline === ds && j.created !== ds ? $('small', { className: 'dl' }, showDate ? 'Hạn chót ' + fmtDate(ds) : 'Hạn chót hôm nay') : '']),
     $('span', { className: 'tag ' + j.status }, STATUS[j.status]),
     $('div', { className: 'amt' }, [fmt(shown(j)), $('small', {}, j.status === 'paid' ? 'đã thu đủ' : 'còn phải thu')]),
     j.phone ? $('a', { className: 'qbtn', href: 'tel:' + j.phone.replace(/[^\d+]/g, ''), title: 'Gọi Khách', onclick: e => e.stopPropagation() }, svg(ICON.phone)) : '',
@@ -978,15 +1030,14 @@ function viewCalendar() {
   const cells = [];
   for (let i = 0; i < total; i++) {
     const n = i - first + 1, inMonth = n >= 1 && n <= dim, dt = new Date(y, m - 1, n), ds = dstr(dt.getFullYear(), dt.getMonth() + 1, dt.getDate()), js = jobsOnDay(ds);
-    cells.push($('button', { className: 'cd' + (inMonth ? '' : ' out') + (inMonth && i % 7 === 6 ? ' sun' : '') + (ds === today() ? ' today' : '') + (ds === cview.sel ? ' sel' : '') + (js.length ? ' has' : ''), title: js.length ? js.length + ' job' : '', onclick: () => selectDay(ds) }, String(dt.getDate())));
+    cells.push($('button', { className: 'cd' + (inMonth ? '' : ' out') + (inMonth && i % 7 === 6 ? ' sun' : '') + (ds === today() ? ' today' : '') + (ds === cview.sel ? ' sel' : '') + (cview.range && ds >= cview.range.from && ds <= cview.range.to ? ' wk' : '') + (js.length ? ' has' : ''), title: js.length ? js.length + ' job' : '', onclick: () => selectDay(ds) }, String(dt.getDate())));
   }
   const monthJobs = state.jobs.filter(j => (j.created || '').startsWith(y + '-' + pad(m))).length;
   const head = $('div', { className: 'calhead' }, [
-    $('div', { className: 'bigday' }, String(sd)),
-    $('div', { className: 'calmeta' }, [$('div', {}, [$('div', { className: 'calmonth' }, 'Tháng ' + sm), $('div', { className: 'calyear' }, String(sy))]), $('div', { className: 'calwd' }, WD_LONG[dow])]),
+    $('div', { className: 'calmeta' }, [$('div', { className: 'bigday' }, String(sd)), $('div', { className: 'calmid' }, [$('div', { className: 'calmonth' }, 'Tháng ' + sm), $('div', { className: 'calyear' }, String(sy))]), $('div', { className: 'calwd' }, WD_LONG[dow])]),
     $('div', { className: 'calnav' }, [
       $('button', { title: 'Tháng trước', onclick: () => shiftMonth(-1) }, '‹'), $('button', { title: 'Tháng sau', onclick: () => shiftMonth(1) }, '›'),
-      $('button', { className: 'caltoday', onclick: () => selectDay(today()) }, 'Hôm Nay'), $('span', { className: 'calcount' }, monthJobs + ' job trong tháng')]),
+      $('button', { className: 'caltoday', onclick: () => openCalPicker() }, 'Hôm Nay'), $('span', { className: 'calcount' }, monthJobs + ' job trong tháng')]),
   ]);
   const grid = $('div', { className: 'calgrid' }, cells);
   let x0 = 0, dx = 0, down = false, swiped = false;   // vuốt ngang để đổi tháng
@@ -996,10 +1047,10 @@ function viewCalendar() {
   grid.addEventListener('pointerup', end); grid.addEventListener('pointercancel', end);
   grid.addEventListener('click', e => { if (swiped) { e.stopPropagation(); e.preventDefault(); } }, true);
   const wrap = $('div', { className: 'calwrap' }, [$('div', { className: 'calwdh' }, WDS.map(w => $('span', {}, w))), grid]);
-  const jobs = jobsOnDay(cview.sel);
+  const rg = cview.range, list = rg ? jobsInRange(rg.from, rg.to) : jobsOnDay(cview.sel).map(j => ({ j, ds: cview.sel }));
   const panel = $('div', { className: 'card calpanel' }, [
-    $('div', { className: 'sec' }, [$('h3', {}, WD_LONG[dow] + ', ' + sd + '/' + sm), $('span', { className: 'sub' }, jobs.length ? jobs.length + ' job' : 'Không có job')]),
-    ...(jobs.length ? jobs.map(j => calJobRow(j, cview.sel)) : [$('div', { className: 'empty' }, [$('div', {}, 'Không có job nào trong ngày này.'), $('button', { className: 'btn', style: 'margin-top:12px', onclick: () => jobForm(null, cview.sel) }, 'Tạo Job Ngày Này')])]),
+    $('div', { className: 'sec' }, [$('h3', {}, rg ? 'Tuần ' + fmtDate(rg.from).slice(0, 5) + ' – ' + fmtDate(rg.to).slice(0, 5) : WD_LONG[dow] + ', ' + sd + '/' + sm), $('span', { className: 'sub' }, list.length ? list.length + ' job' : 'Không có job')]),
+    ...(list.length ? list.map(e => calJobRow(e.j, e.ds, !!rg)) : [$('div', { className: 'empty' }, [$('div', {}, rg ? 'Không có job nào trong tuần này.' : 'Không có job nào trong ngày này.'), rg ? '' : $('button', { className: 'btn', style: 'margin-top:12px', onclick: () => jobForm(null, cview.sel) }, 'Tạo Job Ngày Này')])]),
   ]);
   return $('div', {}, [head, wrap, panel]);
 }
@@ -1019,7 +1070,7 @@ function renderNav() {
   const nav = document.getElementById('nav');
   if (!nav.firstChild) {
     nav.append($('div', { id: 'pill' }));
-    for (const [id, label, icon] of NAV) nav.append($('button', { className: 'nav', 'data-tab': id, title: label, onclick: () => go(id === 'jobs' ? lastJobTab : id) }, [svg(ICON[icon]), $('span', { className: 'c' })]));
+    for (const [id, label, icon] of NAV) nav.append($('button', { className: 'nav', 'data-tab': id, title: label, onclick: () => { if (id === 'chi') expFilter = 'all'; go(id === 'jobs' ? lastJobTab : id); } }, [svg(ICON[icon]), $('span', { className: 'c' })]));
   }
   const cur = navOf(tab);
   for (const [id] of NAV) nav.querySelector('[data-tab="' + id + '"]').classList.toggle('on', id === cur);
@@ -1043,7 +1094,6 @@ function renderMain() {
   const pb = document.getElementById('period');
   pb.textContent = '';
   pb.append(svg('<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>'), periodLabel());
-  document.querySelector('#bell .dot').style.display = dueSoon().length ? 'block' : 'none';
 
   main.textContent = '';
   const unpaidHead = $('div', { className: 'sumline' }, [$('span', {}, 'Tiền chờ thu'), $('b', {}, fmt(sumOwed(pStatus('done'))))]);
@@ -1113,10 +1163,6 @@ document.addEventListener('click', () => { cal.style.display = 'none'; });
 document.getElementById('reload').onclick = e => {
   e.currentTarget.classList.add('spin');
   setTimeout(() => location.reload(), REDUCED ? 0 : 450);
-};
-document.getElementById('bell').onclick = e => {
-  const soon = dueSoon();
-  openMenu(e, soon.length ? soon.map(x => [dueLine(x), () => go(tabForKind(x.kind))]) : [['Không có nhắc nhở', () => {}]]);
 };
 document.getElementById('q').oninput = e => { query = e.target.value; if (query && ['overview'].includes(tab)) tab = 'all'; render(); };
 /* ---------- đăng nhập Google + đồng bộ Drive (chỉ bản web) ---------- */
