@@ -165,12 +165,6 @@
   .btn { font:inherit; font-size:13px; font-weight:500; padding:10px 20px; border-radius:999px; border:1px solid var(--black); background:var(--black); color:#fff; cursor:pointer; }
   .btn.ghost { background:#fff; color:var(--ink); }
 
-  .drive { padding:26px; }
-  .drive .mt2 { display:flex; align-items:center; gap:14px; margin-bottom:12px; }
-  .drive .mt2 i { width:52px; height:52px; border-radius:50%; background:var(--black); color:#fff; display:grid; place-items:center; flex:none; }
-  .drive .mt2 svg { width:24px; height:24px; }
-  .drive p { margin:0 0 18px; line-height:1.6; color:rgba(0,0,0,.65); max-width:520px; }
-  a.btn { display:inline-block; text-decoration:none; }
 
   /* thao tác nhanh, sắp xếp, nhãn */
   .qacts { display:flex; gap:6px; }
@@ -197,71 +191,35 @@
   .sw-dark .jrow { margin-bottom:0; position:relative; z-index:1; touch-action:pan-y; }
   .syncbar { background:var(--peach); border-radius:20px; padding:12px 18px; margin-bottom:14px; font-size:13px; line-height:1.5; cursor:pointer; box-shadow:inset 0 0 0 1.5px var(--black); }
 
-  /* Drive thật */
-  .upbar { background:var(--black); color:#fff; border-radius:20px; padding:12px 18px; margin-bottom:12px; font-size:13px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .sheetbtn { display:flex; align-items:center; gap:14px; width:100%; border:0; background:#f3f3f4; border-radius:22px; padding:14px 16px; font:inherit; cursor:pointer; text-align:left; color:var(--ink); transition:transform .14s var(--ease), background .2s; }
-  .sheetbtn:active { transform:scale(.97); }
-  .sheetbtn i { width:44px; height:44px; border-radius:50%; background:var(--black); color:#fff; display:grid; place-items:center; flex:none; }
-  .sheetbtn svg { width:20px; height:20px; }
-  .sheetbtn b { display:block; font-size:14px; }
-  .sheetbtn small { color:var(--mute); font-size:12px; }
-  .linkbox { width:100%; font:inherit; font-size:14px; padding:12px 15px; border:1px solid #e3e3e6; border-radius:16px; background:#f7f7f8; color:var(--ink); -webkit-user-select:text; user-select:text; }
-  .chiprow { display:flex; gap:8px; flex-wrap:wrap; }
-  .btn.sm { padding:8px 14px; font-size:12px; }
-  .btn:disabled { opacity:.5; }
-  .dth.nothumb { display:grid; place-items:center; }
 
-  .dsec { margin:18px 4px 10px; font-size:18px; font-weight:600; letter-spacing:-.3px; }
-  .dth.tile.add { background:#f1f1f2; box-shadow:inset 0 0 0 2px #c9c9ce; }
 
-  /* Drive (giao diện dùng chung) */
-  .demo-note { background:var(--peach); border-radius:18px; padding:10px 14px; font-size:12.5px; line-height:1.45; margin-bottom:10px; box-shadow:inset 0 0 0 1.5px var(--black); }
-  .dstore { display:flex; align-items:center; gap:12px; margin-bottom:12px; padding:12px 18px; border-radius:24px; font-size:13px; }
-  .dstore .meter { flex:1; height:8px; border-radius:4px; background:rgba(255,255,255,.18); overflow:hidden; }
-  .dstore .meter i { display:block; height:100%; width:0; background:var(--mint); border-radius:4px; }
-  .dstore b { font-size:14px; white-space:nowrap; }
-  .crumbs { display:flex; align-items:center; gap:4px; flex-wrap:wrap; font-size:13px; margin-bottom:12px; }
-  .crumb { border:0; background:#fff; border-radius:999px; padding:8px 14px; font:inherit; font-size:13px; cursor:pointer; color:var(--ink); }
-  .crumb.on { background:var(--black); color:#fff; }
-  .crumbs .sep { color:var(--mute); }
-  .dtools { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
-  .dtools .sortbar { margin:0; flex:1; min-width:0; }
-  .dtools .sortbar span { display:none; }
-  .dtools .sortbar select { width:100%; }
-  .vtog { display:flex; background:#fff; border-radius:999px; padding:3px; gap:2px; height:44px; align-items:center; }
-  .vtog button { width:42px; height:38px; border:0; background:none; border-radius:999px; display:grid; place-items:center; cursor:pointer; color:var(--ink); transition:background .2s, color .2s; }
-  .vtog button.on { background:var(--black); color:#fff; }
-  .vtog svg { width:18px; height:18px; }
-  .dgrid { display:grid; grid-template-columns:repeat(auto-fill, minmax(130px, 1fr)); gap:14px 12px; }
-  .dcard { cursor:pointer; min-width:0; }
-  .dth { width:100%; aspect-ratio:1 / 1; border-radius:22px; object-fit:cover; display:block; background:#e9e9ea; }
-  .dth.tile { display:grid; place-content:center; justify-items:center; gap:6px; }
-  .dth.tile svg { width:40px; height:40px; }
-  .dth.tile b { font-size:12px; font-weight:600; }
-  .dth.c0 { background:var(--peach); } .dth.c1 { background:var(--mint); } .dth.c2 { background:var(--lav); }
-  .dth.video { background:var(--black); color:#fff; }
-  .dth.vid-img { position:relative; }
-  .dname { display:flex; align-items:center; gap:4px; margin-top:8px; font-size:13px; font-weight:500; }
-  .dname span { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .dmeta { font-size:11px; color:var(--mute); margin-top:-2px; }
-  .drow { cursor:pointer; }
-  .row.drow { flex-wrap:nowrap !important; }
-  .row.drow .info { flex:1 1 0 !important; min-width:0; }
-  .row.drow .info div, .row.drow .info small { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .drow .dth { width:46px; height:46px; border-radius:14px; flex:none; aspect-ratio:auto; }
-  .drow .dth.tile svg { width:22px; height:22px; } .drow .dth.tile b { display:none; }
-  .toast { position:fixed; left:50%; bottom:calc(128px + env(safe-area-inset-bottom)); transform:translateX(-50%) translateY(12px); background:var(--black); color:#fff; padding:12px 18px; border-radius:999px; font-size:13px; font-weight:600; opacity:0; pointer-events:none; transition:opacity .3s, transform .3s var(--ease); z-index:50; max-width:calc(100% - 32px); text-align:center; box-shadow:0 10px 24px rgba(0,0,0,.25); }
-  .toast.show { opacity:1; transform:translateX(-50%); }
-  #viewer { position:fixed; inset:0; background:#0c0c0c; z-index:45; display:none; flex-direction:column; color:#fff; padding-top:env(safe-area-inset-top); }
-  #viewer .vbar { display:flex; align-items:center; gap:12px; padding:14px 16px; }
-  #viewer .vbar .ibtn { background:rgba(255,255,255,.14); color:#fff; flex:none; }
-  #viewer .vtitle { flex:1; min-width:0; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  #viewer .vcount { font-size:13px; color:#b9b9be; flex:none; }
-  #viewer .stage { flex:1; min-height:0; display:grid; place-items:center; overflow:hidden; touch-action:none; padding:0 14px; }
-  #viewer img { max-width:100%; max-height:100%; border-radius:16px; transition:transform .3s var(--ease), opacity .3s; -webkit-user-drag:none; }
-  #viewer .vacts { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; padding:14px 16px calc(18px + env(safe-area-inset-bottom)); }
-  #viewer .vacts .btn { background:rgba(255,255,255,.14); border-color:transparent; color:#fff; }
-  #viewer .vacts .btn.pri { background:#fff; color:var(--ink); }
+
+  /* Calendar */
+  :root { --orange:#f26d21; }
+  body[data-tab="calendar"] .title-block, body[data-tab="calendar"] .tools { display:none; }
+  .bigday { font-size:clamp(96px, 34vw, 150px); font-weight:700; letter-spacing:-.05em; line-height:.9; margin:4px 0 20px -4px; }
+  .calmeta { display:flex; justify-content:space-between; align-items:flex-end; }
+  .calmonth { font-size:24px; letter-spacing:.04em; text-transform:uppercase; }
+  .calyear { font-size:24px; color:var(--mute); line-height:1.15; }
+  .calwd { font-size:24px; }
+  .calnav { display:flex; align-items:center; gap:4px; margin:22px 0 18px -10px; }
+  .calnav button { min-width:44px; height:44px; border:0; background:none; font:inherit; font-size:26px; line-height:1; cursor:pointer; color:var(--ink); border-radius:999px; transition:transform .14s var(--ease), background .2s; }
+  .calnav button:active { transform:scale(.88); }
+  .calnav .caltoday { font-size:13px; font-weight:600; padding:0 14px; background:#fff; margin-left:8px; }
+  .calcount { margin-left:auto; font-size:12px; color:var(--mute); }
+  .calwdh { display:grid; grid-template-columns:repeat(7, 1fr); text-align:center; font-size:12px; color:var(--mute); margin-bottom:10px; }
+  .calgrid { display:grid; grid-template-columns:repeat(7, 1fr); gap:10px 0; justify-items:center; touch-action:pan-y; margin-bottom:22px; }
+  .cd { width:calc(100% - 6px); max-width:50px; aspect-ratio:1 / 1; border:0; border-radius:50%; background:var(--black); color:#fff; font:inherit; font-size:15px; font-weight:600; display:grid; place-items:center; position:relative; cursor:pointer; padding:0; transition:transform .14s var(--ease), box-shadow .2s; }
+  .cd:active { transform:scale(.9); }
+  .cd.sun { background:var(--orange); }
+  .cd.out { background:transparent; color:#a9a9ae; box-shadow:inset 0 0 0 2px #cfcfd2; font-weight:500; }
+  .cd.today { text-decoration:underline; text-underline-offset:4px; text-decoration-thickness:2px; }
+  .cd.sel { box-shadow:0 0 0 3px var(--bg), 0 0 0 5px var(--black); }
+  .cd.out.sel { box-shadow:inset 0 0 0 2px #cfcfd2, 0 0 0 3px var(--bg), 0 0 0 5px #8b8b90; }
+  .cd.has::after { content:''; position:absolute; bottom:6px; left:50%; width:5px; height:5px; margin-left:-2.5px; border-radius:50%; background:currentColor; }
+  .cd.out.has::after { background:#8b8b90; }
+  .calpanel .row .dl { color:var(--orange); font-weight:600; }
+  #main.enter .calhead, #main.enter .calwrap { animation:rise .85s var(--ease) backwards; animation-delay:calc(var(--i, 0) * 110ms); }
 
   /* nút nổi kiểu AssistiveTouch: di chuyển bằng transform (GPU), không dùng bộ lọc mờ để kéo mượt trên iPhone */
   .fab { position:fixed; left:0; top:0; width:58px; height:58px; z-index:16; display:none; touch-action:none; cursor:grab; outline:0; will-change:transform; transition:transform .45s var(--ease), opacity .4s; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
@@ -414,7 +372,6 @@
 <div class="veil"></div>
 <div class="fab" id="fab" role="button" tabindex="0"><div class="fab-body"><i></i></div><span class="fab-label" id="fabLabel"></span></div>
 <nav class="dock" id="nav"></nav>
-<div id="viewer"><div class="vbar"><button class="ibtn" id="vclose" title="Đóng"></button><div class="vtitle" id="vtitle"></div><div class="vcount" id="vcount"></div></div><div class="stage" id="vstage"><img id="vimg" alt=""></div><div class="vacts" id="vacts"></div></div>
 <div id="menu"></div>
 <div id="modal"><div class="box" id="box"></div></div>
 
@@ -443,10 +400,8 @@ const ICON = {
   in: '<path d="M17 7L7 17M16 17H7V8"/>',
   link: '<path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/>',
   phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.2-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
-  play: '<path d="M8 5.5v13l11-6.5z"/>',
-  file: '<path d="M6 3h8l5 5v13H6z"/><path d="M14 3v6h5"/>',
   sort: '<path d="M4 7h10M4 12h7M4 17h4"/><path d="M17 5v14M14 16l3 3 3-3"/>',
-  folder: '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+  calendar: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',
 };
 const fmt = n => Number(n).toLocaleString('vi-VN') + ' ₫';
 const short = n => { n = Number(n); const a = Math.abs(n); return a >= 1e9 ? (n / 1e9).toFixed(1) + ' tỷ' : a >= 1e6 ? (n / 1e6).toFixed(1).replace('.0', '') + ' tr' : a >= 1e3 ? Math.round(n / 1e3) + 'k' : String(n); };
@@ -464,7 +419,6 @@ function save() {
 }
 
 state.expenses = state.expenses || [];
-state.driveLinks = state.driveLinks || [];
 state.expenses.forEach(x => { x.kind = x.kind || 'chi'; });
 let tab = 'overview', query = '', enterNext = true, freshId = null;
 let period = { mode: 'month', ym: today().slice(0, 7) };   // month | day | all
@@ -498,7 +452,7 @@ const incomeEvents = () => state.jobs.flatMap(j => {
 });
 const matches = j => !query || (j.title + ' ' + j.client + ' ' + (j.phone || '')).toLowerCase().includes(query.toLowerCase());
 
-const NAV = [['jobs', 'Job Đang Thực Hiện', 'list'], ['drive', 'Google Drive', 'folder'], ['overview', 'Tổng Quan', 'home'], ['chi', 'Chi Tiêu', 'arrow'], ['thu', 'Thu Nhập', 'in']];
+const NAV = [['jobs', 'Job Đang Thực Hiện', 'list'], ['calendar', 'Calendar', 'calendar'], ['overview', 'Tổng Quan', 'home'], ['chi', 'Chi Tiêu', 'arrow'], ['thu', 'Thu Nhập', 'in']];
 const JOB_TABS = ['todo', 'unpaid', 'paid', 'all'];
 const navOf = t => JOB_TABS.includes(t) ? 'jobs' : t;
 let lastJobTab = 'all', homeList = 'todo', chartMode = 'week';
@@ -558,18 +512,18 @@ const deliverOf = j => j.deliver || j.link || '';   // job cũ lưu ở trườn
 const urlOf = t => normLink(t);                       // chỉ coi là link khi nội dung là một đường dẫn
 // chuyển job sang "đã xong": bắt buộc điền nội dung bàn giao (bất kỳ chữ nào) mới cho qua
 function askDone(j) {
-  const input = $('textarea', { rows: 3, autocomplete: 'off', placeholder: 'Ví dụ: đã giao 120 ảnh qua Zalo, hoặc dán link Drive...', value: deliverOf(j) });
+  const input = $('textarea', { rows: 3, autocomplete: 'off', placeholder: 'Ví dụ: đã giao 120 ảnh qua Zalo, hoặc dán link...', value: deliverOf(j) });
   const err = $('div', { className: 'err' });
   const submit = () => {
     const text = input.value.trim();
     if (!text) { err.textContent = 'Bắt buộc phải điền nội dung mới đánh dấu xong được.'; input.focus(); return; }
-    j.deliver = text; delete j.link; autoLinkFromText(j, text); closeModal(); setStatus(j, 'done');
+    j.deliver = text; delete j.link; closeModal(); setStatus(j, 'done');
   };
   box.textContent = '';
   box.className = 'box';
   box.append($('h3', {}, 'Nội Dung Bàn Giao'),
     $('div', { className: 'hint' }, 'Ghi lại nội dung đã giao cho khách của job "' + j.title + '" (link, ghi chú, số lượng ảnh...). Phải điền thì mới đánh dấu xong được.'),
-    $('label', { className: 'fld' }, [$('span', {}, 'Nội dung *'), input]), driveHelpers(j, input), err,
+    $('label', { className: 'fld' }, [$('span', {}, 'Nội dung *'), input]), err,
     $('div', { className: 'actions' }, [$('button', { className: 'btn ghost', type: 'button', onclick: closeModal }, 'Huỷ'), $('button', { className: 'btn', type: 'button', onclick: submit }, 'Xác Nhận Đã Xong')]));
   input.addEventListener('input', () => { err.textContent = ''; });
   showModal();
@@ -664,7 +618,7 @@ function openModal(title, fields, onSubmit, submitLabel) {
   showModal();
   inputs[0].focus();
 }
-function jobForm(j) {
+function jobForm(j, presetDate) {
   const fields = {};
   const field = (key, label, props, wide = false, tag = 'input') => {
     const e = $(tag, props); fields[key] = e;
@@ -678,7 +632,7 @@ function jobForm(j) {
     field('client', 'Khách hàng', { value: v('client') }),
     field('phone', 'Số điện thoại', { type: 'tel', value: v('phone') }),
     field('address', 'Địa chỉ', { value: v('address') }, true),
-    field('created', 'Ngày thực hiện *', { type: 'date', required: true, value: v('created', period.mode === 'day' ? period.date : today()) }),
+    field('created', 'Ngày thực hiện *', { type: 'date', required: true, value: v('created', presetDate || (period.mode === 'day' ? period.date : today())) }),
     field('time', 'Giờ', { type: 'time', value: v('time') }),
     field('desc', 'Mô tả', { rows: 3, value: v('desc') }, true, 'textarea'),
     field('amount', 'Chi phí (₫) *', { type: 'number', min: 0, step: 'any', required: true, value: v('amount') }),
@@ -692,8 +646,8 @@ function jobForm(j) {
     if (!Object.values(fields).every(e => e.reportValidity())) return;
     const data = { title: fields.title.value.trim(), client: fields.client.value.trim(), phone: fields.phone.value.trim(), address: fields.address.value.trim(),
       created: fields.created.value, time: fields.time.value, desc: fields.desc.value.trim(), amount, deposit, deadline: fields.deadline.value, deliver: fields.deliver.value.trim(), link: '' };
-    if (j) { const had = (j.deposit || 0) > 0; Object.assign(j, data); if (!had && deposit > 0) j.depositDate = today(); autoLinkFromText(j, data.deliver); }
-    else { const nj = { id: Date.now() + Math.random(), status: 'todo', paidDate: null, depositDate: today(), ...data }; state.jobs.push(nj); freshId = nj.id; autoLinkFromText(nj, data.deliver); }
+    if (j) { const had = (j.deposit || 0) > 0; Object.assign(j, data); if (!had && deposit > 0) j.depositDate = today(); }
+    else { const nj = { id: Date.now() + Math.random(), status: 'todo', paidDate: null, depositDate: today(), ...data }; state.jobs.push(nj); freshId = nj.id; }
     if (!jobIn({ created: data.created, paidDate: j ? j.paidDate : null })) period = { mode: 'month', ym: data.created.slice(0, 7) };
     closeModal(); save(); render();
   };
@@ -718,7 +672,7 @@ function showJob(j) {
       line('Chi phí', fmt(j.amount)), line('Tiền cọc', fmt(j.deposit || 0)), line('Ngày nhận cọc', j.deposit > 0 ? fmtDate(depDate(j)) : ''), line('Còn phải thu', fmt(owed(j))), line('Ngày thu đủ', fmtDate(j.paidDate)),
       deliverOf(j) ? $('div', { className: 'kv' }, [$('span', {}, 'Nội Dung Bàn Giao'), urlOf(deliverOf(j)) ? $('a', { href: urlOf(deliverOf(j)), target: '_blank', rel: 'noopener', style: 'font-weight:500;text-align:right;word-break:break-all;color:inherit;text-decoration:underline' }, deliverOf(j)) : $('b', {}, deliverOf(j))]) : '',
     ]),
-    $('div', { className: 'actions' }, [$('button', { className: 'btn ghost', onclick: closeModal }, 'Đóng'), $('button', { className: 'btn ghost', onclick: () => { closeModal(); const l = linkOfJob(j); if (l) openLinkFolder(l); else openJobDrive(j); } }, linkOfJob(j) ? 'Xem Ảnh Drive' : 'Thư Mục Drive'), $('button', { className: 'btn', onclick: () => jobForm(j) }, 'Sửa')]));
+    $('div', { className: 'actions' }, [$('button', { className: 'btn ghost', onclick: closeModal }, 'Đóng'), $('button', { className: 'btn', onclick: () => jobForm(j) }, 'Sửa')]));
   showModal();
 }
 function expenseForm(x, kinds) {
@@ -995,548 +949,60 @@ function viewThu() {
   ]);
 }
 
-/* ---------- Google Drive (kết nối thật; quyền drive.file: app chỉ thấy file do app tạo hoặc bạn chọn) ---------- */
-const DRIVE_API = 'https://www.googleapis.com/drive/v3', DRIVE_UP = 'https://www.googleapis.com/upload/drive/v3';
-const FOLDER = 'application/vnd.google-apps.folder', ROOT_NAME = 'Tuni.Graphy', THUMBS_NAME = '_thumbs', DRIVE_ROOT_KEY = 'tuni-drive-root';
-const LIST_FIELDS = 'id,name,mimeType,size,modifiedTime,webViewLink,shared,parents,appProperties';
-const hasDrive = () => { try { return (localStorage.getItem('tuni-scope') || '').includes('auth/drive.file'); } catch (e) { return false; } };
-const rd = { mode: 'home', link: null, root: null, thumbs: null, path: [], items: [], next: null, status: 'idle', error: '', key: '', view: 'grid', sort: 'name', timer: 0, quota: null, busy: '', thumbCache: {}, full: {}, seq: 0 };
-const hashStr = str => { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; };
-const fmtSize = b => b >= 1e9 ? (b / 1e9).toFixed(1) + ' GB' : b >= 1e6 ? Math.round(b / 1e6) + ' MB' : Math.max(1, Math.round(b / 1e3)) + ' KB';
-const TYPE_LABEL = { folder: 'Thư mục', image: 'Ảnh', video: 'Video', pdf: 'PDF', doc: 'Tệp' };
-const typeOf = f => f.mimeType === FOLDER ? 'folder' : /^image\//.test(f.mimeType || '') ? 'image' : /^video\//.test(f.mimeType || '') ? 'video' : f.mimeType === 'application/pdf' ? 'pdf' : 'doc';
-const toItem = f => ({ ...f, type: typeOf(f), size: Number(f.size || 0), date: (f.modifiedTime || '').slice(0, 10) });
-const qv = t => "'" + String(t).replace(/\\/g, '\\\\').replace(/'/g, "\\'") + "'";
-const jbody = (body, method = 'POST') => ({ method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-async function dapi(path, opts = {}) { const t = await getToken(false); return gfetch(DRIVE_API + path, t, opts); }
-const djson = async (path, opts) => (await dapi(path, opts)).json();
-const itemLink = x => x.webViewLink || (x.type === 'folder' ? 'https://drive.google.com/drive/folders/' + x.id : 'https://drive.google.com/file/d/' + x.id + '/view');
-const curParent = async () => rd.path.length ? rd.path[rd.path.length - 1].id : await ensureRoot();
-const pubBase = () => rd.mode === 'link' && rd.link ? rd.link.folderId : null;
-
-function toast(msg) {
-  let t = document.getElementById('toast');
-  if (!t) { t = $('div', { className: 'toast', id: 'toast' }); document.body.append(t); }
-  t.textContent = msg; t.classList.add('show');
-  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2600);
+/* ---------- Calendar ---------- */
+const WDS = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+const WD_LONG = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+const cview = { y: Number(today().slice(0, 4)), m: Number(today().slice(5, 7)), sel: today() };
+const dstr = (y, m, d) => y + '-' + pad(m) + '-' + pad(d);
+// job rơi vào một ngày: theo ngày thực hiện hoặc theo deadline
+const jobsOnDay = ds => state.jobs.filter(j => j.created === ds || j.deadline === ds).sort((a, b) => (a.time || '99').localeCompare(b.time || '99'));
+function selectDay(ds) { cview.sel = ds; cview.y = Number(ds.slice(0, 4)); cview.m = Number(ds.slice(5, 7)); render(); }
+function shiftMonth(d) {
+  const t = new Date(cview.y, cview.m - 1 + d, 1), y = t.getFullYear(), m = t.getMonth() + 1, dim = new Date(y, m, 0).getDate();
+  cview.y = y; cview.m = m; cview.sel = dstr(y, m, Math.min(Number(cview.sel.slice(8, 10)), dim));
+  render();
 }
-async function copyText(t) {
-  try { await navigator.clipboard.writeText(t); return true; } catch (e) {}
-  const a = $('textarea', { value: t }); a.style.cssText = 'position:fixed;opacity:0;top:0';
-  document.body.append(a); a.select();
-  let ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
-  a.remove(); return ok;
-}
-const loadScript = src => new Promise((res, rej) => { const sc = document.createElement('script'); sc.src = src; sc.onload = res; sc.onerror = () => rej(new Error('network: không tải được ' + src)); document.head.append(sc); });
-
-/* thư mục gốc, thư mục ảnh thu nhỏ, thư mục của từng job */
-async function dFindOrCreate(name, parent) {
-  const qs = 'name = ' + qv(name) + " and mimeType = '" + FOLDER + "' and trashed = false and " + qv(parent || 'root') + ' in parents';
-  const j = await djson('/files?' + new URLSearchParams({ q: qs, fields: 'files(id,name)', pageSize: '1' }));
-  if (j.files && j.files[0]) return j.files[0].id;
-  return (await djson('/files?fields=id', jbody({ name, mimeType: FOLDER, ...(parent ? { parents: [parent] } : {}) }))).id;
-}
-async function ensureRoot() {
-  if (rd.root) return rd.root;
-  let id = null; try { id = localStorage.getItem(DRIVE_ROOT_KEY); } catch (e) {}
-  if (id) { try { const f = await djson('/files/' + id + '?fields=id,trashed'); if (f.trashed) id = null; } catch (e) { id = null; } }
-  if (!id) id = await dFindOrCreate(ROOT_NAME, null);
-  try { localStorage.setItem(DRIVE_ROOT_KEY, id); } catch (e) {}
-  return rd.root = id;
-}
-async function ensureThumbs() { if (rd.thumbs) return rd.thumbs; return rd.thumbs = await dFindOrCreate(THUMBS_NAME, await ensureRoot()); }
-const jobFolderName = j => j.title + ' · ' + fmtDate(j.created);
-async function ensureJobFolder(j) {
-  if (j.driveFolder) { try { const f = await djson('/files/' + j.driveFolder + '?fields=id,trashed'); if (!f.trashed) return j.driveFolder; } catch (e) {} }
-  const id = await dFindOrCreate(jobFolderName(j), await ensureRoot());
-  j.driveFolder = id; save();
-  return id;
-}
-async function openJobDrive(j) {
-  if (!signedIn() || !hasDrive() || !useCode) { go('drive'); return; }
-  try { const id = await ensureJobFolder(j); rd.mode = 'mine'; rd.link = null; rd.path = [{ id, name: jobFolderName(j) }]; rd.key = ''; go('drive'); }
-  catch (e) { toast('Không mở được thư mục: ' + e.message); }
-}
-
-/* danh sách, tìm kiếm */
-async function listFolder(id, pageToken) {
-  const j = await djson('/files?' + new URLSearchParams({ q: qv(id) + ' in parents and trashed = false', fields: 'nextPageToken,files(' + LIST_FIELDS + ')', pageSize: '100', orderBy: 'folder,name', ...(pageToken ? { pageToken } : {}) }));
-  return { items: (j.files || []).map(toItem), next: j.nextPageToken || null };
-}
-async function searchFiles(text) {
-  let qs = 'name contains ' + qv(text) + ' and trashed = false';
-  if (rd.thumbs) qs += ' and not ' + qv(rd.thumbs) + ' in parents';
-  const j = await djson('/files?' + new URLSearchParams({ q: qs, fields: 'files(' + LIST_FIELDS + ')', pageSize: '60', orderBy: 'folder,name' }));
-  return (j.files || []).map(toItem).filter(x => x.name !== THUMBS_NAME);
-}
-const driveKey = () => [rd.mode, rd.link ? rd.link.id : '', rd.path.length ? rd.path[rd.path.length - 1].id : 'root', rd.mode === 'mine' ? query.trim().toLowerCase() : ''].join('|');
-function driveLoad(more = false, soft = false) {
-  const my = ++rd.seq, text = query.trim();
-  rd.key = driveKey();
-  if (!more && !soft) { rd.items = []; rd.next = null; }
-  rd.status = soft ? rd.status : 'loading'; rd.error = '';
-  (async () => {
-    try {
-      let res;
-      if (rd.mode === 'link') {
-        const l = rd.link, id = rd.path.length ? rd.path[rd.path.length - 1].id : l.folderId;
-        res = l.kind === 'file' && !rd.path.length ? { items: [await pubMeta(l)], next: null } : await pubList(id, l, more ? rd.next : null);
-      } else if (text) res = { items: await searchFiles(text), next: null };
-      else {
-        const id = await curParent();
-        res = await listFolder(id, more ? rd.next : null);
-        if (!rd.path.length) res.items = res.items.filter(x => x.name !== THUMBS_NAME);
-      }
-      if (my !== rd.seq) return;
-      rd.items = more ? rd.items.concat(res.items) : res.items; rd.next = res.next; rd.status = 'ready';
-    } catch (e) {
-      if (my !== rd.seq) return;
-      rd.status = 'error';
-      rd.error = e.message === 'nokey' ? 'Chưa có Google API key trong config.js nên chưa đọc được thư mục này.'
-        : e.status === 404 ? 'Không mở được thư mục. Hãy kiểm tra link đã để chế độ "Bất kỳ ai có link" chưa.'
-        : e.status === 403 ? (rd.mode === 'link' ? 'Google từ chối (403). Kiểm tra API key đã bật Google Drive API và cho phép địa chỉ web này, hoặc thư mục chưa mở công khai.' : 'Google từ chối quyền truy cập (403). Hãy cấp lại quyền Drive.')
-        : e.message;
-    }
-    if (tab === 'drive') renderMain();
-  })();
-}
-
-/* thư mục liên kết: dán link Drive công khai, xem ảnh ngay trong app (đọc bằng Google API key, không cần đăng nhập) */
-function parseDriveLink(url) {
-  const t = String(url || '').trim();
-  let u; try { u = new URL(/^https?:\/\//i.test(t) ? t : 'https://' + t); } catch (e) { return null; }
-  if (!/(^|\.)drive\.google\.com$/.test(u.hostname)) return null;
-  let m, id = null, kind = 'unknown';
-  if ((m = u.pathname.match(/\/folders\/([\w-]{10,})/))) { id = m[1]; kind = 'folder'; }
-  else if ((m = u.pathname.match(/\/file\/d\/([\w-]{10,})/))) { id = m[1]; kind = 'file'; }
-  else if ((m = (u.searchParams.get('id') || '').match(/^[\w-]{10,}$/))) { id = m[0]; kind = /folderview/.test(u.pathname) ? 'folder' : 'unknown'; }
-  return id ? { id, kind, rk: u.searchParams.get('resourcekey') || '' } : null;
-}
-const PUB_FIELDS = 'id,name,mimeType,size,modifiedTime,webViewLink,thumbnailLink,shared';
-async function pubJson(path, rk, id) {
-  if (!API_KEY) throw new Error('nokey');
-  const u = new URL(DRIVE_API + path); u.searchParams.set('key', API_KEY);
-  const r = await fetch(u.toString(), rk ? { headers: { 'X-Goog-Drive-Resource-Keys': id + '/' + rk } } : {});
-  if (!r.ok) { const e = new Error('drive: ' + r.status); e.status = r.status; throw e; }
-  return r.json();
-}
-const pubMeta = async l => toItem({ ...(await pubJson('/files/' + l.folderId + '?supportsAllDrives=true&fields=' + PUB_FIELDS, l.rk, l.folderId)), pub: true });
-async function pubList(folderId, l, pageToken) {
-  const j = await pubJson('/files?' + new URLSearchParams({ q: qv(folderId) + ' in parents and trashed = false', fields: 'nextPageToken,files(' + PUB_FIELDS + ')', pageSize: '100', orderBy: 'folder,name', supportsAllDrives: 'true', includeItemsFromAllDrives: 'true', ...(pageToken ? { pageToken } : {}) }), l.rk, l.folderId);
-  return { items: (j.files || []).map(f => toItem({ ...f, pub: true })), next: j.nextPageToken || null };
-}
-const thumbUrl = (x, size) => x.thumbnailLink ? x.thumbnailLink.replace(/=s\d+(-[a-z]+)*$/, '=s' + size) : '';
-const linkOfJob = j => (state.driveLinks || []).find(l => String(l.jobId) === String(j.id));
-const newLinkId = () => 'l' + Date.now() + Math.random().toString(36).slice(2, 6);
-// job có dán link Drive vào nội dung bàn giao thì tự tạo thư mục liên kết cho job đó
-function autoLinkFromText(j, text) {
-  const urls = String(text || '').match(/https?:\/\/drive\.google\.com\/[^\s<>"']+/g) || [];
-  let added = 0;
-  for (const u of urls) {
-    const p = parseDriveLink(u);
-    if (!p || state.driveLinks.some(l => l.folderId === p.id)) continue;
-    state.driveLinks.push({ id: newLinkId(), folderId: p.id, kind: p.kind, name: j.title, url: u, rk: p.rk, jobId: String(j.id) });
-    added++;
-  }
-  return added;
-}
-function openLinkFolder(l) {
-  rd.mode = 'link'; rd.link = l; rd.path = []; rd.items = []; rd.key = ''; query = ''; document.getElementById('q').value = '';
-  go('drive');
-}
-function addLinkDialog(prefill = '', jobId = null) {
-  const input = $('input', { className: 'linkbox', placeholder: 'Dán link Google Drive...', value: prefill, inputMode: 'url', autocapitalize: 'off', spellcheck: false });
-  const nameIn = $('input', { className: 'linkbox', placeholder: 'Tên thư mục (không bắt buộc)' });
-  const jobSel = $('select', { className: 'linkbox' }, [$('option', { value: '' }, 'Không gắn với job'), ...state.jobs.slice().sort((a, b) => b.id - a.id).map(j => $('option', { value: String(j.id), selected: jobId != null && String(jobId) === String(j.id) }, j.title))]);
-  const err = $('div', { className: 'err' });
-  const okBtn = $('button', { className: 'btn', type: 'button' }, 'Lưu'), forceBtn = $('button', { className: 'btn ghost', type: 'button', style: 'display:none' }, 'Vẫn Lưu');
-  const save1 = async force => {
-    err.textContent = '';
-    const p = parseDriveLink(input.value);
-    if (!p) { err.textContent = 'Đây không phải link Google Drive hợp lệ (ví dụ https://drive.google.com/drive/folders/...).'; return; }
-    const dup = state.driveLinks.find(l => l.folderId === p.id);
-    if (dup) { closeModal(); toast('Link này đã có trong danh sách'); return openLinkFolder(dup); }
-    let name = nameIn.value.trim(), kind = p.kind;
-    if (API_KEY) {
-      okBtn.disabled = true; okBtn.textContent = 'Đang kiểm tra...';
-      try { const meta = await pubMeta({ folderId: p.id, rk: p.rk }); kind = meta.type === 'folder' ? 'folder' : 'file'; name = name || meta.name; }
-      catch (e) {
-        okBtn.disabled = false; okBtn.textContent = 'Lưu';
-        if (!force) { err.textContent = e.status === 404 || e.status === 403 ? 'Không mở được link này. Hãy kiểm tra link đã để chế độ "Bất kỳ ai có link" chưa. Bạn vẫn có thể bấm Vẫn Lưu.' : 'Không kiểm tra được link (' + e.message + '). Bạn vẫn có thể bấm Vẫn Lưu.'; forceBtn.style.display = ''; return; }
-      }
-      okBtn.disabled = false; okBtn.textContent = 'Lưu';
-    }
-    const l = { id: newLinkId(), folderId: p.id, kind, name: name || 'Thư mục Drive', url: input.value.trim(), rk: p.rk, jobId: jobSel.value || null };
-    state.driveLinks.push(l); save(); closeModal(); toast('Đã thêm thư mục liên kết'); openLinkFolder(l);
-  };
-  okBtn.onclick = () => save1(false); forceBtn.onclick = () => save1(true);
-  box.textContent = ''; box.className = 'box';
-  box.append($('h3', {}, 'Thêm Thư Mục Từ Link'), $('div', { className: 'hint' }, 'Dán link thư mục Drive đang để chế độ "Bất kỳ ai có link" (đúng link bạn gửi cho khách). App sẽ liệt kê ảnh bên trong để xem ngay.'),
-    $('label', { className: 'fld' }, [$('span', {}, 'Link *'), input]), $('label', { className: 'fld' }, [$('span', {}, 'Tên'), nameIn]), $('label', { className: 'fld' }, [$('span', {}, 'Gắn với job'), jobSel]), err,
-    $('div', { className: 'actions' }, [$('button', { className: 'btn ghost', type: 'button', onclick: closeModal }, 'Huỷ'), forceBtn, okBtn]));
-  input.addEventListener('keydown', e => { if (e.key === 'Enter') save1(false); });
-  showModal(); setTimeout(() => input.focus(), 50);
-}
-function linkJobSheet(l) {
-  box.textContent = ''; box.className = 'box';
-  box.append($('h3', {}, 'Gắn Với Job'),
-    $('button', { className: 'sheetbtn', type: 'button', onclick: () => { l.jobId = null; save(); closeModal(); render(); } }, [$('i', {}, svg(ICON.folder)), $('span', {}, [$('b', {}, 'Không gắn với job')])]),
-    ...state.jobs.slice().sort((a, b) => b.id - a.id).slice(0, 30).map(j => $('button', { className: 'sheetbtn', type: 'button', onclick: () => { l.jobId = String(j.id); save(); closeModal(); toast('Đã gắn với job'); render(); } }, [$('i', {}, svg(ICON.brief)), $('span', {}, [$('b', {}, j.title), $('small', {}, [fmtDate(j.created), j.client].filter(Boolean).join(' · '))])])),
-    $('div', { className: 'actions' }, [$('button', { className: 'btn ghost', onclick: closeModal }, 'Đóng')]));
-  showModal();
-}
-const linkMenu = l => [
-  ['Mở', () => openLinkFolder(l)],
-  ['Sao Chép Link', async () => toast((await copyText(l.url)) ? 'Đã sao chép link' : 'Không sao chép được link')],
-  ['Mở Trong Drive', () => window.open(l.url, '_blank', 'noopener')],
-  ['Đổi Tên', () => textDialog('Đổi Tên', 'Tên thư mục', l.name, 'Lưu', name => { l.name = name; save(); render(); })],
-  ['Gắn Với Job', () => linkJobSheet(l)],
-  ['Xoá Khỏi Danh Sách', () => askConfirm('Xoá thư mục liên kết "' + l.name + '" khỏi danh sách? Không xoá gì trong Drive.', () => { state.driveLinks = state.driveLinks.filter(x => x !== l); save(); render(); }, 'Xoá')],
-];
-
-function driveQuota() {
-  if (rd.quota !== null) return;
-  rd.quota = false;
-  djson('/about?fields=storageQuota').then(a => { rd.quota = a.storageQuota && a.storageQuota.limit ? a.storageQuota : false; if (tab === 'drive') renderMain(); }).catch(() => {});
-}
-
-/* ảnh thu nhỏ: tạo lúc tải lên, lưu trong thư mục _thumbs, tải về bằng quyền của app (không phụ thuộc cookie trình duyệt) */
-const thumbQ = { running: 0, queue: [] };
-function pumpThumbs() { while (thumbQ.running < 4 && thumbQ.queue.length) { const job = thumbQ.queue.shift(); thumbQ.running++; job().catch(() => {}).finally(() => { thumbQ.running--; pumpThumbs(); }); } }
-async function loadThumb(x) {
-  if (rd.thumbCache[x.id]) return rd.thumbCache[x.id];
-  const tid = x.appProperties && x.appProperties.thumb;
-  let blob = null;
-  if (tid) blob = await (await dapi('/files/' + tid + '?alt=media')).blob();
-  if (!blob) return '';
-  return rd.thumbCache[x.id] = URL.createObjectURL(blob);
-}
-function queueThumb(img) {
-  if (img.__queued) return;
-  img.__queued = true;
-  const x = img.__item;
-  thumbQ.queue.push(async () => { const u = await loadThumb(x); if (u) img.src = u; else img.replaceWith(tileFor(x)); });
-  pumpThumbs();
-}
-const thumbIO = typeof IntersectionObserver === 'function' ? new IntersectionObserver(es => es.forEach(e => {
-  if (!e.isIntersecting) return;
-  thumbIO.unobserve(e.target);
-  queueThumb(e.target);
-}), { rootMargin: '300px' }) : null;
-async function makeThumb(file) {
-  if (!/^image\//.test(file.type)) return null;
-  try {
-    const bmp = await createImageBitmap(file), k = Math.min(1, 320 / Math.max(bmp.width, bmp.height));
-    const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(bmp.width * k)); c.height = Math.max(1, Math.round(bmp.height * k));
-    c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
-    return await new Promise(r => c.toBlob(r, 'image/jpeg', 0.72));
-  } catch (e) { return null; }
-}
-
-/* tải lên (≤ 5 MB: một lần; lớn hơn: tải theo phiên, lỗi thì quay về cách một lần) */
-async function uploadFile(blob, name, parent, mime) {
-  const t = await getToken(false), type = mime || 'application/octet-stream', meta = { name, parents: [parent] };
-  const F = 'id,name,mimeType,size,modifiedTime,webViewLink,shared,parents,appProperties';
-  if (blob.size > 5 * 1024 * 1024) {
-    try {
-      const init = await gfetch(DRIVE_UP + '/files?uploadType=resumable&fields=' + F, t, { method: 'POST', headers: { 'Content-Type': 'application/json; charset=UTF-8', 'X-Upload-Content-Type': type, 'X-Upload-Content-Length': String(blob.size) }, body: JSON.stringify(meta) });
-      const loc = init.headers.get('Location');
-      if (loc) { const r = await fetch(loc, { method: 'PUT', headers: { 'Content-Type': type }, body: blob }); if (r.ok) return r.json(); }
-    } catch (e) {}
-  }
-  const b = 'tuni' + Date.now() + Math.random().toString(36).slice(2);
-  const body = new Blob(['--' + b + '\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n' + JSON.stringify(meta) + '\r\n--' + b + '\r\nContent-Type: ' + type + '\r\n\r\n', blob, '\r\n--' + b + '--']);
-  return (await gfetch(DRIVE_UP + '/files?uploadType=multipart&fields=' + F, t, { method: 'POST', headers: { 'Content-Type': 'multipart/related; boundary=' + b }, body })).json();
-}
-async function uploadOne(file, parent) {
-  const created = await uploadFile(file, file.name, parent, file.type);
-  const tb = await makeThumb(file);
-  if (tb) {
-    try {
-      const th = await uploadFile(tb, created.id + '.jpg', await ensureThumbs(), 'image/jpeg');
-      await dapi('/files/' + created.id + '?fields=id', jbody({ appProperties: { thumb: th.id } }, 'PATCH'));
-    } catch (e) { console.error(e); }
-  }
-}
-async function uploadFiles(files) {
-  if (!files.length) return;
-  let done = 0, fail = 0;
-  try {
-    const parent = await curParent();
-    for (const f of files) {
-      rd.busy = 'Đang tải lên ' + (done + fail + 1) + '/' + files.length + ': ' + f.name; if (tab === 'drive') renderMain();
-      try { await uploadOne(f, parent); done++; } catch (e) { fail++; console.error(e); }
-    }
-  } catch (e) { fail = files.length; console.error(e); }
-  rd.busy = '';
-  toast(fail ? 'Đã tải ' + done + ' file, lỗi ' + fail + ' file' : 'Đã tải lên ' + done + ' file');
-  driveLoad(false, true);
-}
-function pickAndUpload() {
-  const inp = $('input', { type: 'file', multiple: true, accept: 'image/*,video/*,application/pdf,.doc,.docx,.xls,.xlsx,.zip', style: 'display:none' });
-  inp.onchange = () => { const files = [...inp.files]; inp.remove(); uploadFiles(files); };
-  document.body.append(inp); inp.click();
-}
-
-/* link, chia sẻ, đổi tên, xoá, tải về */
-async function makeShared(x) { await dapi('/files/' + x.id + '/permissions?fields=id', jbody({ role: 'reader', type: 'anyone' })); x.shared = true; }
-function linkDialog(name, link) {
-  const input = $('input', { className: 'linkbox', value: link, readOnly: true });
-  box.textContent = ''; box.className = 'box';
-  box.append($('h3', {}, 'Link Để Gửi Khách'), $('div', { className: 'hint' }, '"' + name + '" — ai có link này đều xem được.'), input,
-    $('div', { className: 'actions' }, [$('button', { className: 'btn ghost', type: 'button', onclick: closeModal }, 'Đóng'),
-      $('button', { className: 'btn', type: 'button', onclick: async () => { input.select(); toast((await copyText(link)) ? 'Đã sao chép link' : 'Hãy giữ ngón tay vào ô link để sao chép'); } }, 'Sao Chép')]));
-  showModal(); setTimeout(() => input.select(), 50);
-}
-function copyItemLink(x) {
-  if (x.pub) return copyText(itemLink(x)).then(ok => ok ? toast('Đã sao chép link') : linkDialog(x.name, itemLink(x)));
-  if (x.shared) return copyText(itemLink(x)).then(ok => ok ? toast('Đã sao chép link') : linkDialog(x.name, itemLink(x)));
-  askConfirm('Bật chế độ "ai có link đều xem được" cho "' + x.name + '" để gửi cho khách?', async () => {
-    try { await makeShared(x); } catch (e) { return toast('Không bật được chia sẻ: ' + e.message); }
-    linkDialog(x.name, itemLink(x));
-  }, 'Bật Và Lấy Link');
-}
-function shareItem(x) {
-  if (x.pub) return navigator.share ? navigator.share({ title: x.name, url: itemLink(x) }).catch(() => {}) : linkDialog(x.name, itemLink(x));
-  const go2 = () => navigator.share ? navigator.share({ title: x.name, url: itemLink(x) }).catch(() => {}) : linkDialog(x.name, itemLink(x));
-  if (x.shared) return go2();
-  askConfirm('Bật chế độ "ai có link đều xem được" cho "' + x.name + '" rồi chia sẻ?', async () => {
-    try { await makeShared(x); } catch (e) { return toast('Không bật được chia sẻ: ' + e.message); }
-    linkDialog(x.name, itemLink(x));
-  }, 'Bật Và Chia Sẻ');
-}
-function textDialog(title, label, value, okLabel, onOk) {
-  const input = $('input', { className: 'linkbox', value, placeholder: label });
-  const submit = () => { const v = input.value.trim(); if (!v) return input.focus(); closeModal(); onOk(v); };
-  box.textContent = ''; box.className = 'box';
-  box.append($('h3', {}, title), input, $('div', { className: 'actions' }, [$('button', { className: 'btn ghost', type: 'button', onclick: closeModal }, 'Huỷ'), $('button', { className: 'btn', type: 'button', onclick: submit }, okLabel)]));
-  input.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
-  showModal(); setTimeout(() => { input.focus(); input.select(); }, 50);
-}
-function renameItem(x) { textDialog('Đổi Tên', 'Tên mới', x.name, 'Lưu', async name => { try { await dapi('/files/' + x.id + '?fields=id', jbody({ name }, 'PATCH')); toast('Đã đổi tên'); driveLoad(false, true); } catch (e) { toast('Không đổi được tên: ' + e.message); } }); }
-function trashItem(x) { askConfirm('Chuyển "' + x.name + '" vào thùng rác của Google Drive?', async () => { try { await dapi('/files/' + x.id + '?fields=id', jbody({ trashed: true }, 'PATCH')); toast('Đã chuyển vào thùng rác'); driveLoad(false, true); } catch (e) { toast('Không xoá được: ' + e.message); } }, 'Xoá'); }
-async function downloadItem(x) {
-  if (x.pub) { window.open('https://drive.google.com/uc?export=download&id=' + x.id, '_blank', 'noopener'); return; }
-  toast('Đang tải ' + x.name + '...');
-  try { const b = await (await dapi('/files/' + x.id + '?alt=media')).blob(); const a = $('a', { href: URL.createObjectURL(b), download: x.name }); document.body.append(a); a.click(); a.remove(); }
-  catch (e) { toast('Không tải được: ' + e.message); }
-}
-function newFolder() { textDialog('Thư Mục Mới', 'Tên thư mục', '', 'Tạo', async name => { try { const parent = await curParent(); await djson('/files?fields=id', jbody({ name, mimeType: FOLDER, parents: [parent] })); toast('Đã tạo thư mục'); driveLoad(false, true); } catch (e) { toast('Không tạo được: ' + e.message); } }); }
-function jobFolderSheet() {
-  box.textContent = ''; box.className = 'box';
-  box.append($('h3', {}, 'Thư Mục Cho Job'),
-    ...(state.jobs.length ? state.jobs.slice().sort((a, b) => b.id - a.id).slice(0, 30).map(j => $('button', { className: 'sheetbtn', type: 'button', onclick: async () => { closeModal(); await openJobDrive(j); } }, [$('i', {}, svg(ICON.folder)), $('span', {}, [$('b', {}, j.title), $('small', {}, [fmtDate(j.created), j.client].filter(Boolean).join(' · '))])])) : [$('div', { className: 'empty' }, 'Chưa có job nào')]),
-    $('div', { className: 'actions' }, [$('button', { className: 'btn ghost', onclick: closeModal }, 'Đóng')]));
-  showModal();
-}
-async function pickFromDrive() {
-  if (!API_KEY) { toast('Chưa cấu hình Google API key'); return []; }
-  try {
-    if (!(window.gapi && gapi.load)) await loadScript('https://apis.google.com/js/api.js');
-    await new Promise(r => gapi.load('picker', { callback: r }));
-    const token = await getToken(false);
-    return await new Promise(resolve => {
-      const view = new google.picker.DocsView().setIncludeFolders(true).setSelectFolderEnabled(true);
-      new google.picker.PickerBuilder().addView(view).setOAuthToken(token).setDeveloperKey(API_KEY).setAppId(APP_ID)
-        .setCallback(d => { if (d.action === 'picked') resolve(d.docs || []); else if (d.action === 'cancel') resolve([]); }).build().setVisible(true);
-    });
-  } catch (e) { toast('Không mở được cửa sổ chọn file: ' + e.message); return []; }
-}
-async function pickSheet() {
-  const docs = await pickFromDrive();
-  if (!docs.length) return;
-  box.textContent = ''; box.className = 'box';
-  box.append($('h3', {}, 'File Đã Chọn'), $('div', { className: 'hint' }, 'Link lấy từ Drive của bạn. Muốn khách xem được thì cần bật chia sẻ trong Google Drive.'),
-    ...docs.map(d => $('button', { className: 'sheetbtn', type: 'button', onclick: async () => toast((await copyText(d.url)) ? 'Đã sao chép link' : 'Không sao chép được') }, [$('i', {}, svg(ICON.link)), $('span', {}, [$('b', {}, d.name), $('small', {}, 'Chạm để sao chép link')])])),
-    $('div', { className: 'actions' }, [$('button', { className: 'btn ghost', onclick: closeModal }, 'Đóng')]));
-  showModal();
-}
-function driveAddSheet() {
-  const btn = (icon, label, sub, fn) => $('button', { className: 'sheetbtn', type: 'button', onclick: () => { closeModal(); fn(); } }, [$('i', {}, svg(icon)), $('span', {}, [$('b', {}, label), $('small', {}, sub)])]);
-  const rows = [btn(ICON.link, 'Dán Link Thư Mục Drive', 'Xem ảnh trong link công khai ngay trong app', () => addLinkDialog())];
-  if (rd.mode === 'home') rows.push(btn(ICON.folder, 'Thư Mục Trong App', 'Mở thư mục Tuni.Graphy để tải ảnh lên', () => { rd.mode = 'mine'; rd.link = null; rd.path = []; rd.key = ''; render(); }));
-  else if (rd.mode === 'link') rows.push(btn(ICON.folder, 'Mở Trong Drive', 'Mở link này ở trang Google Drive', () => window.open(rd.link.url, '_blank', 'noopener')));
-  else if (!driveGate()) rows.push(
-    btn(ICON.plus, 'Tải Ảnh Hoặc Video Lên', 'Vào thư mục đang mở', pickAndUpload),
-    btn(ICON.folder, 'Tạo Thư Mục Mới', 'Trong thư mục đang mở', newFolder),
-    btn(ICON.brief, 'Thư Mục Cho Job', 'Mỗi job một thư mục, đặt tên theo job', jobFolderSheet),
-    API_KEY ? btn(ICON.link, 'Chọn File Từ Drive', 'Lấy link file có sẵn trong Drive', pickSheet) : '');
-  box.textContent = ''; box.className = 'box';
-  box.append($('h3', {}, 'Thêm Vào Drive'), ...rows, $('div', { className: 'actions' }, [$('button', { className: 'btn ghost', onclick: closeModal }, 'Đóng')]));
-  showModal();
-}
-/* hai nút trợ giúp trong bảng "Nội Dung Bàn Giao" của job */
-function driveHelpers(j, input) {
-  if (!signedIn() || !hasDrive() || !useCode) return '';
-  const fb = $('button', { className: 'btn ghost sm', type: 'button' }, 'Lấy Link Thư Mục Job');
-  fb.onclick = async () => {
-    fb.disabled = true; fb.textContent = 'Đang tạo link...';
-    try {
-      const id = await ensureJobFolder(j), f = await djson('/files/' + id + '?fields=id,shared,webViewLink');
-      if (!f.shared) await makeShared({ id });
-      const link = f.webViewLink || 'https://drive.google.com/drive/folders/' + id;
-      input.value = (input.value.trim() ? input.value.trim() + '\n' : '') + link;
-      toast('Đã điền link thư mục (ai có link đều xem được)');
-    } catch (e) { toast('Không lấy được link: ' + e.message); }
-    fb.disabled = false; fb.textContent = 'Lấy Link Thư Mục Job';
-  };
-  const row = [fb];
-  if (API_KEY) {
-    const pb = $('button', { className: 'btn ghost sm', type: 'button' }, 'Chọn Từ Drive');
-    pb.onclick = async () => { const docs = await pickFromDrive(); if (docs.length) input.value = (input.value.trim() ? input.value.trim() + '\n' : '') + docs.map(d => d.url).join('\n'); };
-    row.push(pb);
-  }
-  return $('div', { className: 'chiprow' }, row);
-}
-
-/* giao diện tab */
-const driveCard = (title, text, label, fn) => $('div', { className: 'card drive' }, [$('div', { className: 'mt2' }, [$('i', {}, svg(ICON.folder)), $('h3', {}, title)]), $('p', {}, text), label ? $('button', { className: 'btn', onclick: fn }, label) : '']);
-function driveGate() {
-  if (native || !CLIENT_ID || !useCode) return driveCard('Chưa Bật Kết Nối', 'Thư mục trong app cần đăng nhập qua máy chủ Cloudflare Worker (AUTH_URL trong config.js). Bản này chưa được bật.', '', null);
-  if (!signedIn()) return driveCard('Đăng Nhập Google', 'Đăng nhập tài khoản Google để dùng thư mục trong app: mỗi job một thư mục, tải ảnh lên và lấy link gửi khách.', 'Đăng Nhập Google', () => syncNow(true));
-  if (!hasDrive()) return driveCard('Cấp Quyền Google Drive', 'App cần thêm quyền để tạo thư mục và lưu ảnh trong Drive của bạn. App chỉ thấy các file do chính app tạo ra hoặc file bạn chọn, không đọc được phần còn lại của Drive. Ở màn hình của Google, nhớ tick ô cho phép Drive.', 'Cấp Quyền Drive', () => { location.href = loginUrl(false, true); });
-  return null;
-}
-const sortDrive = items => { const cmp = { name: (a, b) => a.name.localeCompare(b.name, 'vi'), 'date-desc': (a, b) => b.date.localeCompare(a.date), 'date-asc': (a, b) => a.date.localeCompare(b.date), 'size-desc': (a, b) => b.size - a.size }[rd.sort]; return items.slice().sort((a, b) => (a.type === 'folder') !== (b.type === 'folder') ? (a.type === 'folder' ? -1 : 1) : cmp(a, b)); };
-const driveMenu = x => x.pub
-  ? [['Mở', () => openNode(x)], ['Sao Chép Link', () => copyItemLink(x)], ['Chia Sẻ', () => shareItem(x)], ['Mở Trong Drive', () => window.open(itemLink(x), '_blank', 'noopener')], x.type !== 'folder' && ['Tải Về', () => downloadItem(x)]].filter(Boolean)
-  : [['Mở', () => openNode(x)], ['Sao Chép Link', () => copyItemLink(x)], ['Chia Sẻ', () => shareItem(x)], ['Mở Trong Drive', () => window.open(itemLink(x), '_blank', 'noopener')], x.type !== 'folder' && ['Tải Về', () => downloadItem(x)], ['Đổi Tên', () => renameItem(x)], ['Xoá', () => trashItem(x)]].filter(Boolean);
-function openNode(x) {
-  if (x.type === 'folder') { rd.path.push({ id: x.id, name: x.name }); query = ''; document.getElementById('q').value = ''; return render(); }
-  if (x.type === 'image') { const imgs = sortDrive(rd.items).filter(y => y.type === 'image'); return openViewer(imgs, Math.max(0, imgs.indexOf(x))); }
-  window.open(itemLink(x), '_blank', 'noopener');
-}
-function tileFor(x) {
-  if (x.type === 'folder') return $('div', { className: 'dth tile c' + (hashStr(x.id) % 3) }, [svg(ICON.folder), $('b', {}, x.pub ? 'Link công khai' : x.shared ? 'Đã chia sẻ' : 'Thư mục')]);
-  if (x.type === 'video') return $('div', { className: 'dth tile video' }, [svg(ICON.play), $('b', {}, 'Video')]);
-  return $('div', { className: 'dth tile c' + (x.type === 'pdf' ? 0 : 2) }, [svg(ICON.file), $('b', {}, x.type === 'pdf' ? 'PDF' : x.type === 'image' ? 'Ảnh' : 'Tệp')]);
-}
-function thumbOf(x) {
-  if (x.type === 'image' && x.pub) {
-    const u = thumbUrl(x, 400);
-    if (!u) return tileFor(x);
-    const img = $('img', { className: 'dth', alt: x.name, draggable: false, loading: 'lazy', referrerPolicy: 'no-referrer' });
-    img.onerror = () => img.replaceWith(tileFor(x));
-    img.src = u;
-    return img;
-  }
-  if (x.type === 'image' && x.appProperties && x.appProperties.thumb) {
-    const img = $('img', { className: 'dth', alt: x.name, draggable: false });
-    img.__item = x;
-    if (rd.thumbCache[x.id]) img.src = rd.thumbCache[x.id];
-    else {
-      if (thumbIO) thumbIO.observe(img);
-      setTimeout(() => { if (img.isConnected && !img.getAttribute('src')) queueThumb(img); }, 1500);   // dự phòng nếu trình duyệt không báo ảnh đã vào màn hình
-    }
-    return img;
-  }
-  return tileFor(x);
-}
-const driveHomeCrumb = () => $('button', { className: 'crumb', onclick: () => { rd.mode = 'home'; rd.link = null; rd.path = []; rd.key = ''; query = ''; document.getElementById('q').value = ''; render(); } }, 'Google Drive');
-function viewDriveHome() {
-  const links = state.driveLinks || [];
-  const jobName = l => { const j = state.jobs.find(x => String(x.id) === String(l.jobId)); return j ? j.title : ''; };
-  const linkCard = l => $('div', { className: 'dcard', onclick: () => openLinkFolder(l) }, [
-    $('div', { className: 'dth tile c' + (hashStr(l.id) % 3) }, [svg(ICON.folder), $('b', {}, l.kind === 'file' ? 'File liên kết' : 'Link công khai')]),
-    $('div', { className: 'dname' }, [$('span', {}, l.name), $('button', { className: 'dots', onclick: e => openMenu(e, linkMenu(l)) }, '···')]),
-    $('div', { className: 'dmeta' }, jobName(l) ? 'Job: ' + jobName(l) : 'Thư mục liên kết')]);
-  const addCard = $('div', { className: 'dcard', onclick: () => addLinkDialog() }, [$('div', { className: 'dth tile add' }, [svg(ICON.plus), $('b', {}, 'Dán Link')]), $('div', { className: 'dname' }, [$('span', {}, 'Thêm thư mục từ link')]), $('div', { className: 'dmeta' }, 'Link Drive công khai')]);
-  const mineCard = $('div', { className: 'dcard', onclick: () => { rd.mode = 'mine'; rd.link = null; rd.path = []; rd.key = ''; render(); } }, [$('div', { className: 'dth tile video' }, [svg(ICON.folder), $('b', {}, 'Tuni.Graphy')]), $('div', { className: 'dname' }, [$('span', {}, 'Tuni.Graphy')]), $('div', { className: 'dmeta' }, 'Thư mục do app tạo, tải ảnh lên được')]);
-  return $('div', {}, [
-    API_KEY ? '' : $('div', { className: 'demo-note' }, 'Chưa có Google API key nên chưa xem được ảnh bên trong link ngay trong app. Bạn vẫn lưu được link và mở trong Drive.'),
-    $('h3', { className: 'dsec' }, 'Thư Mục Liên Kết'),
-    $('div', { className: 'card' }, $('div', { className: 'dgrid' }, [...links.map(linkCard), addCard])),
-    $('h3', { className: 'dsec' }, 'Trong App'),
-    $('div', { className: 'card' }, $('div', { className: 'dgrid' }, [mineCard])),
+function calJobRow(j, ds) {
+  const sub = [j.time, j.client, j.phone, j.address].filter(Boolean).join(' · ');
+  return $('div', { className: 'row', 'data-id': j.id, onclick: () => showJob(j) }, [
+    $('div', { className: 'ic' }, svg(ICON.brief)),
+    $('div', { className: 'info' }, [$('div', {}, j.title), $('small', {}, sub || '—'), j.deadline === ds && j.created !== ds ? $('small', { className: 'dl' }, 'Hạn chót hôm nay') : '']),
+    $('span', { className: 'tag ' + j.status }, STATUS[j.status]),
+    $('div', { className: 'amt' }, [fmt(shown(j)), $('small', {}, j.status === 'paid' ? 'đã thu đủ' : 'còn phải thu')]),
+    j.phone ? $('a', { className: 'qbtn', href: 'tel:' + j.phone.replace(/[^\d+]/g, ''), title: 'Gọi Khách', onclick: e => e.stopPropagation() }, svg(ICON.phone)) : '',
   ]);
 }
-function viewDrive() {
-  if (rd.mode === 'home') return viewDriveHome();
-  const gateCard = rd.mode === 'mine' ? driveGate() : !API_KEY ? driveCard('Cần Google API Key', 'Để xem ảnh trong thư mục Drive ngay trong app, cần điền GOOGLE_API_KEY vào config.js. Trong lúc chưa có, bạn vẫn mở được link bằng nút bên dưới.', 'Mở Trong Drive', () => window.open(rd.link.url, '_blank', 'noopener')) : null;
-  if (gateCard) return $('div', {}, [$('div', { className: 'crumbs' }, [driveHomeCrumb()]), gateCard]);
-  if (rd.mode === 'mine') driveQuota();
-  const key = driveKey(), text = query.trim();
-  if (rd.key !== key) { rd.key = key; clearTimeout(rd.timer); rd.status = 'loading'; rd.items = []; rd.next = null; rd.timer = setTimeout(() => driveLoad(), rd.mode === 'mine' && text ? 350 : 0); }
-  let items = sortDrive(rd.items);
-  if (rd.mode === 'link' && text) items = items.filter(x => x.name.toLowerCase().includes(text.toLowerCase()));
-  const rootName = rd.mode === 'link' ? rd.link.name : ROOT_NAME;
-  const crumbs = $('div', { className: 'crumbs' }, rd.mode === 'mine' && text ? [driveHomeCrumb(), $('span', { className: 'sep' }, '›'), $('span', {}, 'Kết quả tìm kiếm cho "' + text + '"')] : [
-    driveHomeCrumb(), $('span', { className: 'sep' }, '›'),
-    $('button', { className: 'crumb' + (rd.path.length ? '' : ' on'), onclick: () => { rd.path = []; render(); } }, rootName),
-    ...rd.path.flatMap((p, i) => [$('span', { className: 'sep' }, '›'), $('button', { className: 'crumb' + (i === rd.path.length - 1 ? ' on' : ''), onclick: () => { rd.path = rd.path.slice(0, i + 1); render(); } }, p.name)]),
+function viewCalendar() {
+  const { y, m } = cview, first = (new Date(y, m - 1, 1).getDay() + 6) % 7, dim = new Date(y, m, 0).getDate(), total = Math.ceil((first + dim) / 7) * 7;
+  const [sy, sm, sd] = cview.sel.split('-').map(Number), dow = new Date(sy, sm - 1, sd).getDay();
+  const cells = [];
+  for (let i = 0; i < total; i++) {
+    const n = i - first + 1, inMonth = n >= 1 && n <= dim, dt = new Date(y, m - 1, n), ds = dstr(dt.getFullYear(), dt.getMonth() + 1, dt.getDate()), js = jobsOnDay(ds);
+    cells.push($('button', { className: 'cd' + (inMonth ? '' : ' out') + (inMonth && i % 7 === 6 ? ' sun' : '') + (ds === today() ? ' today' : '') + (ds === cview.sel ? ' sel' : '') + (js.length ? ' has' : ''), title: js.length ? js.length + ' job' : '', onclick: () => selectDay(ds) }, String(dt.getDate())));
+  }
+  const monthJobs = state.jobs.filter(j => (j.created || '').startsWith(y + '-' + pad(m))).length;
+  const head = $('div', { className: 'calhead' }, [
+    $('div', { className: 'bigday' }, String(sd)),
+    $('div', { className: 'calmeta' }, [$('div', {}, [$('div', { className: 'calmonth' }, 'Tháng ' + sm), $('div', { className: 'calyear' }, String(sy))]), $('div', { className: 'calwd' }, WD_LONG[dow])]),
+    $('div', { className: 'calnav' }, [
+      $('button', { title: 'Tháng trước', onclick: () => shiftMonth(-1) }, '‹'), $('button', { title: 'Tháng sau', onclick: () => shiftMonth(1) }, '›'),
+      $('button', { className: 'caltoday', onclick: () => selectDay(today()) }, 'Hôm Nay'), $('span', { className: 'calcount' }, monthJobs + ' job trong tháng')]),
   ]);
-  const tools = $('div', { className: 'dtools' }, [
-    $('div', { className: 'vtog' }, [['grid', ICON.grid, 'Dạng lưới'], ['list', ICON.list, 'Dạng danh sách']].map(([k, ic, t]) => $('button', { className: rd.view === k ? 'on' : '', title: t, onclick: () => { rd.view = k; render(); } }, svg(ic)))),
-    sortSelect(rd.sort, [['name', 'Tên: A → Z'], ['date-desc', 'Ngày: Mới Nhất'], ['date-asc', 'Ngày: Cũ Nhất'], ['size-desc', 'Dung Lượng: Lớn Nhất']], k => { rd.sort = k; }),
+  const grid = $('div', { className: 'calgrid' }, cells);
+  let x0 = 0, dx = 0, down = false, swiped = false;   // vuốt ngang để đổi tháng
+  grid.addEventListener('pointerdown', e => { down = true; x0 = e.clientX; dx = 0; swiped = false; });
+  grid.addEventListener('pointermove', e => { if (down) dx = e.clientX - x0; });
+  const end = () => { if (!down) return; down = false; if (Math.abs(dx) > 70) { swiped = true; setTimeout(() => { swiped = false; }, 120); shiftMonth(dx < 0 ? 1 : -1); } };
+  grid.addEventListener('pointerup', end); grid.addEventListener('pointercancel', end);
+  grid.addEventListener('click', e => { if (swiped) { e.stopPropagation(); e.preventDefault(); } }, true);
+  const wrap = $('div', { className: 'calwrap' }, [$('div', { className: 'calwdh' }, WDS.map(w => $('span', {}, w))), grid]);
+  const jobs = jobsOnDay(cview.sel);
+  const panel = $('div', { className: 'card calpanel' }, [
+    $('div', { className: 'sec' }, [$('h3', {}, WD_LONG[dow] + ', ' + sd + '/' + sm), $('span', { className: 'sub' }, jobs.length ? jobs.length + ' job' : 'Không có job')]),
+    ...(jobs.length ? jobs.map(j => calJobRow(j, cview.sel)) : [$('div', { className: 'empty' }, [$('div', {}, 'Không có job nào trong ngày này.'), $('button', { className: 'btn', style: 'margin-top:12px', onclick: () => jobForm(null, cview.sel) }, 'Tạo Job Ngày Này')])]),
   ]);
-  const meta = x => [TYPE_LABEL[x.type], x.type === 'folder' ? '' : fmtSize(x.size), fmtDate(x.date)].filter(Boolean).join(' · ');
-  const dots = x => $('button', { className: 'dots', onclick: e => openMenu(e, driveMenu(x)) }, '···');
-  let body;
-  if (rd.status === 'loading' && !items.length) body = $('div', { className: 'empty' }, 'Đang tải từ Google Drive...');
-  else if (rd.status === 'error') body = $('div', { className: 'empty' }, [$('div', {}, 'Không tải được: ' + rd.error), $('div', { style: 'margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap' }, [$('button', { className: 'btn', onclick: () => driveLoad() }, 'Thử Lại'), rd.mode === 'link' ? $('button', { className: 'btn ghost', onclick: () => window.open(rd.link.url, '_blank', 'noopener') }, 'Mở Trong Drive') : ''])]);
-  else if (!items.length) body = $('div', { className: 'empty' }, text ? 'Không tìm thấy file nào' : rd.mode === 'link' ? 'Thư mục này đang trống' : 'Thư mục này đang trống. Bấm nút + để tải ảnh lên.');
-  else if (rd.view === 'grid') body = $('div', { className: 'dgrid' }, items.map(x => $('div', { className: 'dcard', onclick: () => openNode(x) }, [thumbOf(x), $('div', { className: 'dname' }, [$('span', {}, x.name), dots(x)]), $('div', { className: 'dmeta' }, TYPE_LABEL[x.type] + (x.type === 'folder' || !x.size ? '' : ' · ' + fmtSize(x.size)))])));
-  else body = $('div', {}, items.map(x => $('div', { className: 'row drow', onclick: () => openNode(x) }, [thumbOf(x), $('div', { className: 'info' }, [$('div', {}, x.name), $('small', {}, meta(x))]), dots(x)])));
-  const q = rd.mode === 'mine' ? rd.quota : null;
-  return $('div', {}, [
-    rd.busy ? $('div', { className: 'upbar' }, rd.busy) : '',
-    q ? $('div', { className: 'card black dstore' }, [$('span', {}, 'Dung lượng Google'), $('div', { className: 'meter' }, $('i', { style: 'width:' + Math.min(100, Math.round(q.usage / q.limit * 100)) + '%' })), $('b', {}, (q.usage / 1e9).toFixed(1) + ' / ' + (q.limit / 1e9).toFixed(0) + ' GB')]) : '',
-    crumbs, tools,
-    $('div', { className: 'card' }, [body, rd.next && rd.status === 'ready' ? $('div', { className: 'more', style: 'color:var(--ink)', onclick: () => driveLoad(true) }, 'Tải Thêm ›') : '']),
-  ]);
+  return $('div', {}, [head, wrap, panel]);
 }
-
-/* trình xem ảnh toàn màn hình */
-const viewer = { list: [], i: 0 };
-const vEl = id => document.getElementById(id);
-async function loadViewerImage(x) {
-  const img = vEl('vimg');
-  if (x.pub) { img.src = thumbUrl(x, 1600) || (DRIVE_API + '/files/' + x.id + '?alt=media&key=' + API_KEY); return; }
-  try { const t = await loadThumb(x); if (t && viewer.list[viewer.i] === x) img.src = t; } catch (e) {}
-  if (x.size > 40e6) return;
-  try {
-    let url = rd.full[x.id];
-    if (!url) {
-      url = rd.full[x.id] = URL.createObjectURL(await (await dapi('/files/' + x.id + '?alt=media')).blob());
-      const keys = Object.keys(rd.full); if (keys.length > 6) { URL.revokeObjectURL(rd.full[keys[0]]); delete rd.full[keys[0]]; }
-    }
-    if (viewer.list[viewer.i] === x) img.src = url;
-  } catch (e) {}
-}
-function paintViewer(dir = 0) {
-  const x = viewer.list[viewer.i], img = vEl('vimg');
-  img.removeAttribute('src');
-  img.style.transition = 'none'; img.style.opacity = dir ? '0' : '1'; img.style.transform = dir ? 'translateX(' + (dir * 70) + 'px)' : '';
-  requestAnimationFrame(() => requestAnimationFrame(() => { img.style.transition = ''; img.style.transform = ''; img.style.opacity = '1'; }));
-  vEl('vtitle').textContent = x.name; vEl('vcount').textContent = (viewer.i + 1) + ' / ' + viewer.list.length;
-  loadViewerImage(x);
-}
-function openViewer(list, i) {
-  viewer.list = list; viewer.i = i; paintViewer();
-  vEl('vacts').textContent = '';
-  vEl('vacts').append($('button', { className: 'btn pri', onclick: () => copyItemLink(viewer.list[viewer.i]) }, 'Sao Chép Link'), $('button', { className: 'btn', onclick: () => shareItem(viewer.list[viewer.i]) }, 'Chia Sẻ'), $('button', { className: 'btn', onclick: () => downloadItem(viewer.list[viewer.i]) }, 'Tải Về'));
-  vEl('viewer').style.display = 'flex'; document.body.style.overflow = 'hidden';
-}
-function closeViewer() { vEl('viewer').style.display = 'none'; document.body.style.overflow = ''; }
-function stepViewer(d) {
-  const n = viewer.i + d;
-  if (n < 0 || n >= viewer.list.length) { vEl('vimg').style.transform = ''; return; }
-  viewer.i = n; paintViewer(d);
-}
-(() => {
-  vEl('vclose').append(svg('<path d="M6 6l12 12M18 6L6 18"/>'));
-  vEl('vclose').onclick = closeViewer;
-  const st = vEl('vstage'), img = vEl('vimg');
-  let x0 = 0, dx = 0, down = false;
-  st.addEventListener('pointerdown', e => { down = true; x0 = e.clientX; dx = 0; });
-  st.addEventListener('pointermove', e => { if (!down) return; dx = e.clientX - x0; img.style.transition = 'none'; img.style.transform = 'translateX(' + dx + 'px)'; });
-  const end = () => { if (!down) return; down = false; img.style.transition = ''; if (Math.abs(dx) > 70) stepViewer(dx < 0 ? 1 : -1); else img.style.transform = ''; };
-  st.addEventListener('pointerup', end); st.addEventListener('pointercancel', end);
-  document.addEventListener('keydown', e => {
-    if (vEl('viewer').style.display !== 'flex') return;
-    if (e.key === 'Escape') closeViewer(); else if (e.key === 'ArrowRight') stepViewer(1); else if (e.key === 'ArrowLeft') stepViewer(-1);
-  });
-})();
 
 let goTimer = null;
 function go(t) {
@@ -1563,7 +1029,7 @@ function renderNav() {
   updateFab(cur);
   const TITLES = { overview: ['Xin Chào! 👋', greet() + ' · ' + new Date().toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric' })],
     jobs: ['Job Đang Thực Hiện', byStatus('todo').length + ' chưa làm · ' + byStatus('done').length + ' chờ thu tiền'],
-    drive: ['Google Drive', 'Xem ảnh từ link Drive và quản lý thư mục'],
+    calendar: ['Calendar', ''],
     chi: ['Chi Tiêu', 'Chi tiêu, cho vay và trả nợ'],
     thu: ['Thu Nhập', 'Thu từ job, vay và thu khác'] };
   document.getElementById('title').textContent = TITLES[cur][0];
@@ -1573,7 +1039,7 @@ function render() { renderNav(); renderMain(); }
 function renderMain() {
   const main = document.getElementById('main');
   main.classList.remove('exit');
-  document.querySelector('.tools .rel').style.display = tab === 'drive' ? 'none' : '';
+  document.body.dataset.tab = tab;
   const pb = document.getElementById('period');
   pb.textContent = '';
   pb.append(svg('<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>'), periodLabel());
@@ -1587,10 +1053,10 @@ function renderMain() {
     tab === 'unpaid' ? viewJobs(pStatus('done'), 'Không có job nào đang chờ thu tiền', unpaidHead) :
     tab === 'paid' ? viewJobs(pStatus('paid').sort((a, b) => (b.paidDate || '').localeCompare(a.paidDate || '')), 'Chưa có job nào được thu tiền') :
     tab === 'all' ? viewJobs(state.jobs.filter(jobIn).sort((a, b) => b.id - a.id), 'Không có job nào trong khoảng này') :
-    tab === 'drive' ? viewDrive() : tab === 'chi' ? viewChi() : viewThu());
+    tab === 'calendar' ? viewCalendar() : tab === 'chi' ? viewChi() : viewThu());
   if (enterNext && !REDUCED) {
     main.classList.add('enter');
-    main.querySelectorAll('.card, .hero, .pair2, .alert, .chips').forEach((el, i) => el.style.setProperty('--i', Math.min(i, 8)));
+    main.querySelectorAll('.card, .calhead, .calwrap, .hero, .pair2, .alert, .chips').forEach((el, i) => el.style.setProperty('--i', Math.min(i, 8)));
   } else main.classList.remove('enter');
   animateCounts(enterNext);
   enterNext = false;
@@ -1658,8 +1124,7 @@ const CLIENT_ID = window.GOOGLE_CLIENT_ID || '';
 // có AUTH_URL (Cloudflare Worker) thì đăng nhập bằng mã + thẻ làm mới: không bị hết phiên mỗi giờ; không có thì dùng cách cũ
 const AUTH_URL = (window.AUTH_URL || '').replace(/\/+$/, ''), useCode = !!(CLIENT_ID && AUTH_URL), RT_KEY = 'tuni-refresh';
 const FLAG = 'tuni-signedin', FILE_NAME = 'tunigraphy-data.json';
-const SCOPE_SYNC = 'https://www.googleapis.com/auth/drive.appdata', SCOPE = SCOPE_SYNC + ' https://www.googleapis.com/auth/drive.file', TOKEN_KEY = 'tuni-token';
-const API_KEY = window.GOOGLE_API_KEY || '', APP_ID = (CLIENT_ID.split('-')[0] || '');
+const SCOPE = 'https://www.googleapis.com/auth/drive.appdata', TOKEN_KEY = 'tuni-token';
 const SYNC = { token: null, exp: 0, client: null, fileId: null, status: 'local', msg: '', last: null, choose: false, busy: false, again: false, timer: null, needGesture: false };
 // giữ thẻ đăng nhập qua các lần tải lại trang (thẻ Google chỉ sống 1 giờ)
 try { const t = JSON.parse(localStorage.getItem(TOKEN_KEY) || 'null'); if (t && t.exp > Date.now() + 60000) { SYNC.token = t.t; SYNC.exp = t.exp; } } catch (e) {}
@@ -1682,7 +1147,7 @@ function notice(title, msg) {
   showModal();
 }
 const persistLocal = () => { try { localStorage.setItem('jobmgr', JSON.stringify(state)); } catch (e) {} };
-const normalize = o => ({ driveLinks: o.driveLinks || [], jobs: o.jobs || [], expenses: (o.expenses || []).map(x => ({ ...x, kind: x.kind || 'chi' })), updatedAt: o.updatedAt || 0 });
+const normalize = o => ({ jobs: o.jobs || [], expenses: (o.expenses || []).map(x => ({ ...x, kind: x.kind || 'chi' })), updatedAt: o.updatedAt || 0 });
 const mergeById = (a, b) => { const m = new Map(); [...a, ...b].forEach(x => m.set(x.id, x)); return [...m.values()]; };
 
 function loadGIS() {
@@ -1704,10 +1169,10 @@ async function authPost(path, body) {
   return { ok: r.ok, status: r.status, j: await r.json().catch(() => ({})) };
 }
 const redirectUri = () => location.origin + location.pathname.replace(/index\.html$/, '');
-function loginUrl(choose, withDrive = false) {
+function loginUrl(choose) {
   const st = Math.random().toString(36).slice(2) + Date.now().toString(36);
   try { localStorage.setItem('tuni-oauth-state', st); } catch (e) {}
-  return 'https://accounts.google.com/o/oauth2/v2/auth?' + new URLSearchParams({ client_id: CLIENT_ID, redirect_uri: redirectUri(), response_type: 'code', scope: withDrive ? SCOPE : SCOPE_SYNC, access_type: 'offline', include_granted_scopes: 'true', prompt: choose ? 'consent select_account' : 'consent', state: st });
+  return 'https://accounts.google.com/o/oauth2/v2/auth?' + new URLSearchParams({ client_id: CLIENT_ID, redirect_uri: redirectUri(), response_type: 'code', scope: SCOPE, access_type: 'offline', include_granted_scopes: 'true', prompt: choose ? 'consent select_account' : 'consent', state: st });
 }
 // quay lại từ Google với ?code=...: đổi mã lấy thẻ, lưu thẻ làm mới
 async function finishLogin() {
@@ -1723,7 +1188,7 @@ async function finishLogin() {
     if (!res.ok || !res.j.access_token) throw new Error('auth: ' + (res.j.detail || res.j.error || res.status));
     if (!String(res.j.scope || '').includes('drive.appdata')) throw new Error('scope: chưa cấp quyền Google Drive, hãy đăng nhập lại và tick ô quyền truy cập Drive');
     if (!res.j.refresh_token) throw new Error('auth: Google không cấp quyền duy trì đăng nhập, hãy đăng nhập lại');
-    try { localStorage.setItem(RT_KEY, res.j.refresh_token); localStorage.setItem('tuni-scope', res.j.scope || ''); localStorage.removeItem('tuni-synced'); } catch (e) {}
+    try { localStorage.setItem(RT_KEY, res.j.refresh_token); localStorage.removeItem('tuni-synced'); } catch (e) {}
     saveToken(res.j.access_token, res.j.expires_in);
   } catch (e) {
     setSync('local', e.message);
@@ -1737,7 +1202,7 @@ async function getToken(interactive) {
     if (rt) {
       let res;
       try { res = await authPost('/refresh', { refresh_token: rt }); } catch (e) { throw new Error('net: không kết nối được máy chủ đăng nhập'); }
-      if (res.ok && res.j.access_token) { if (res.j.scope) { try { localStorage.setItem('tuni-scope', res.j.scope); } catch (e) {} } saveToken(res.j.access_token, res.j.expires_in); return SYNC.token; }
+      if (res.ok && res.j.access_token) { saveToken(res.j.access_token, res.j.expires_in); return SYNC.token; }
       if (res.status === 401) { try { localStorage.removeItem(RT_KEY); } catch (e) {} throw new Error('auth: phiên đăng nhập Google đã hết hạn'); }
       throw new Error('net: máy chủ đăng nhập báo lỗi ' + res.status);
     }
@@ -1745,13 +1210,13 @@ async function getToken(interactive) {
     throw new Error('auth: chưa đăng nhập');
   }
   await loadGIS();
-  if (!SYNC.client) SYNC.client = google.accounts.oauth2.initTokenClient({ client_id: CLIENT_ID, scope: SCOPE_SYNC, callback: () => {} });
+  if (!SYNC.client) SYNC.client = google.accounts.oauth2.initTokenClient({ client_id: CLIENT_ID, scope: SCOPE, callback: () => {} });
   return new Promise((resolve, reject) => {
     const prompt = interactive ? (SYNC.choose ? 'select_account' : '') : 'none';
     SYNC.choose = false;
     SYNC.client.callback = r => {
       if (r.error) return reject(new Error('auth: ' + r.error));
-      if (typeof google.accounts.oauth2.hasGrantedAllScopes === 'function' && !google.accounts.oauth2.hasGrantedAllScopes(r, SCOPE_SYNC)) return reject(new Error('scope: chưa cấp quyền Google Drive, hãy đăng nhập lại và tick ô quyền truy cập Drive'));
+      if (typeof google.accounts.oauth2.hasGrantedAllScopes === 'function' && !google.accounts.oauth2.hasGrantedAllScopes(r, SCOPE)) return reject(new Error('scope: chưa cấp quyền Google Drive, hãy đăng nhập lại và tick ô quyền truy cập Drive'));
       saveToken(r.access_token, r.expires_in);
       resolve(SYNC.token);
     };
@@ -1796,7 +1261,7 @@ async function syncNow(interactive) {
     if (!remote) SYNC.fileId = await upload(token, null, state);
     else if (first && hasLocal && remote.jobs.length + remote.expenses.length > 0) {
       // lần đầu đồng bộ mà cả hai bên đều có dữ liệu: gộp theo id, không mất gì
-      state = { jobs: mergeById(state.jobs, remote.jobs), expenses: mergeById(state.expenses, remote.expenses), driveLinks: mergeById(state.driveLinks || [], remote.driveLinks || []), updatedAt: Date.now() };
+      state = { jobs: mergeById(state.jobs, remote.jobs), expenses: mergeById(state.expenses, remote.expenses), updatedAt: Date.now() };
       persistLocal(); render();
       await upload(token, SYNC.fileId, state);
     } else if (remote.updatedAt > (state.updatedAt || 0)) { state = remote; persistLocal(); render(); }
@@ -1823,8 +1288,7 @@ function pushSoon() {
 function signOut() {
   const t = SYNC.token, rt = getRT();
   if (useCode && rt) authPost('/revoke', { token: rt }).catch(() => {});
-  try { localStorage.removeItem(FLAG); localStorage.removeItem('tuni-synced'); localStorage.removeItem(TOKEN_KEY); localStorage.removeItem(RT_KEY); localStorage.removeItem('tuni-scope'); localStorage.removeItem('tuni-drive-root'); } catch (e) {}
-  rd.mode = 'home'; rd.link = null; rd.root = null; rd.thumbs = null; rd.path = []; rd.items = []; rd.key = ''; rd.quota = null; rd.thumbCache = {};
+  try { localStorage.removeItem(FLAG); localStorage.removeItem('tuni-synced'); localStorage.removeItem(TOKEN_KEY); localStorage.removeItem(RT_KEY); } catch (e) {}
   SYNC.needGesture = false;
   SYNC.token = null; SYNC.fileId = null; SYNC.last = null;
   if (t && window.google && google.accounts) google.accounts.oauth2.revoke(t, () => {});
@@ -1837,7 +1301,7 @@ function leaveAccount(thenSignIn) {
     await syncNow(false);
     if (SYNC.status !== 'ok') return notice('Chưa đồng bộ được', 'Chưa đẩy được dữ liệu lên Drive nên chưa thể đăng xuất. Hãy kiểm tra mạng rồi thử lại, hoặc xuất file sao lưu trước.');
     signOut();
-    state = { jobs: [], expenses: [], driveLinks: [], updatedAt: 0 };
+    state = { jobs: [], expenses: [], updatedAt: 0 };
     persistLocal(); render();
     if (thenSignIn) { SYNC.choose = true; syncNow(true); }
   }, thenSignIn ? 'Đổi tài khoản' : 'Đăng xuất');
@@ -1881,7 +1345,7 @@ document.addEventListener('click', () => { if (SYNC.needGesture && !SYNC.busy &&
 document.getElementById('syncbar').onclick = () => syncNow(true);
 /* nút nổi (kiểu AssistiveTouch): kéo đi đâu cũng được, thả ra tự hít vào mép trái hoặc phải, nhớ vị trí trên từng thiết bị */
 const FAB_KEY = 'tuni-fab', FAB = 58, FM = 12;
-const FAB_ACTIONS = { drive: ['Thêm Vào Drive', () => driveAddSheet()], jobs: ['Tạo Job', () => jobForm()], chi: ['Thêm Khoản Chi', () => expenseForm(null, ['chi', 'chovay'])], thu: ['Thêm Khoản Thu', () => expenseForm(null, ['thu', 'vay'])] };
+const FAB_ACTIONS = { calendar: ['Tạo Job', () => jobForm(null, cview.sel)], jobs: ['Tạo Job', () => jobForm()], chi: ['Thêm Khoản Chi', () => expenseForm(null, ['chi', 'chovay'])], thu: ['Thêm Khoản Thu', () => expenseForm(null, ['thu', 'vay'])] };
 const fab = document.getElementById('fab'), fabLabel = document.getElementById('fabLabel');
 fab.querySelector('i').append(svg(ICON.plus));
 let fabPos = { side: 'right', y: Infinity }, fabX = 0, fabY = 0, fabCur = null, fabIdle = null, fabLabelTimer = null;
