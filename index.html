@@ -269,10 +269,10 @@
   .fab-label.show { opacity:1; transform:translateY(-50%); }
 
   /* lớp mờ che nội dung dưới dock */
-  .veil { position:fixed; left:0; right:0; bottom:0; height:calc(108px + env(safe-area-inset-bottom)); z-index:14; -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); background:linear-gradient(to top, rgba(240,240,242,.5) 0, rgba(240,240,242,.35) 70%, rgba(240,240,242,0) 100%); -webkit-mask-image:linear-gradient(to top, #000 82%, transparent 100%); mask-image:linear-gradient(to top, #000 82%, transparent 100%); }
+  .veil { position:fixed; left:0; right:0; bottom:0; height:calc(92px + env(safe-area-inset-bottom) * .3); z-index:14; -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); background:linear-gradient(to top, rgba(240,240,242,.5) 0, rgba(240,240,242,.35) 70%, rgba(240,240,242,0) 100%); -webkit-mask-image:linear-gradient(to top, #000 82%, transparent 100%); mask-image:linear-gradient(to top, #000 82%, transparent 100%); }
 
   /* dock */
-  .dock { position:fixed; left:50%; bottom:calc(14px + env(safe-area-inset-bottom)); transform:translateX(-50%); width:min(calc(100% - 20px),390px); height:78px; background:rgba(20,20,22,.7); -webkit-backdrop-filter:blur(24px) saturate(1.5); backdrop-filter:blur(24px) saturate(1.5); border:1px solid rgba(255,255,255,.16); border-radius:39px; padding:9px; display:flex; z-index:15; box-shadow:0 16px 36px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.18); }
+  .dock { position:fixed; left:50%; bottom:calc(6px + env(safe-area-inset-bottom) * .3); transform:translateX(-50%); width:min(calc(100% - 20px),390px); height:78px; background:rgba(20,20,22,.7); -webkit-backdrop-filter:blur(24px) saturate(1.5); backdrop-filter:blur(24px) saturate(1.5); border:1px solid rgba(255,255,255,.16); border-radius:39px; padding:9px; display:flex; z-index:15; box-shadow:0 16px 36px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.18); }
   .dock .nav { flex:1; height:60px; border:0; background:none; color:#fff; border-radius:50%; position:relative; z-index:1; cursor:pointer; display:grid; place-items:center; transition:color .45s var(--ease), transform .12s; }
   .dock .nav.on { color:var(--black); }
   .dock .nav svg { width:25px; height:25px; }
@@ -1071,10 +1071,12 @@ const sortSelect = (cur, opts, set) => $('label', { className: 'sortbar' }, [svg
 const jobKey = j => (j.created || '') + ' ' + (j.time || '');
 const sortJobs = a => a.slice().sort(jobSort === 'date-asc' ? (x, y) => jobKey(x).localeCompare(jobKey(y)) : jobSort === 'amt-desc' ? (x, y) => y.amount - x.amount : jobSort === 'amt-asc' ? (x, y) => x.amount - y.amount : (x, y) => jobKey(y).localeCompare(jobKey(x)));
 // đã thu = tiền cọc của job chưa xong + toàn bộ tiền của job đã thu; cần thu lại = tiền còn lại của các job đang chờ thu tiền
-const jobTotals = () => { let got = 0, due = 0; for (const j of state.jobs) { got += j.status === 'paid' ? j.amount : Math.min(j.deposit || 0, j.amount); if (j.status === 'done') due += owed(j); } return { got, due }; };
+const jobTotals = () => { let got = 0, due = 0, todoLeft = 0, all = 0; for (const j of state.jobs) { got += j.status === 'paid' ? j.amount : Math.min(j.deposit || 0, j.amount); if (j.status === 'done') due += owed(j); if (j.status === 'todo') todoLeft += owed(j); all += j.amount; } return { got, due, todoLeft, all }; };
 const jobSummary = () => { const t = jobTotals(); return $('div', { className: 'jsum' }, [
   $('div', { className: 'card mint tap' + (tab === 'paid' ? ' active' : ''), onclick: () => { period = { mode: 'all' }; go('paid'); } }, [$('div', { className: 'sub' }, 'Tổng Tiền Job Đã Thu'), $('div', { className: 'jn' }, fmt(t.got))]),
-  $('div', { className: 'card peach tap' + (tab === 'unpaid' ? ' active' : ''), onclick: () => { period = { mode: 'all' }; go('unpaid'); } }, [$('div', { className: 'sub' }, 'Tổng Tiền Cần Thu Lại'), $('div', { className: 'jn' }, fmt(t.due))])]); };
+  $('div', { className: 'card peach tap' + (tab === 'unpaid' ? ' active' : ''), onclick: () => { period = { mode: 'all' }; go('unpaid'); } }, [$('div', { className: 'sub' }, 'Tổng Tiền Cần Thu Lại'), $('div', { className: 'jn' }, fmt(t.due))]),
+  $('div', { className: 'card tap' + (tab === 'todo' ? ' active' : ''), onclick: () => { period = { mode: 'all' }; go('todo'); } }, [$('div', { className: 'sub' }, 'Tổng Tiền Job Chưa Làm'), $('div', { className: 'jn' }, fmt(t.todoLeft))]),
+  $('div', { className: 'card tap' + (tab === 'all' ? ' active' : ''), onclick: () => { period = { mode: 'all' }; go('all'); } }, [$('div', { className: 'sub' }, 'Tổng Tiền Tất Cả Job'), $('div', { className: 'jn' }, fmt(t.all))])]); };
 const viewJobs = (jobs, empty, extra) => $('div', {}, [jobSummary(), jobChips(),
   sortSelect(jobSort, [['date-desc', 'Ngày Thực Hiện: Mới Nhất'], ['date-asc', 'Ngày Thực Hiện: Cũ Nhất'], ['amt-desc', 'Số Tiền: Cao Nhất'], ['amt-asc', 'Số Tiền: Thấp Nhất']], k => { jobSort = k; }),
   viewList(sortJobs(jobs), empty, extra)]);
