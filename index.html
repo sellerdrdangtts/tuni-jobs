@@ -472,15 +472,14 @@
 
   /* ===== linh vật Kaneki: chỉ để xem, không chạm được ===== */
   #mascot { position:fixed; left:0; top:0; width:0; height:0; z-index:13; pointer-events:none; -webkit-user-select:none; user-select:none; touch-action:none; will-change:transform; }
-  #mascot svg { position:absolute; left:-36px; top:-72px; width:72px; height:72px; overflow:visible; pointer-events:none; filter:drop-shadow(0 3px 3px rgba(0,0,0,.25)); }
-  #mascot .kag path { fill:none; stroke-linecap:round; transform-origin:34px 50px; }
-  #mascot .kag .o { stroke:#a30f26; stroke-width:5.5; } #mascot .kag .i { stroke:#e3173a; stroke-width:2; }
-  #mascot .kag { animation:kwave 2.4s ease-in-out infinite; transform-origin:34px 50px; }
+  #mascot svg { position:absolute; left:-46px; top:-96px; width:92px; height:92px; overflow:visible; pointer-events:none; filter:drop-shadow(0 3px 3px rgba(0,0,0,.25)); }
+  #mascot .kag .k { transform-origin:42px 60px; }
+  #mascot .kag { animation:kwave 2.4s ease-in-out infinite; transform-origin:42px 60px; }
   @keyframes kwave { 50% { transform:rotate(5deg); } }
-  #mascot .lg { transform-origin:50% 56px; transform-box:fill-box; }
+  #mascot .lg { transform-origin:50% 8%; transform-box:fill-box; }
   #mascot.run .lg.l { animation:legl .36s ease-in-out infinite; } #mascot.run .lg.r { animation:legr .36s ease-in-out infinite; }
   @keyframes legl { 50% { transform:rotate(-38deg); } } @keyframes legr { 50% { transform:rotate(38deg); } }
-  #mascot .ar { transform-origin:31px 44px; transform-box:view-box; }
+  #mascot .ar { transform-origin:39px 55px; transform-box:view-box; }
   #mascot.run .bd { animation:bob .36s ease-in-out infinite; } @keyframes bob { 50% { transform:translateY(-1.6px); } }
   #mascot.idle .bd { animation:breath 2s ease-in-out infinite; } @keyframes breath { 50% { transform:translateY(-1px); } }
   #mascot .fx path { fill:none; stroke:#e3173a; stroke-width:3; stroke-linecap:round; opacity:0; stroke-dasharray:60; stroke-dashoffset:60; }
@@ -1714,28 +1713,42 @@ document.addEventListener('wheel', e => { if (e.ctrlKey) e.preventDefault(); }, 
 /* linh vật Kaneki chạy quanh viền màn hình; không nhận chạm, không kéo được */
 (function () {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const el = document.createElement('div'); el.id = 'mascot'; el.setAttribute('aria-hidden', 'true'); el.innerHTML = `<svg viewBox="0 0 80 80" aria-hidden="true" focusable="false">
- <g class="kag"><path class="o k1" d="M34 50 C22 46 12 52 6 40"/><path class="i k1" d="M34 50 C22 46 12 52 6 40"/>
-  <path class="o k2" d="M34 50 C24 42 14 40 10 28"/><path class="i k2" d="M34 50 C24 42 14 40 10 28"/>
-  <path class="o k3" d="M34 50 C26 40 22 30 26 18"/><path class="i k3" d="M34 50 C26 40 22 30 26 18"/>
-  <path class="o k4" d="M34 50 C20 54 8 60 2 54"/><path class="i k4" d="M34 50 C20 54 8 60 2 54"/></g>
- <g class="lg l"><rect x="34" y="56" width="6.5" height="15" rx="3.2" fill="#17171b"/><ellipse cx="38" cy="72.5" rx="5.6" ry="3.3" fill="#3a3a42"/></g>
- <g class="lg r"><rect x="41" y="56" width="6.5" height="15" rx="3.2" fill="#202026"/><ellipse cx="45.5" cy="72.5" rx="5.6" ry="3.3" fill="#4a4a52"/></g>
- <g class="bd">
-  <rect x="29" y="39" width="22" height="22" rx="8" fill="#17171b"/><path d="M40 41v18" stroke="#34343c" stroke-width="1.2"/><path d="M33 41l7 6 7-6" stroke="#3a3a42" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
-  <g class="ar"><path d="M31 44 L24 55" stroke="#17171b" stroke-width="5.5" stroke-linecap="round"/><circle cx="23.5" cy="56" r="3" fill="#f1d3c1"/></g>
-  <path d="M49 44 L55 55" stroke="#17171b" stroke-width="5.5" stroke-linecap="round"/><circle cx="55.5" cy="56" r="3" fill="#f1d3c1"/>
-  <circle cx="40" cy="26" r="16" fill="#f3d7c6"/>
-  <path d="M23.5 27 C20 6 60 4 56.5 27 C54 18 48 13.5 40 14 C32 13.5 26 18 23.5 27Z" fill="#f4f4f7" stroke="#cfcfd8" stroke-width="1"/>
-  <path d="M23 26 L21 36 L29 28Z M57 26 L59 35 L51 28Z M33 15 L30 9 L38 14Z M44 14 L50 8 L49 16Z" fill="#f4f4f7" stroke="#cfcfd8" stroke-width=".8" stroke-linejoin="round"/>
-  <path d="M24.5 29 C28 37 52 37 55.5 29 L55.5 31 C52 46 28 46 24.5 31Z" fill="#2b2b32"/>
-  <path d="M26 34 C32 38 48 38 54 34" stroke="#8a8a96" stroke-width="1" fill="none"/>
-  <path d="M29 35.5v4M33 36.5v4.5M37 37v4.5M41 37v4.5M45 37v4.5M49 36.5v4M53 35v3" stroke="#d9d9e2" stroke-width="1.2" stroke-linecap="round"/>
-  <ellipse cx="34" cy="25" rx="3" ry="3.2" fill="#e8e0e4"/><circle cx="34.5" cy="25.2" r="1.6" fill="#222"/>
-  <g class="eye"><ellipse cx="46" cy="24.5" rx="4.6" ry="4.2" fill="#0a0a0c"/><circle cx="46.4" cy="24.6" r="2.7" fill="#e3173a"/><circle cx="47" cy="23.8" r="1" fill="#fff"/></g>
-  <path d="M29 20 C34 18 38 19 40 21" stroke="#9a9aa6" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  const el = document.createElement('div'); el.id = 'mascot'; el.setAttribute('aria-hidden', 'true'); el.innerHTML = `<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+ <defs>
+  <linearGradient id="kg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e3173a"/><stop offset="1" stop-color="#6e0a1a"/></linearGradient>
+  <linearGradient id="hr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#cfd2dc"/></linearGradient>
+  <linearGradient id="jk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a2a31"/><stop offset="1" stop-color="#0f0f13"/></linearGradient>
+ </defs>
+ <g class="kag">
+  <path class="k k1" d="M42 62 C30 60 16 66 4 50 C18 58 30 54 40 55Z" fill="url(#kg)"/>
+  <path class="k k2" d="M42 58 C32 50 20 50 12 34 C24 42 34 44 41 52Z" fill="url(#kg)"/>
+  <path class="k k3" d="M44 55 C38 44 32 34 36 18 C40 32 46 40 47 50Z" fill="url(#kg)"/>
+  <path class="k k4" d="M42 66 C32 70 20 78 8 72 C22 70 32 64 40 62Z" fill="url(#kg)"/>
  </g>
- <g class="fx"><path d="M62 30 C74 34 80 46 76 60"/><path d="M60 22 C76 26 86 44 80 64"/><path d="M58 40 C70 42 76 52 72 66"/></g>
+ <g class="lg l"><rect x="42" y="70" width="8" height="21" rx="4" fill="#15151a"/><path d="M38 92.5c0-3 3-4.6 7-4.6s6 1.6 6 4.6c0 2-2 3.2-6.5 3.2S38 94.500 38 92.5z" fill="#2a2a31"/></g>
+ <g class="lg r"><rect x="51" y="70" width="8" height="21" rx="4" fill="#1d1d23"/><path d="M47 92.5c0-3 3-4.6 7-4.6s6.500 1.6 6.500 4.6c0 2-2 3.2-7 3.2S47 94.500 47 92.5z" fill="#34343c"/></g>
+ <g class="bd">
+  <path d="M38 52 C38 48 62 48 62 52 L64 74 C64 78 36 78 36 74Z" fill="url(#jk)"/>
+  <path d="M43 50 L50 60 L57 50" fill="none" stroke="#4a4a55" stroke-width="1.6" stroke-linejoin="round"/>
+  <path d="M36 66 H64" stroke="#3a3a44" stroke-width="2"/><rect x="47" y="64.500" width="6" height="3" rx="1" fill="#8b8b97"/>
+  <g class="ar"><path d="M39 55 L31 69" stroke="#15151a" stroke-width="6.500" stroke-linecap="round"/><circle cx="30" cy="71" r="3.600" fill="#f3d7c6"/></g>
+  <path d="M61 55 L69 69" stroke="#15151a" stroke-width="6.500" stroke-linecap="round"/><circle cx="70" cy="71" r="3.600" fill="#f3d7c6"/>
+  <path d="M42 50 C42 44 58 44 58 50 L58 53 C54 56 46 56 42 53Z" fill="#101014"/>
+  <circle cx="50" cy="35" r="20" fill="#f6dccb"/>
+  <path d="M30.500 40 C32 50 38 54 50 54 C62 54 68 50 69.500 40 C66 44 58 47 50 47 C42 47 34 44 30.500 40Z" fill="#ecc8b4" opacity=".55"/>
+  <path d="M29 38 C24 6 76 6 71 38 C69 30 66 27 62 28 C60 24 56 23 53 27 C50 22 45 22 42 28 C39 24 35 26 33 31 C31 33 30 35 29 38Z" fill="url(#hr)"/>
+  <path d="M28 33 L24 46 L35 35Z" fill="url(#hr)"/><path d="M72 33 L77 45 L65 35Z" fill="url(#hr)"/>
+  <path d="M36 16 L30 6 L44 14Z M47 14 L52 2 L59 15Z M60 16 L70 7 L68 20Z M29 25 L20 20 L32 18Z M70 26 L80 22 L70 17Z" fill="url(#hr)"/>
+  <path d="M33 26 C37 31 38 36 36 41 C34 37 32 32 33 26Z M41 27 C43 32 43 36 41 39 C40 35 40 31 41 27Z" fill="#e4e6ee" stroke="#c4c7d2" stroke-width=".7"/>
+  <path d="M40 17 L38 25 M48 16 L47 22 M57 17 L59 24" stroke="#c4c7d2" stroke-width="1" stroke-linecap="round"/>
+  <path d="M30.500 38 C34 50 66 50 69.500 38 L69.500 41 C66 56 34 56 30.500 41Z" fill="#24242b"/>
+  <path d="M31.500 43 C37 47.500 63 47.500 68.500 43" fill="none" stroke="#6d6d7a" stroke-width="1.2"/>
+  <g fill="#e9e9f0" stroke="#24242b" stroke-width=".7"><rect x="34.500" y="44" width="3.800" height="5" rx="1"/><rect x="39" y="45.500" width="3.800" height="5.500" rx="1"/><rect x="43.500" y="46" width="3.800" height="5.500" rx="1"/><rect x="48" y="46.300" width="3.800" height="5.500" rx="1"/><rect x="52.500" y="46" width="3.800" height="5.500" rx="1"/><rect x="57" y="45.500" width="3.800" height="5.500" rx="1"/><rect x="61.500" y="44" width="3.200" height="4.500" rx="1"/></g>
+  <path d="M33 41.500 H67" stroke="#3b3b45" stroke-width="1" stroke-dasharray="2 2"/>
+  <g class="eye"><ellipse cx="58" cy="35" rx="6.200" ry="5.600" fill="#0a0a0d"/><circle cx="58.500" cy="35.200" r="3.700" fill="#e3173a"/><circle cx="59.700" cy="33.800" r="1.300" fill="#fff"/><circle cx="57" cy="36.500" r=".7" fill="#0a0a0d"/></g>
+  <path d="M52 29 C56 27.500 61 27.500 65 30" stroke="#7c7f8e" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+ </g>
+ <g class="fx"><path d="M72 28 C88 34 96 50 92 70"/><path d="M70 18 C92 24 104 48 96 74"/><path d="M68 44 C82 46 90 58 86 74"/></g>
 </svg>`;
   document.body.append(el);
   const SPEED = 105;
