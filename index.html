@@ -992,6 +992,8 @@ function viewOverview() {
   const thu = sum(inflows().filter(e => inPeriod(e.date))), chi = sum(outflows().filter(e => inPeriod(e.date)));
   const todo = pStatus('todo'), unpaid = pStatus('done'), paidJobs = pStatus('paid'), total = todo.length + unpaid.length + paidJobs.length;
   const pPaid = total ? Math.round(paidJobs.length / total * 100) : 0;
+  // bảng Công việc: chưa làm theo ngày/tháng đang xem (ngày thực hiện hoặc deadline); chờ thu là tất cả job chưa thu tiền, không theo kỳ
+  const todoJ = byStatus('todo').filter(j => period.mode === 'all' || inPeriod(j.created) || (j.deadline && inPeriod(j.deadline))), unpaidAll = byStatus('done');
   const open = k => state.expenses.filter(x => x.kind === k && !x.settled);
   const nextDue = list => { const d = list.filter(x => x.due).sort((a, b) => a.due.localeCompare(b.due))[0]; return !list.length ? 'Không có khoản nào' : d ? dueShort(d) : list.length + ' khoản'; };
 
@@ -1001,7 +1003,7 @@ function viewOverview() {
     $('div', { className: 'delta hstrip' }, [
       $('div', {}, [$('small', {}, 'Thu'), $('span', { className: 'up' }, '↑ ' + short(thu))]),
       $('div', {}, [$('small', {}, 'Chi'), $('span', { className: 'dn' }, '↓ ' + short(chi))]),
-      $('div', {}, [$('small', {}, 'Chờ Thu'), $('span', { className: 'wt' }, short(sumOwed(unpaid)))])]),
+      $('div', {}, [$('small', {}, 'Chờ Thu'), $('span', { className: 'wt' }, short(sumOwed(unpaidAll)))])]),
   ]);
   const chart = $('div', { className: 'card mint ga-chart' }, [
     $('div', { className: 'card-top' }, [$('h3', {}, 'Thu – Chi'),
@@ -1010,18 +1012,18 @@ function viewOverview() {
     $('div', { className: 'legend' }, [$('span', {}, [$('i', { className: 'k1' }), 'Thu']), $('span', {}, [$('i', { className: 'k2' }), 'Chi'])]),
   ]);
 
-  const list = homeList === 'todo' ? todo : unpaid;
+  const list = homeList === 'todo' ? todoJ : unpaidAll;
   const jobsCard = $('div', { className: 'card black ga-jobs' }, [
     $('div', { className: 'sec' }, [$('h3', {}, 'Công việc'),
-      $('div', { className: 'jt' }, [['todo', 'Chưa làm (' + todo.length + ')'], ['unpaid', 'Chờ thu (' + unpaid.length + ')']].map(([k, l]) => $('button', { className: homeList === k ? 'on' : '', onclick: () => { homeList = k; render(); } }, l)))]),
+      $('div', { className: 'jt' }, [['todo', 'Chưa làm (' + todoJ.length + ')'], ['unpaid', 'Chờ thu (' + unpaidAll.length + ')']].map(([k, l]) => $('button', { className: homeList === k ? 'on' : '', onclick: () => { homeList = k; render(); } }, l)))]),
     ...(list.length ? list.slice(0, 5).map(j => swipeable($('div', { className: 'jrow', 'data-id': j.id }, [
       $('div', { className: 'ic' }, svg(ICON.brief)),
       $('div', { className: 'in lnk', onclick: () => showJob(j) }, [$('div', { className: 'nm' }, j.title), $('small', {}, [when(j), j.client].filter(Boolean).join(' · '))]),
       $('div', { className: 'am' }, [fmt(owed(j)), $('small', {}, 'còn thu')]),
       $('button', { className: 'ok', title: homeList === 'todo' ? 'Đánh dấu đã xong' : 'Đã thu tiền', onclick: e => homeList === 'todo' ? askDone(j) : leave(e.currentTarget.closest('.sw') || e.currentTarget.closest('.jrow'), () => setStatus(j, 'paid')) }, svg(ICON.check)),
     ]), () => homeList === 'todo' ? askDone(j) : setStatus(j, 'paid'), homeList === 'todo' ? 'Xong' : 'Đã Thu', 'sw-dark', homeList === 'todo' ? () => { askDone(j); return true; } : null)) : [$('div', { className: 'empty dim' }, homeList === 'todo' ? 'Không còn job nào chưa làm' : 'Không có khoản nào đang chờ thu')]),
-    list.length > 5 ? $('div', { className: 'more', onclick: () => go(homeList) }, 'Xem tất cả (' + list.length + ') ›') : '',
-    $('div', { className: 'jtotal' }, [$('span', {}, 'Tổng tiền chờ thu'), $('b', {}, fmt(sumOwed(unpaid)))]),
+    list.length > 5 ? $('div', { className: 'more', onclick: () => { if (homeList === 'unpaid') period = { mode: 'all' }; go(homeList); } }, 'Xem tất cả (' + list.length + ') ›') : '',
+    $('div', { className: 'jtotal' }, [$('span', {}, 'Tổng tiền chờ thu'), $('b', {}, fmt(sumOwed(unpaidAll)))]),
   ]);
 
   const cnt = (key, n, cls, label) => $('div', { className: 'cnt' }, [num(key, n, 'int', '', 'b'), $('span', {}, [$('i', { className: cls }), label])]);
