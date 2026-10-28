@@ -967,7 +967,7 @@ function kpiForm(k) {
     closeModal(); save(); render();
   };
   box.textContent = ''; box.className = 'box';
-  box.append($('h3', {}, k ? 'Sửa Mục Tiêu' : 'Thêm Mục Tiêu'), $('div', { className: 'hint' }, 'Số tiền hiện tại tự lấy từ ô "Còn Lại" ở đầu trang và cập nhật liên tục.'), $('div', { className: 'form-grid' }, [nameL, tgtL]),
+  box.append($('h3', {}, k ? 'Sửa Mục Tiêu' : 'Thêm Mục Tiêu'), $('div', { className: 'hint' }, 'Số tiền hiện tại tự lấy từ tổng số tiền còn lại của tất cả thời gian (thu trừ chi) và cập nhật liên tục.'), $('div', { className: 'form-grid' }, [nameL, tgtL]),
     $('div', { className: 'actions' }, [
       k ? $('button', { className: 'btn ghost', type: 'button', onclick: () => askConfirm('Xoá mục tiêu "' + k.name + '"?', () => { state.kpis = state.kpis.filter(x => x !== k); save(); render(); }) }, 'Xoá') : '',
       $('button', { className: 'btn ghost', type: 'button', onclick: closeModal }, 'Huỷ'), $('button', { className: 'btn', type: 'button', onclick: submit }, k ? 'Lưu' : 'Thêm')]));
@@ -986,7 +986,7 @@ const kpiRow = (k, cur) => {
 };
 const kpiCard = cur => $('div', { className: 'card ga-kpi' }, [
   $('div', { className: 'sec' }, [$('h3', {}, 'Mục Tiêu / KPI'), $('button', { className: 'btn', onclick: () => kpiForm() }, '+ Thêm')]),
-  ...(state.kpis.length ? state.kpis.map(k => kpiRow(k, cur)) : [$('div', { className: 'empty' }, 'Chưa có mục tiêu. Bấm "+ Thêm" và chỉ cần điền mục tiêu, tiến độ tự lấy từ "Còn Lại" (ví dụ: Mua xe 500 triệu).')]),
+  ...(state.kpis.length ? state.kpis.map(k => kpiRow(k, cur)) : [$('div', { className: 'empty' }, 'Chưa có mục tiêu. Bấm "+ Thêm" và chỉ cần điền mục tiêu, tiến độ tự lấy từ tổng tiền còn lại của tất cả thời gian (ví dụ: Mua xe 500 triệu).')]),
 ]);
 function viewOverview() {
   const thu = sum(inflows().filter(e => inPeriod(e.date))), chi = sum(outflows().filter(e => inPeriod(e.date)));
@@ -1036,7 +1036,7 @@ function viewOverview() {
   ]);
   const debts = $('div', { className: 'pair2 ga-debt' }, [mini('peach', 'Phải trả (đang vay)', open('vay'), () => { thuFilter = 'vay'; go('thu'); }), mini('lav', 'Cần thu lại (cho vay)', open('chovay'), () => { expFilter = 'chovay'; go('chi'); })]);
 
-  return $('div', {}, [reminders(), $('div', { className: 'home' }, [hero, kpiCard(thu - chi), jobsCard, chart, prog, debts])]);
+  return $('div', {}, [reminders(), $('div', { className: 'home' }, [hero, kpiCard(sum(inflows()) - sum(outflows())), jobsCard, chart, prog, debts])]);
 }
 
 function banner() {
