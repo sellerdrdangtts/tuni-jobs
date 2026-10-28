@@ -1136,14 +1136,14 @@ const dayCaption = (w, hi, lo) => hi ? $('div', { className: 'daycap' }, [w + ' 
 const bodyCard = (body, empty) => { const c = $('div', { className: 'card' }, banner()); c.append(body.length ? $('div', {}, body) : $('div', { className: 'empty' }, empty)); return c; };
 
 function viewChi() {
-  const q = query.toLowerCase(), hit = t => !q || t.toLowerCase().includes(q), onlyLoan = expFilter === 'chovay';
+  const q = query.toLowerCase(), hit = t => !q || t.toLowerCase().includes(q), onlyLoan = expFilter === 'chovay', f = expFilter;
   const rows = [];
   for (const x of state.expenses) {
     if (x.kind === 'thu' || x.kind === 'vay') continue;
-    if (onlyLoan ? x.kind !== 'chovay' : !visible(x)) continue;
+    if (f === 'chovay' ? x.kind !== 'chovay' : f === 'chi' ? !(x.kind === 'chi' && inPeriod(x.date)) : f === 'tong' ? !inPeriod(x.date) : !visible(x)) continue;
     if (hit(x.note + ' ' + (x.person || ''))) rows.push({ date: x.date, amount: x.amount, el: entryRow(x) });
   }
-  if (!onlyLoan) {
+  if (f === 'all' || f === 'tong') {
     for (const x of state.expenses) {
       if (x.kind === 'vay' && x.settled && x.settledDate && inPeriod(x.settledDate) && hit(x.note + ' ' + (x.person || ''))) {
         rows.push({ date: x.settledDate, amount: x.amount, el: listRow({ id: x.id, title: 'Trả Nợ · ' + (x.person || x.note), sub: fmtDate(x.settledDate) + ' · ' + x.note, tag: 'Trả nợ', tagCls: 'vay', amount: '-' + fmt(x.amount), items: [['Huỷ đã trả', () => settle(x, false)], ['Sửa khoản vay', () => expenseForm(x)]] }) });
@@ -1153,14 +1153,14 @@ function viewChi() {
   const { body, hi, lo } = arrange(rows, expSort);
   return $('div', {}, [
     $('div', { className: 'stat3' }, [
-      statCard('black', 'Tổng chi (kỳ đang xem)', sum(outflows().filter(e => inPeriod(e.date)))),
-      statCard('peach', 'Chi tiêu thường', sum(state.expenses.filter(x => x.kind === 'chi' && inPeriod(x.date)))),
+      statCard('black', 'Tổng chi (kỳ đang xem)', sum(outflows().filter(e => inPeriod(e.date))), () => { expFilter = f === 'tong' ? 'all' : 'tong'; render(); }, f === 'tong'),
+      statCard('peach', 'Chi tiêu thường', sum(state.expenses.filter(x => x.kind === 'chi' && inPeriod(x.date))), () => { expFilter = f === 'chi' ? 'all' : 'chi'; render(); }, f === 'chi'),
       statCard('mint', 'Cho vay · cần thu lại', openOf('chovay'), () => { expFilter = onlyLoan ? 'all' : 'chovay'; render(); }, onlyLoan),
     ]),
-    onlyLoan ? $('div', { className: 'banner' }, [$('span', {}, ['Đang lọc: ', $('b', {}, 'Các khoản cho vay')]), $('a', { onclick: () => { expFilter = 'all'; render(); } }, 'Bỏ lọc')]) : '',
+    f !== 'all' ? $('div', { className: 'banner' }, [$('span', {}, ['Đang lọc: ', $('b', {}, f === 'chovay' ? 'Các khoản cho vay' : f === 'chi' ? 'Chi tiêu thường' : 'Tổng chi')]), $('a', { onclick: () => { expFilter = 'all'; render(); } }, 'Bỏ lọc')]) : '',
     sortSelect(expSort, sortOpts('Chi'), k => { expSort = k; }),
     dayCaption('Chi', hi, lo),
-    bodyCard(body, onlyLoan ? 'Chưa có khoản cho vay nào' : 'Chưa có khoản chi nào'),
+    bodyCard(body, onlyLoan ? 'Chưa có khoản cho vay nào' : f === 'chi' ? 'Chưa có khoản chi tiêu thường nào' : 'Chưa có khoản chi nào'),
   ]);
 }
 
@@ -1183,9 +1183,9 @@ function viewThu() {
   const { body, hi, lo } = arrange(rows, thuSort);
   return $('div', {}, [
     $('div', { className: 'stat3' }, [
-      statCard('black', 'Tổng thu (kỳ đang xem)', sum(inflows().filter(e => inPeriod(e.date)))),
-      statCard('mint', 'Thu từ job', sum(incomeEvents().filter(e => inPeriod(e.date)))),
-      statCard('peach', 'Đang vay · phải trả', openOf('vay')),
+      statCard('black', 'Tổng thu (kỳ đang xem)', sum(inflows().filter(e => inPeriod(e.date))), () => { thuFilter = 'all'; render(); }, false),
+      statCard('mint', 'Thu từ job', sum(incomeEvents().filter(e => inPeriod(e.date))), () => { thuFilter = thuFilter === 'job' ? 'all' : 'job'; render(); }, thuFilter === 'job'),
+      statCard('peach', 'Đang vay · phải trả', openOf('vay'), () => { thuFilter = thuFilter === 'vay' ? 'all' : 'vay'; render(); }, thuFilter === 'vay'),
     ]),
     chipRow(thuFilter, [['all', 'Tất cả'], ['job', 'Từ job'], ['vay', 'Vay'], ['thu', 'Thu khác'], ['lai', 'Thu lại']], k => { thuFilter = k; }),
     sortSelect(thuSort, sortOpts('Thu'), k => { thuSort = k; }),
