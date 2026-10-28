@@ -470,12 +470,47 @@
   .empty::before { content:''; display:block; width:46px; height:46px; margin:0 auto 12px; border-radius:15px; border:2px dashed currentColor; opacity:.35; animation:floaty 3.2s ease-in-out infinite; }
   @keyframes floaty { 50% { transform:translateY(-7px) rotate(4deg); } }
 
+  /* ===== Tổng Quan bento, dải tuần, ẩn số, so sánh tháng ===== */
+  .home { grid-template-areas:"hero kpi" "jobs chart" "jobs cmp" "debt debt"; }
+  .ga-cmp { grid-area:cmp; }
+  .card { border:1px solid rgba(17,17,17,.1); }
+  .card.black { border-color:rgba(255,255,255,.12); }
+  .card h3 { font-family:ui-serif,'Iowan Old Style',Georgia,serif; font-style:italic; font-weight:600; font-size:21px; letter-spacing:-.2px; }
+  .card.black h3 { color:#fff; }
+  @media (hover:hover) { .card.tap:hover, .mini:hover { transform:translate(-2px,-2px); box-shadow:4px 4px 0 rgba(17,17,17,.88); } }
+  .hero .eye { position:absolute; top:12px; right:12px; width:38px; height:38px; border-radius:50%; border:1px solid rgba(17,17,17,.1); background:rgba(250,248,244,.8); display:grid; place-items:center; cursor:pointer; color:var(--ink); }
+  .hero .eye svg { width:18px; height:18px; }
+  .secret, .hero .val, .hstrip span, .kpisub .kpicur, .jtotal b, .jrow .am, .mini .mn { transition:filter .3s; }
+  body.hide-nums #main .ga-hero .val, body.hide-nums #main .hstrip span, body.hide-nums #main .secret, body.hide-nums #main .kpisub .kpicur, body.hide-nums #main .jtotal b, body.hide-nums #main .jrow .am, body.hide-nums #main .mini .mn { filter:blur(9px); }
+  .weekstrip { padding:14px 14px 12px; margin-bottom:16px; border-radius:28px; }
+  .wkhead { display:flex; align-items:center; justify-content:center; gap:8px; font-size:13px; font-weight:600; margin-bottom:10px; }
+  .wkhead span { flex:1; text-align:center; }
+  .wkn, .wkt { border:0; background:rgba(17,17,17,.06); border-radius:999px; font:inherit; cursor:pointer; color:var(--ink); }
+  .wkn { width:32px; height:32px; font-size:20px; line-height:1; } .wkt { font-size:11.5px; padding:6px 11px; background:var(--black); color:#fff; }
+  .wkdays { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
+  .wkd { border:0; background:rgba(17,17,17,.045); border-radius:16px; padding:8px 0 9px; display:grid; gap:3px; justify-items:center; font:inherit; cursor:pointer; color:var(--ink); position:relative; transition:transform .14s var(--ease), background .2s, color .2s; }
+  .wkd small { font-size:10.5px; color:var(--mute); letter-spacing:.04em; } .wkd b { font-size:17px; font-weight:600; }
+  .wkd:active { transform:scale(.93); }
+  .wkd.sun small { color:var(--orange); }
+  .wkd.today { box-shadow:inset 0 0 0 1.5px var(--orange); }
+  .wkd.has::after { content:''; position:absolute; bottom:4px; width:4px; height:4px; border-radius:50%; background:var(--orange); }
+  .wkd.sel { background:linear-gradient(180deg,#2a2a2d,#111); color:#fff; box-shadow:0 6px 14px rgba(0,0,0,.22); } .wkd.sel small { color:#c8c8cf; } .wkd.sel.has::after { background:#fff; }
+  .cmprow { padding:10px 0; border-top:1px solid var(--line); } .sec + .cmprow { border-top:0; padding-top:0; }
+  .cmphead { display:flex; align-items:baseline; gap:10px; margin-bottom:8px; } .cmphead span { font-weight:500; flex:1; } .cmphead b { font-size:17px; letter-spacing:-.3px; }
+  .cmphead em { font-style:normal; font-size:12px; font-weight:600; padding:3px 9px; border-radius:999px; background:rgba(0,0,0,.06); color:var(--mute); }
+  .cmphead em.ok { background:rgba(31,157,85,.14); color:#17803f; } .cmphead em.bad { background:rgba(217,48,37,.12); color:#c0261c; }
+  .cmpbar { display:grid; gap:4px; } .cmpbar i { display:block; height:7px; border-radius:4px; transition:width 1s var(--ease); }
+  .cmpbar .a { background:linear-gradient(90deg,#f26d21,#ff9a5a); } .cmpbar .b { background:rgba(17,17,17,.2); }
+  #main.enter .cmpbar i { animation:growx2 1.1s var(--ease) .6s backwards; } @keyframes growx2 { from { width:0; } }
+  .cmprow small { display:block; margin-top:6px; font-size:12px; color:var(--mute); }
+
   /* phone */
   @media (max-width: 860px) {
     .app { padding-left:16px; padding-right:16px; }
     .top { margin-left:-16px; margin-right:-16px; padding-left:16px; padding-right:16px; }
     .home { grid-template-columns:1fr; grid-template-areas:none; }
-    .ga-hero, .ga-chart, .ga-jobs, .ga-prog, .ga-debt, .ga-kpi { grid-area:auto; }
+    .ga-hero, .ga-chart, .ga-jobs, .ga-prog, .ga-debt, .ga-kpi, .ga-cmp { grid-area:auto; }
+    .weekstrip { margin-bottom:14px; } .wkd b { font-size:16px; }
     .hero .val { font-size:52px; }
     .stat3 { grid-template-columns:1fr 1fr; gap:10px; }
     .stat3 .card:first-child { grid-column:1 / -1; }
@@ -988,6 +1023,25 @@ const kpiCard = cur => $('div', { className: 'card ga-kpi' }, [
   $('div', { className: 'sec' }, [$('h3', {}, 'Mục Tiêu / KPI'), $('button', { className: 'btn', onclick: () => kpiForm() }, '+ Thêm')]),
   ...(state.kpis.length ? state.kpis.map(k => kpiRow(k, cur)) : [$('div', { className: 'empty' }, 'Chưa có mục tiêu. Bấm "+ Thêm" và chỉ cần điền mục tiêu, tiến độ tự lấy từ tổng tiền còn lại của tất cả thời gian (ví dụ: Mua xe 500 triệu).')]),
 ]);
+let weekOff = 0, hideNums = false;
+try { hideNums = localStorage.getItem('tuni-hide') === '1'; } catch (e) {}
+const prevYm = ym => { const d = new Date(Number(ym.slice(0, 4)), Number(ym.slice(5, 7)) - 2, 1); return d.getFullYear() + '-' + pad(d.getMonth() + 1); };
+const EYE = '<path d="M2 12s3.600-7 10-7 10 7 10 7-3.600 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>', EYE_OFF = '<path d="M3 3l18 18M10.500 6.200A9.800 9.800 0 0 1 12 6c6.400 0 10 6 10 6a17 17 0 0 1-3.200 3.800M6.600 7.600A16.600 16.600 0 0 0 2 12s3.600 6 10 6a9.700 9.700 0 0 0 4.400-1"/><path d="M9.900 9.900a3 3 0 0 0 4.200 4.200"/>';
+const eyeBtn = () => $('button', { className: 'eye', title: 'Ẩn hoặc hiện số tiền', onclick: e => { hideNums = !hideNums; try { localStorage.setItem('tuni-hide', hideNums ? '1' : '0'); } catch (_) {} document.body.classList.toggle('hide-nums', hideNums); e.currentTarget.replaceChildren(svg(hideNums ? EYE_OFF : EYE)); } }, svg(hideNums ? EYE_OFF : EYE));
+// dải tuần: chạm vào ngày để xem riêng ngày đó, chạm lại để về cả tháng
+function weekStrip() {
+  const base = period.mode === 'day' ? period.date : today(), mon = addDays(mondayOf(base), weekOff * 7), sun = addDays(mon, 6), t = today();
+  const sh = d => Number(d.slice(8, 10)) + '/' + Number(d.slice(5, 7));
+  return $('div', { className: 'card weekstrip' }, [
+    $('div', { className: 'wkhead' }, [
+      $('button', { className: 'wkn', title: 'Tuần trước', onclick: () => { weekOff--; render(); } }, '‹'),
+      $('span', {}, 'Tuần ' + sh(mon) + ' – ' + sh(sun)),
+      weekOff ? $('button', { className: 'wkt', onclick: () => { weekOff = 0; render(); } }, 'Hôm Nay') : '',
+      $('button', { className: 'wkn', title: 'Tuần sau', onclick: () => { weekOff++; render(); } }, '›')]),
+    $('div', { className: 'wkdays' }, Array.from({ length: 7 }, (_, i) => { const ds = addDays(mon, i), sel = period.mode === 'day' && period.date === ds, has = jobsOnDay(ds).length > 0;
+      return $('button', { className: 'wkd' + (sel ? ' sel' : '') + (ds === t ? ' today' : '') + (has ? ' has' : '') + (i === 6 ? ' sun' : ''), onclick: () => { period = sel ? { mode: 'month', ym: ds.slice(0, 7) } : { mode: 'day', date: ds }; render(); } }, [$('small', {}, WDS[i]), $('b', {}, String(Number(ds.slice(8, 10))))]); })),
+  ]);
+}
 function viewOverview() {
   const thu = sum(inflows().filter(e => inPeriod(e.date))), chi = sum(outflows().filter(e => inPeriod(e.date)));
   const todo = pStatus('todo'), unpaid = pStatus('done'), paidJobs = pStatus('paid'), total = todo.length + unpaid.length + paidJobs.length;
@@ -998,6 +1052,7 @@ function viewOverview() {
   const nextDue = list => { const d = list.filter(x => x.due).sort((a, b) => a.due.localeCompare(b.due))[0]; return !list.length ? 'Không có khoản nào' : d ? dueShort(d) : list.length + ' khoản'; };
 
   const hero = $('div', { className: 'hero card ga-hero' }, [
+    eyeBtn(),
     $('div', { className: 'lbl' }, 'Còn lại · ' + periodLabel()),
     num('left', thu - chi, 'fmt', 'val'),
     $('div', { className: 'delta hstrip' }, [
@@ -1026,11 +1081,20 @@ function viewOverview() {
     $('div', { className: 'jtotal' }, [$('span', {}, 'Tổng tiền chờ thu'), $('b', {}, fmt(sumOwed(unpaidAll)))]),
   ]);
 
-  const cnt = (key, n, cls, label) => $('div', { className: 'cnt' }, [num(key, n, 'int', '', 'b'), $('span', {}, [$('i', { className: cls }), label])]);
-  const prog = $('div', { className: 'card ga-prog' }, [
-    $('h3', {}, 'Tiến độ job'),
-    $('div', { className: 'counts' }, [cnt('todo', todo.length, 'k-peach', 'Chưa làm'), cnt('unpaid', unpaid.length, 'k-lav', 'Chờ thu'), cnt('paid', paidJobs.length, 'k-mint', 'Đã thu')]),
-    $('div', { className: 'pbar' }, [$('div', { className: 'a', style: 'width:' + pPaid + '%' }, pPaid + '%'), $('div', { className: 'b' }, (100 - pPaid) + '%')]),
+  const ym = periodMonth(), py = prevYm(ym), mSum = k => ({ thu: sum(inflows().filter(e => e.date.startsWith(k))), chi: sum(outflows().filter(e => e.date.startsWith(k))) });
+  const cm = mSum(ym), pm = mSum(py);
+  const cmpRow = (label, cur, prv, upGood) => {
+    const pct = prv ? Math.round((cur - prv) / Math.abs(prv) * 100) : null, good = pct === null ? null : (pct >= 0) === upGood, mx = Math.max(Math.abs(cur), Math.abs(prv), 1);
+    return $('div', { className: 'cmprow' }, [
+      $('div', { className: 'cmphead' }, [$('span', {}, label), $('b', { className: 'secret' }, fmt(cur)),
+        $('em', { className: pct === null ? '' : good ? 'ok' : 'bad' }, pct === null ? (cur ? 'Mới' : '—') : (pct >= 0 ? '↑ ' : '↓ ') + Math.abs(pct) + '%')]),
+      $('div', { className: 'cmpbar' }, [$('i', { className: 'a', style: 'width:' + Math.round(Math.abs(cur) / mx * 100) + '%' }), $('i', { className: 'b', style: 'width:' + Math.round(Math.abs(prv) / mx * 100) + '%' })]),
+      $('small', { className: 'secret' }, 'Tháng trước: ' + fmt(prv)),
+    ]);
+  };
+  const cmp = $('div', { className: 'card ga-cmp' }, [
+    $('div', { className: 'sec' }, [$('h3', {}, 'So Với Tháng Trước'), $('span', { className: 'sub' }, 'T' + ym.slice(5) + ' · T' + py.slice(5))]),
+    cmpRow('Thu', cm.thu, pm.thu, true), cmpRow('Chi', cm.chi, pm.chi, false), cmpRow('Còn Lại', cm.thu - cm.chi, pm.thu - pm.chi, true),
   ]);
   const mini = (cls, title, list, onGo) => $('div', { className: 'mini card ' + cls, onclick: onGo }, [
     $('div', { className: 'mt' }, [$('span', {}, title), $('i', {}, svg(ICON.arrow))]),
@@ -1038,7 +1102,8 @@ function viewOverview() {
   ]);
   const debts = $('div', { className: 'pair2 ga-debt' }, [mini('peach', 'Phải trả (đang vay)', open('vay'), () => { thuFilter = 'vay'; go('thu'); }), mini('lav', 'Cần thu lại (cho vay)', open('chovay'), () => { expFilter = 'chovay'; go('chi'); })]);
 
-  return $('div', {}, [reminders(), $('div', { className: 'home' }, [hero, kpiCard(sum(inflows()) - sum(outflows())), jobsCard, chart, prog, debts])]);
+  document.body.classList.toggle('hide-nums', hideNums);
+  return $('div', {}, [reminders(), weekStrip(), $('div', { className: 'home' }, [hero, kpiCard(sum(inflows()) - sum(outflows())), debts, jobsCard, cmp, chart])]);
 }
 
 function banner() {
