@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Trịnh Đức Tùng – Ecommerce Leader Portfolio</title>
+<meta name="description" content="Portfolio Ecommerce Leader: vận hành sàn TMĐT, MCN, Livestream, Affiliate và quản lý team.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --wine:#5c0f1c; --wine-2:#7a1a2a; --wine-3:#3f0913;
+  --paper:#fbf7f4; --ink:#2a0c12; --muted:#7b5a60; --line:#e6d6d8;
+  --display:'Anton','Impact','Arial Narrow',sans-serif;
+  --body:'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);color:var(--ink);background:linear-gradient(180deg,var(--wine) 0%,var(--wine-3) 100%) fixed;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:20px 16px 64px}
+h1,h2,h3{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.01em;line-height:1}
+.card{background:var(--paper);border-radius:6px;padding:22px}
+.dark{background:var(--wine-2);color:#f6e9ea;border:1px solid rgba(255,255,255,.1)}
+.dark h2{color:#fff}
+.grid{display:grid;gap:14px;margin-top:14px}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+h2{font-size:30px;margin-bottom:14px;color:var(--wine)}
+h3{font-size:19px;color:var(--wine);margin-bottom:8px}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--wine);border:1px solid var(--wine);border-radius:99px;padding:3px 10px;margin-bottom:10px}
+.dark .tag{color:#f6e9ea;border-color:rgba(255,255,255,.5)}
+ul{padding-left:18px}li{margin:5px 0;font-size:14.5px}
+p{font-size:14.5px}
+.muted{color:var(--muted)}
+.ph{color:#b98a92;font-style:normal;border-bottom:1px dashed #c9a4ab}   /* chỗ cần bổ sung số liệu */
+.dark .ph{color:#f0b9c0;border-color:#f0b9c0}
+
+/* HERO */
+.hero{padding:0;overflow:hidden}
+nav{display:flex;justify-content:space-between;align-items:center;padding:20px 28px;gap:12px;flex-wrap:wrap}
+nav b{font-weight:700;letter-spacing:.08em;color:var(--wine);font-size:15px}
+nav div{display:flex;gap:26px;flex-wrap:wrap}
+nav a{color:var(--wine);text-decoration:none;font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+nav a:hover{text-decoration:underline}
+.hero-body{display:grid;grid-template-columns:1.25fr 1fr;align-items:end;gap:10px;padding:10px 28px 0}
+.hero h1{font-size:clamp(58px,10.5vw,128px);color:var(--wine)}
+.hero h1 span{display:block}
+.hero h1 .big{font-size:1.18em}
+.role{font-weight:700;letter-spacing:.2em;font-size:13px;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
+.pitch{max-width:470px;margin-bottom:26px}
+.photo{align-self:stretch;display:flex;align-items:flex-end;justify-content:center}
+.photo img{width:min(100%,340px);aspect-ratio:1/1.05;object-fit:cover;object-position:center 20%;border-radius:6px 6px 0 0;transform:scale(1);clip-path:inset(1.5% 1.5% 0 1.5%)}
+.hero-foot{display:flex;justify-content:space-between;align-items:center;padding:18px 28px;border-top:1px solid var(--line);flex-wrap:wrap;gap:10px}
+.hero-foot a{color:var(--wine);font-weight:700;text-decoration:none;font-size:14px;letter-spacing:.06em}
+.btn{display:inline-block;background:var(--wine);color:#fff!important;padding:10px 20px;border-radius:99px;font-size:13px!important}
+
+/* SNAPSHOT */
+.stat{text-align:left}
+.stat b{display:block;font-family:var(--display);font-weight:400;font-size:46px;line-height:1;color:#fff}
+.stat span{font-size:13px;opacity:.85}
+
+/* TIMELINE */
+.job{border-top:1px solid var(--line);padding:16px 0}
+.job:first-of-type{border-top:0;padding-top:0}
+.job-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+.job-head b{font-size:16px}
+.job-head small{color:var(--muted);font-weight:600}
+.job-role{color:var(--wine);font-weight:600;font-size:14px;margin-bottom:4px}
+.badge{background:var(--wine);color:#fff;border-radius:99px;font-size:11px;padding:2px 9px;margin-left:6px;font-weight:600;vertical-align:middle}
+
+/* CASE */
+.case{padding:0;overflow:hidden;display:flex;flex-direction:column}
+.shot{aspect-ratio:16/10;background:repeating-linear-gradient(135deg,#efe3e4,#efe3e4 12px,#f7eeef 12px,#f7eeef 24px);display:flex;align-items:center;justify-content:center;color:#a77d85;font-size:13px;font-weight:600;text-align:center;padding:10px}
+.case .in{padding:18px 20px 22px}
+.case dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:14px;margin-top:10px}
+.case dt{font-weight:700;color:var(--wine)}
+
+/* SKILLS */
+.bars div{margin:10px 0}
+.bars label{display:flex;justify-content:space-between;font-size:13.5px;font-weight:600;margin-bottom:4px}
+.bar{height:6px;background:rgba(255,255,255,.18);border-radius:9px;overflow:hidden}
+.bar i{display:block;height:100%;background:#fff;border-radius:9px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{border:1px solid var(--wine);color:var(--wine);border-radius:99px;padding:5px 12px;font-size:13px;font-weight:600}
+
+/* FUNNEL */
+.funnel{display:grid;gap:10px}
+.step{border-radius:6px;padding:14px 18px;color:#fff;display:flex;gap:16px;align-items:center}
+.step b{font-family:var(--display);font-weight:400;font-size:26px;opacity:.9;min-width:40px}
+.step p{font-size:14px}.step strong{display:block;font-size:15px}
+.s1{background:#7a1a2a;width:100%}.s2{background:#681524;width:92%;margin:0 auto}.s3{background:#5c0f1c;width:84%;margin:0 auto}.s4{background:#3f0913;width:76%;margin:0 auto}
+
+/* ROADMAP */
+.road{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;text-align:center}
+.road div{padding:6px}
+.road .ic{width:64px;height:64px;border-radius:50%;border:2px solid var(--wine);display:grid;place-items:center;margin:0 auto 10px;font-family:var(--display);font-size:22px;color:var(--wine)}
+.road strong{display:block;color:var(--wine);margin-bottom:4px}
+.road p{font-size:13px}
+
+/* CONTACT */
+.contact{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+.contact h2{font-size:clamp(34px,6vw,64px);margin:0}
+.contact ul{list-style:none;padding:0}.contact li{font-size:16px;margin:8px 0}
+.contact a{color:inherit}
+footer{text-align:center;color:rgba(255,255,255,.6);font-size:12px;margin-top:22px}
+
+.grid>*,.hero-body>*{min-width:0}
+.rise{opacity:0;transform:translateY(14px);transition:.6s ease}
+.rise.on{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rise{opacity:1;transform:none;transition:none}}
+
+@media(max-width:860px){
+  .g4{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr}.g2{grid-template-columns:1fr}
+  .hero-body{grid-template-columns:1fr;padding:10px 20px 0}
+  .photo{order:-1;justify-content:flex-start}.photo img{width:200px}
+  nav{padding:16px 20px}nav div{gap:16px}
+  .road{grid-template-columns:1fr 1fr}
+  .step{width:100%!important}
+}
+@media(max-width:480px){.wrap{padding:12px 12px 48px}.card{padding:18px}.hero-foot{padding:16px 20px}}
+@media print{body{background:#fff}.rise{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HERO -->
+<header class="card hero rise" id="top">
+  <nav>
+    <b>TRỊNH ĐỨC TÙNG</b>
+    <div>
+      <a href="#kinhnghiem">Kinh nghiệm</a>
+      <a href="#duan">Dự án</a>
+      <a href="#nangluc">Năng lực</a>
+      <a href="#lienhe">Liên hệ</a>
+    </div>
+  </nav>
+  <div class="hero-body">
+    <div>
+      <h1><span>Ecommerce</span><span class="big">Leader</span></h1>
+      <p class="role">Vận hành sàn TMĐT · MCN · Livestream · Affiliate</p>
+      <p class="pitch muted">Từ vận hành shop đến dẫn dắt team: xây kế hoạch theo quý/tháng, kết nối KOL với nền tảng, kiểm soát KPI và mở rộng dự án để tăng doanh thu.</p>
+    </div>
+    <div class="photo"><img src="assets/portrait.jpg" alt="Trịnh Đức Tùng"></div>
+  </div>
+  <div class="hero-foot">
+    <span class="muted" style="font-size:13px">Shopee · TikTok Shop · Facebook</span>
+    <a class="btn" href="#lienhe">Liên hệ hợp tác</a>
+  </div>
+</header>
+
+<!-- SNAPSHOT -->
+<section class="grid g4 rise" aria-label="Số liệu nổi bật">
+  <div class="card dark stat"><b>2+</b><span>năm trong ngành Marketing &amp; TMĐT</span></div>
+  <div class="card dark stat"><b>45K</b><span>follow kênh TikTok shop đã xây (LeCharm's)</span></div>
+  <div class="card dark stat"><b>T12/24</b><span>được bổ nhiệm Leader tại Gió Media</span></div>
+  <div class="card dark stat"><b class="ph">[GMV]</b><span>tổng doanh thu đã quản lý (bổ sung)</span></div>
+</section>
+
+<!-- ABOUT + SKILLS -->
+<section class="grid g2" id="nangluc">
+  <div class="card rise">
+    <span class="tag">Giới thiệu</span>
+    <h2>Về tôi</h2>
+    <p>Tôi bắt đầu từ content và vận hành shop TikTok, qua agency tư vấn chiến lược, rồi đến vị trí Leader điều hành MCN và dự án thương mại cho KOL. Tôi làm được cả hai phía: <b>trực tiếp làm</b> (quay dựng, chạy ads, live) và <b>quản lý người làm</b> (điều phối, KPI, tiến độ).</p>
+    <p style="margin-top:10px" class="muted">Cao đẳng FPT Polytechnic · Digital Marketing (2022–2024)</p>
+  </div>
+  <div class="card dark rise">
+    <span class="tag">Năng lực</span>
+    <h2>Kỹ năng chính</h2>
+    <div class="bars">
+      <div><label><span>Vận hành sàn TMĐT</span></label><div class="bar"><i style="width:90%"></i></div></div>
+      <div><label><span>Livestream &amp; MCN</span></label><div class="bar"><i style="width:85%"></i></div></div>
+      <div><label><span>Chạy Ads (TikTok, Shopee, FB)</span></label><div class="bar"><i style="width:80%"></i></div></div>
+      <div><label><span>Quản lý dự án &amp; team</span></label><div class="bar"><i style="width:80%"></i></div></div>
+      <div><label><span>Content, quay dựng, thiết kế</span></label><div class="bar"><i style="width:75%"></i></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="card rise" id="kinhnghiem" style="margin-top:14px">
+  <span class="tag">Hành trình</span>
+  <h2>Kinh nghiệm làm việc</h2>
+
+  <div class="job">
+    <div class="job-head"><b>Công ty cổ phần Gió Media</b><small>T5/2024 – T6/2025</small></div>
+    <div class="job-role">Chuyên viên Marketing <span class="badge">Leader từ T12/2024</span></div>
+    <ul>
+      <li>Quản lý sàn TMĐT của đối tác, lên kế hoạch vận hành theo quý/tháng.</li>
+      <li>Lên kế hoạch phát triển dự án thương mại cho KOL trên Facebook, TikTok, Shopee.</li>
+      <li>Vận hành Livestream cho KOL (KeyLive, Megalive, Live Inhouse).</li>
+      <li>Vận hành MCN: làm việc trực tiếp với đối tác TikTok, Shopee; kết nối KOL với nền tảng để chạy chiến dịch affiliate và livestream.</li>
+      <li>Quản lý nhân sự cấp dưới: điều phối công việc, kiểm soát KPI từng dự án, đảm bảo tiến độ KPI tháng/quý.</li>
+    </ul>
+  </div>
+  <div class="job">
+    <div class="job-head"><b>LeCharm's Store</b><small>T8/2023 – T5/2024</small></div>
+    <div class="job-role">Chuyên viên vận hành sàn TMĐT</div>
+    <ul>
+      <li>Quản lý kênh TikTok của shop (45K follow); lên kịch bản, quay dựng video bán hàng.</li>
+      <li>Lên kế hoạch vận hành shop theo từng chiến dịch của sàn; chạy ads chuyển đổi trên TikTok Seller.</li>
+      <li>Quản lý vận đơn và chăm sóc khách hàng.</li>
+    </ul>
+  </div>
+  <div class="job">
+    <div class="job-head"><b>Leci Agency</b><small>T2/2023 – T8/2024</small></div>
+    <div class="job-role">Chuyên viên Marketing</div>
+    <ul>
+      <li>Research/R&amp;D ngành hàng, lên kế hoạch phát triển dự án cho đối tác.</li>
+      <li>Tạo và xây dựng kênh TikTok cho công ty; tư vấn chiến lược Marketing cho đối tác trên TikTok.</li>
+    </ul>
+  </div>
+  <div class="job">
+    <div class="job-head"><b>Tổng Kho Hồng Quế</b><small>T8/2022 – T2/2023</small></div>
+    <div class="job-role">Content Marketing</div>
+    <ul>
+      <li>Viết content, quay dựng cho 2 kênh TikTok bán hàng; quản lý vận đơn.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- CASE STUDIES -->
+<section id="duan" style="margin-top:28px">
+  <div class="card dark rise"><span class="tag">Dự án tiêu biểu</span><h2 style="margin:0">Case Study</h2></div>
+  <div class="grid g3">
+    <article class="card case rise">
+      <div class="shot">Ảnh dự án 1 – thêm sau</div>
+      <div class="in">
+        <h3>Scale kênh TikTok Shop</h3>
+        <p class="muted">LeCharm's Store</p>
+        <dl>
+          <dt>Mục tiêu</dt><dd class="ph">[điền]</dd>
+          <dt>Hành động</dt><dd>Kịch bản, quay dựng, ads chuyển đổi, vận hành theo chiến dịch sàn</dd>
+          <dt>Kết quả</dt><dd>45K follow · <span class="ph">[doanh thu / đơn]</span></dd>
+        </dl>
+      </div>
+    </article>
+    <article class="card case rise">
+      <div class="shot">Ảnh dự án 2 – thêm sau</div>
+      <div class="in">
+        <h3>Vận hành MCN &amp; Affiliate KOL</h3>
+        <p class="muted">Gió Media</p>
+        <dl>
+          <dt>Mục tiêu</dt><dd class="ph">[điền]</dd>
+          <dt>Hành động</dt><dd>Làm việc trực tiếp với TikTok, Shopee; kết nối KOL chạy affiliate và livestream</dd>
+          <dt>Kết quả</dt><dd class="ph">[số KOL / GMV / % tăng trưởng]</dd>
+        </dl>
+      </div>
+    </article>
+    <article class="card case rise">
+      <div class="shot">Ảnh dự án 3 – thêm sau</div>
+      <div class="in">
+        <h3>Livestream KeyLive / Megalive</h3>
+        <p class="muted">Gió Media</p>
+        <dl>
+          <dt>Mục tiêu</dt><dd class="ph">[điền]</dd>
+          <dt>Hành động</dt><dd>Vận hành KeyLive, Megalive, Live Inhouse cho KOL</dd>
+          <dt>Kết quả</dt><dd class="ph">[doanh thu phiên live / lượt xem]</dd>
+        </dl>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- LEADERSHIP + FUNNEL -->
+<section class="grid g2">
+  <div class="card dark rise">
+    <span class="tag">Quản lý</span>
+    <h2>Năng lực Leader</h2>
+    <ul>
+      <li>Dẫn dắt team vận hành dự án từ T12/2024, quy mô <span class="ph">[số người]</span>.</li>
+      <li>Điều phối công việc, đặt và kiểm soát KPI tháng/quý cho từng dự án.</li>
+      <li>Xử lý tình huống, giữ tiến độ, mở rộng dự án để tăng doanh thu.</li>
+      <li>Làm việc trực tiếp với đối tác nền tảng (TikTok, Shopee) và KOL.</li>
+    </ul>
+  </div>
+  <div class="card rise">
+    <span class="tag">Quy trình</span>
+    <h2>Cách tôi vận hành một sàn</h2>
+    <div class="funnel">
+      <div class="step s1"><b>01</b><p><strong>Research &amp; kế hoạch</strong>Phân tích ngành hàng, lập kế hoạch quý/tháng.</p></div>
+      <div class="step s2"><b>02</b><p><strong>Nội dung &amp; KOL</strong>Kịch bản, video, kết nối KOL/affiliate.</p></div>
+      <div class="step s3"><b>03</b><p><strong>Livestream &amp; Ads</strong>Live theo chiến dịch sàn, ads chuyển đổi.</p></div>
+      <div class="step s4"><b>04</b><p><strong>Đo lường &amp; tối ưu</strong>Theo dõi KPI, điều chỉnh, mở rộng.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section class="card rise" style="margin-top:14px">
+  <span class="tag">Công cụ &amp; nền tảng</span>
+  <div class="chips">
+    <span>Shopee</span><span>TikTok Shop</span><span>TikTok Seller</span><span>Facebook Ads</span><span>Affiliate</span><span>MCN</span><span>Livestream</span><span>Thiết kế đồ họa</span><span>Quay / dựng video</span>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section class="card rise" style="margin-top:14px">
+  <span class="tag">Hợp tác</span>
+  <h2>Làm việc cùng tôi</h2>
+  <div class="road">
+    <div><div class="ic">1</div><strong>Trao đổi</strong><p>Hiểu mục tiêu, sản phẩm và ngân sách.</p></div>
+    <div><div class="ic">2</div><strong>Kế hoạch</strong><p>Đề xuất lộ trình theo quý/tháng và KPI.</p></div>
+    <div><div class="ic">3</div><strong>Triển khai</strong><p>Vận hành sàn, content, KOL, livestream, ads.</p></div>
+    <div><div class="ic">4</div><strong>Báo cáo</strong><p>Đo lường, tối ưu, mở rộng.</p></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="card dark rise" id="lienhe" style="margin-top:14px">
+  <div class="contact">
+    <h2>Cùng làm<br>nhé?</h2>
+    <ul>
+      <li>📞 <a href="tel:+84327965659">+84 327 965 659</a></li>
+      <li>✉️ <a href="mailto:tungductrinh9@gmail.com">tungductrinh9@gmail.com</a></li>
+      <li>📍 Thanh Hóa, Việt Nam</li>
+    </ul>
+  </div>
+</section>
+<footer>© 2026 Trịnh Đức Tùng</footer>
+</div>
+
+<script>
+(function(){
+  var els=document.querySelectorAll('.rise');
+  if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('on')});return}
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.08});
+  els.forEach(function(e){io.observe(e)});
+})();
+</script>
+</body>
+</html>
