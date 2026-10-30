@@ -36,22 +36,35 @@ p{font-size:14.5px}
 .dark .ph{color:#f0b9c0;border-color:#f0b9c0}
 
 /* HERO */
-.hero{padding:0;overflow:hidden}
-nav{display:flex;justify-content:space-between;align-items:center;padding:20px 28px;gap:12px;flex-wrap:wrap}
-nav b{font-weight:700;letter-spacing:.08em;color:var(--wine);font-size:15px}
-nav div{display:flex;gap:26px;flex-wrap:wrap}
-nav a{color:var(--wine);text-decoration:none;font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
-nav a:hover{text-decoration:underline}
-.hero-body{display:grid;grid-template-columns:1.25fr 1fr;align-items:end;gap:10px;padding:10px 28px 0}
-.hero h1{font-size:clamp(58px,10.5vw,128px);color:var(--wine)}
-.hero h1 span{display:block}
-.hero h1 .big{font-size:1.18em}
-.role{font-weight:700;letter-spacing:.2em;font-size:13px;text-transform:uppercase;color:var(--muted);margin:18px 0 6px}
-.pitch{max-width:470px;margin-bottom:26px}
-.photo{align-self:stretch;display:flex;align-items:flex-end;justify-content:center}
-.photo img{width:min(100%,340px);aspect-ratio:1/1.05;object-fit:cover;object-position:center 20%;border-radius:6px 6px 0 0;transform:scale(1);clip-path:inset(1.5% 1.5% 0 1.5%)}
-.hero-foot{display:flex;justify-content:space-between;align-items:center;padding:18px 28px;border-top:1px solid var(--line);flex-wrap:wrap;gap:10px}
-.hero-foot a{color:var(--wine);font-weight:700;text-decoration:none;font-size:14px;letter-spacing:.06em}
+.hero{padding:0;overflow:hidden;background:var(--paper) radial-gradient(circle at 50% 100%,rgba(122,26,42,.06),transparent 60%)}
+nav{display:flex;justify-content:center;gap:28px;padding:18px 20px 0;flex-wrap:wrap}
+nav a{color:var(--muted);text-decoration:none;font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+nav a:hover{color:var(--wine)}
+.hero-in{text-align:center;padding:26px 28px 0}
+.hello{display:inline-block;border:1.5px solid var(--ink);border-radius:99px;padding:9px 34px;font-size:16px;font-weight:500}
+.hero h1{font-family:var(--body);text-transform:none;font-weight:500;font-size:clamp(38px,6.6vw,76px);line-height:1.1;margin-top:26px;letter-spacing:-.01em}
+.hero h1 b{color:var(--wine);font-weight:800}
+.hero h2{font-family:var(--body);text-transform:none;color:var(--ink);font-weight:800;font-size:clamp(24px,3.7vw,44px);margin:8px 0 0;letter-spacing:-.01em;line-height:1.15}
+.stage{display:grid;grid-template-columns:1fr minmax(280px,400px) 1fr;gap:20px;align-items:end;margin-top:30px;text-align:left}
+.stage .l{align-self:center;padding-bottom:90px}
+.stage .r{align-self:center;padding-bottom:90px;text-align:center}
+.quote{color:var(--wine);font-family:var(--display);font-size:92px;line-height:.7;height:44px}
+.stage .l p{font-size:15px;max-width:330px}
+.yrs b{display:block;font-weight:800;font-size:clamp(40px,5vw,60px);color:var(--wine);line-height:1}
+.yrs span{font-size:17px;line-height:1.35;display:block;margin-top:6px}
+.figure{position:relative}
+.figure .arch{position:relative}
+.figure .arch img{display:block;width:100%;aspect-ratio:1/1.12;object-fit:cover;object-position:50% 0;border-radius:999px 999px 0 0}
+.figure .cta{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);display:flex;align-items:center;border:1.5px solid rgba(255,255,255,.85);border-radius:99px;background:rgba(20,5,8,.55);backdrop-filter:blur(6px);padding:4px;white-space:nowrap}
+.cta a{text-decoration:none;font-size:14px;font-weight:600;padding:10px 20px;border-radius:99px;color:#fff}
+.cta a:first-child{background:var(--wine-2)}
+.pill{position:absolute;z-index:3;background:#191013;color:#fff;border-radius:99px;padding:12px 22px;font-size:15px;font-weight:500;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.p1{left:-92px;top:22%}.p2{right:-96px;top:12%}.p3{right:-70px;top:62%}.p4{left:-62px;top:76%}
+.name{background:var(--wine);color:#fff;text-align:center;padding:16px 10px 18px;margin:0 -28px}
+.name strong{display:block;font-family:var(--display);font-weight:400;font-size:clamp(26px,4vw,40px);letter-spacing:.04em;text-transform:uppercase;line-height:1.1}
+.name span{font-size:12px;letter-spacing:.18em;text-transform:uppercase;opacity:.8}
+.figure .name{margin:0;border-radius:0}
+.hero-bar{height:0}
 .btn{display:inline-block;background:var(--wine);color:#fff!important;padding:10px 20px;border-radius:99px;font-size:13px!important}
 
 /* SNAPSHOT */
@@ -104,20 +117,24 @@ nav a:hover{text-decoration:underline}
 .contact a{color:inherit}
 footer{text-align:center;color:rgba(255,255,255,.6);font-size:12px;margin-top:22px}
 
-.grid>*,.hero-body>*{min-width:0}
+.grid>*,.stage>*{min-width:0}
 .rise{opacity:0;transform:translateY(14px);transition:.6s ease}
 .rise.on{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.rise{opacity:1;transform:none;transition:none}}
 
 @media(max-width:860px){
   .g4{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr}.g2{grid-template-columns:1fr}
-  .hero-body{grid-template-columns:1fr;padding:10px 20px 0}
-  .photo{order:-1;justify-content:flex-start}.photo img{width:200px}
-  nav{padding:16px 20px}nav div{gap:16px}
+  .hero-in{padding:22px 16px 0}
+  .stage{grid-template-columns:1fr;gap:18px}
+  .figure{width:min(100%,380px);margin:0 auto;order:1}
+  .stage .l{order:2;padding:0}.stage .r{order:3;padding:0 0 22px}
+  .pill{position:static;display:inline-block;margin:0 4px 8px;font-size:13px;padding:9px 16px}
+  .figure .pill{display:none}
+  nav{gap:16px}
   .road{grid-template-columns:1fr 1fr}
   .step{width:100%!important}
 }
-@media(max-width:480px){.wrap{padding:12px 12px 48px}.card{padding:18px}.hero-foot{padding:16px 20px}}
+@media(max-width:480px){.wrap{padding:12px 12px 48px}.card{padding:18px}}
 @media print{body{background:#fff}.rise{opacity:1;transform:none}}
 </style>
 </head>
@@ -127,25 +144,33 @@ footer{text-align:center;color:rgba(255,255,255,.6);font-size:12px;margin-top:22
 <!-- HERO -->
 <header class="card hero rise" id="top">
   <nav>
-    <b>TRỊNH ĐỨC TÙNG</b>
-    <div>
-      <a href="#kinhnghiem">Kinh nghiệm</a>
-      <a href="#duan">Dự án</a>
-      <a href="#nangluc">Năng lực</a>
-      <a href="#lienhe">Liên hệ</a>
-    </div>
+    <a href="#kinhnghiem">Kinh nghiệm</a>
+    <a href="#duan">Dự án</a>
+    <a href="#nangluc">Năng lực</a>
+    <a href="#lienhe">Liên hệ</a>
   </nav>
-  <div class="hero-body">
-    <div>
-      <h1><span>Ecommerce</span><span class="big">Leader</span></h1>
-      <p class="role">Vận hành sàn TMĐT · MCN · Livestream · Affiliate</p>
-      <p class="pitch muted">Từ vận hành shop đến dẫn dắt team: xây kế hoạch theo quý/tháng, kết nối KOL với nền tảng, kiểm soát KPI và mở rộng dự án để tăng doanh thu.</p>
+  <div class="hero-in">
+    <span class="hello">Xin chào!</span>
+    <h1>Tôi là <b>Tùng</b> 👋,</h1>
+    <h2>Ecommerce Leader</h2>
+    <div class="stage">
+      <div class="l">
+        <div class="quote" aria-hidden="true">“</div>
+        <p>Từ vận hành shop đến dẫn dắt team: xây kế hoạch theo quý/tháng, kết nối KOL với nền tảng, kiểm soát KPI và mở rộng dự án để tăng doanh thu trên Shopee, TikTok Shop và Facebook.</p>
+      </div>
+      <div class="figure">
+        <span class="pill p1">🛍️ Sàn TMĐT</span>
+        <span class="pill p2">🎥 Livestream</span>
+        <span class="pill p3">🤝 MCN &amp; Affiliate</span>
+        <span class="pill p4">📈 Quản lý team</span>
+        <div class="arch">
+          <img src="assets/portrait.jpg" alt="Trịnh Đức Tùng">
+          <div class="cta"><a href="#duan">Dự án ↘</a><a href="#lienhe">Liên hệ</a></div>
+        </div>
+        <div class="name"><strong>Trịnh Đức Tùng</strong><span>Ecommerce Leader</span></div>
+      </div>
+      <div class="r yrs"><b>2+ năm</b><span>kinh nghiệm Marketing<br>&amp; vận hành TMĐT</span></div>
     </div>
-    <div class="photo"><img src="assets/portrait.jpg" alt="Trịnh Đức Tùng"></div>
-  </div>
-  <div class="hero-foot">
-    <span class="muted" style="font-size:13px">Shopee · TikTok Shop · Facebook</span>
-    <a class="btn" href="#lienhe">Liên hệ hợp tác</a>
   </div>
 </header>
 
